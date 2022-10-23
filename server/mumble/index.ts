@@ -1,5 +1,4 @@
 import { EventEmitter } from "events";
-import Promise from "bluebird";
 import Connection from "./Connection";
 import * as Constants from "./Constants";
 import ChannelRemove, { ChannelRemoveData } from "./handlers/ChannelRemove";
@@ -63,7 +62,7 @@ export default class Client extends EventEmitter {
       this.connection
         .writeProto("Version", {
           version: Util.encodeVersion(1, 0, 0),
-          release: "NoodleJS Client",
+          release: "NoodleTS Client",
           os: "NodeJS",
           os_version: process.version,
         })
@@ -78,6 +77,7 @@ export default class Client extends EventEmitter {
           tokens: this.options.tokens,
         })
         .catch((error) => {
+          console.log("error", error);
           this.emit("error", error);
         });
       this._pingRoutine();
@@ -113,21 +113,23 @@ export default class Client extends EventEmitter {
     const textMessage = new TextMessage(this);
 
     // TODO This is not ran for some reason
-    this.connection.on("ServerSync", (data: ServerSyncData) =>
-      serverSync.handle(data)
-    );
+    this.connection.on("ServerSync", (data: ServerSyncData) => {
+      console.log("serversync");
+      serverSync.handle(data);
+    });
 
     this.connection.on("UserState", (data: UserStateData) => {
-      console.log("userState123", userState);
       userState.handle(data);
 
       // First UserState is own
-      if (!this.user || this.user.session !== data.session) {
+      if (!this.user || data.name !== this.connection.options.name) {
         this.user = this.users.get(data.session);
+
+        // TODO: temp solution to set ready stea as serverSync is not sent
+        this.emit("ready", this);
+        this.synced = true;
       }
     });
-
-    console.log("this.connection", this.connection);
 
     this.connection.on("UserRemove", (data: UserRemoveData) =>
       userRemove.handle(data)

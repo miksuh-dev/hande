@@ -16,7 +16,7 @@ export default class User {
   pluginContext: UserStateData["pluginContext"];
   pluginIdentity: UserStateData["pluginIdentity"];
   comment: UserStateData["comment"];
-  hash: UserStateData["hash"] | undefined;
+  hash: UserStateData["hash"];
   commentHash: UserStateData["commentHash"];
   textureHash: UserStateData["textureHash"];
   prioritySpeaker: UserStateData["prioritySpeaker"] = false;
@@ -32,6 +32,7 @@ export default class User {
     this.session = data.session;
     this.client = client;
     this.name = data.name;
+    this.hash = data.hash;
 
     const channel = this.client.channels.get(data.channelId ?? 0);
     if (!channel) {

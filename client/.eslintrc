@@ -1,0 +1,8 @@
+{
+  "$schema": "http://json.schemastore.org/eslintrc",
+  "parser": "@typescript-eslint/parser",
+  "root": true,
+  "plugins": ["@typescript-eslint", "import", "solid"],
+  "extends": ["prettier"],
+  "ignorePatterns": ["node_modules/", "build/", "dist/"]
+}

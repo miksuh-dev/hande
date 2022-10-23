@@ -1,0 +1,17 @@
+datasource db {
+  url      = env("DATABASE_URL")
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Song {
+  id        Int    @id @default(autoincrement())
+  title     String
+  serverHash String
+  duration  Int
+  thumbnail String
+  url       String
+}

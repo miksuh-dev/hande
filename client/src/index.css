@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  body,
+  #root {
+    @apply h-screen bg-neutral-800 dark:bg-neutral-800;
+  }
+
+  .btn-primary {
+    @apply block rounded-lg bg-gradient-to-br from-custom-aqua-800 to-custom-aqua-900 px-6 py-4 text-center text-xl font-semibold text-white transition duration-300 hover:from-custom-aqua-400 hover:to-custom-aqua-900 md:w-auto;
+  }
+
+  .input-primary {
+    @apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-custom-aqua-50 dark:border-custom-aqua-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500;
+  }
+
+  .text-primary {
+    @apply text-lg font-medium text-custom-aqua-700;
+  }
+
+  .btn-primary-full {
+    @apply btn-primary w-full;
+  }
+
+  .btn-secondary {
+    @apply block rounded-lg border border-custom-aqua-900 px-6 py-4 text-center text-xl font-semibold text-white transition duration-300 hover:bg-neutral-700 md:w-auto;
+  }
+
+  .btn-secondary-full {
+    @apply btn-secondary w-full;
+  }
+}

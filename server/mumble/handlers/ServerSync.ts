@@ -25,6 +25,6 @@ export default class ServerSync extends AbstractHandler {
      * @event Client#ready
      * @param {ServerInfo} info The information from the server
      */
-    this.client.emit("ready", info);
+    this.client.emit("ready", this);
   }
 }

@@ -28,7 +28,6 @@ export interface UserStateData {
 
 export default class UserState extends AbstractHandler {
   override handle(data: UserStateData) {
-    console.log("1231231", data);
     let user = this.client.users.get(data.session);
 
     if (user) {

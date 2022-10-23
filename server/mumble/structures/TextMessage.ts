@@ -50,7 +50,10 @@ export default class TextMessage {
     if (!this.sender) {
       throw new Error("Cannot reply to a message with no sender");
     }
-    return this.sender.sendMessage(message);
+
+    this.sender.sendMessage(message).catch((error) => {
+      console.log("error", error);
+    });
   }
 
   toPacket() {

@@ -1,7 +1,6 @@
 import { EventEmitter } from "events";
 import * as tls from "tls";
 import { OpusEncoder } from "@discordjs/opus";
-import Promise from "bluebird";
 import * as Constants from "./Constants";
 import { ClientOptions } from "./index";
 import Protobuf from "./Protobuf";
@@ -22,6 +21,7 @@ class Connection extends EventEmitter {
 
     this.options = options;
     this.opusEncoder = new OpusEncoder(Constants.Audio.sampleRate, 1);
+    this.opusEncoder.setBitrate(70000); // Hard-coded for now
     this.currentEncoder = this.opusEncoder;
     this.codec = Connection.codec().Opus;
     this.voiceSequence = 0;
@@ -95,12 +95,17 @@ class Connection extends EventEmitter {
     if (!this.protobuf) {
       throw new Error("Protobuf not loaded");
     }
-    const channel = this.protobuf.nameById(type);
-    if (!channel) {
+    const typeName = this.protobuf.nameById(type);
+    if (!typeName) {
       throw new Error("Unknown channel");
     }
 
-    this.emit(channel, msg);
+    console.log("type", type);
+    console.log("msg", msg);
+    console.log("typeName", typeName);
+    console.log("---");
+
+    this.emit(typeName, msg);
   }
 
   _writePacket(buffer: Uint8Array) {
