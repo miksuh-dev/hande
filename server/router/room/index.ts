@@ -1,15 +1,26 @@
 // import { TRPCError } from "@trpc/server";
+import { Song } from "@prisma/client";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
+import { MumbleUser } from "../../types/auth";
 import { authedProcedure } from "../utils";
+
+const roomOnlineUsers = new Map<string, MumbleUser[]>();
+const roomMessages = new Map<string, Message[]>();
 
 interface Message {
   id: string;
   username: string;
   content: string;
   timestamp: number;
+}
+
+interface Room {
+  song: Song[];
+  users: MumbleUser[];
+  messages: Message[];
 }
 
 export const roomRouter = t.router({
@@ -22,10 +33,13 @@ export const roomRouter = t.router({
       },
     });
 
+    const users = roomOnlineUsers.get(user.serverHash) ?? [];
+    const messages = roomMessages.get(user.serverHash) ?? [];
+
     return {
       songs,
-      messages: [],
-      users: [],
+      messages,
+      users,
     };
   }),
   message: authedProcedure
@@ -37,42 +51,44 @@ export const roomRouter = t.router({
     .mutation(({ ctx, input }) => {
       const { user } = ctx;
 
-      const message = {
-        id: Date.now().toString(),
-        username: user.name,
-        content: input.content,
-        timestamp: Date.now(),
-      };
+      const message = [
+        {
+          id: Date.now().toString(),
+          username: user.name,
+          content: input.content,
+          timestamp: Date.now(),
+        },
+      ];
 
-      ee.emit(`onMessage-${user.serverHash}`, message);
+      ee.emit(`onUpdate-${user.serverHash}`, { messages: message });
 
       return message;
     }),
-  // onUpdate: authedProcedure.subscription(({ input, ctx }) => {
-  //   const { user } = ctx;
-  //
-  //   return observable<Partial<LobbyState>>((emit) => {
-  //     const onUpdate = (updatedLobby: Partial<LobbyState>) => {
-  //       emit.next(updatedLobby);
-  //     };
-  //
-  //     ee.on(`onUpdate-${input.lobbyId}`, onUpdate);
-  //     return () => {
-  //       ee.off(`onUpdate-${input.lobbyId}`, onUpdate);
-  //     };
-  //   });
-  // }),
-  onMessage: authedProcedure.subscription(({ ctx }) => {
+  onUpdate: authedProcedure.subscription(({ ctx }) => {
     const { user } = ctx;
 
-    return observable<Message>((emit) => {
-      const onMessage = (incomingMessage: Message) => {
-        emit.next(incomingMessage);
+    return observable<Partial<Room>>((emit) => {
+      const onUpdate = (updatedLobby: Partial<Room>) => {
+        emit.next(updatedLobby);
       };
 
-      ee.on(`onMessage-${user.serverHash}`, onMessage);
+      ee.on(`onUpdate-${user.serverHash}`, onUpdate);
+
+      const users = roomOnlineUsers.get(user.serverHash) ?? [];
+      roomOnlineUsers.set(user.serverHash, [...users, user]);
+
+      ee.emit(`onUpdate-${user.serverHash}`, {
+        users: roomOnlineUsers.get(user.serverHash) ?? [],
+      });
+
       return () => {
-        ee.off(`onMessage-${user.serverHash}`, onMessage);
+        roomOnlineUsers.delete(user.serverHash);
+
+        ee.emit(`onUpdate-${user.serverHash}`, {
+          users: roomOnlineUsers.get(user.serverHash) ?? [],
+        });
+
+        ee.off(`onUpdate-${user.serverHash}`, onUpdate);
       };
     });
   }),

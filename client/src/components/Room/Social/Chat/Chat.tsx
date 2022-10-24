@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { IncomingMessage } from "trpc/types";
 
 type Props = {
-  messages: Accessor<IncomingMessage[]>;
+  messages: IncomingMessage[];
   currentMessage: Accessor<string>;
   onChange: Setter<string>;
   onSubmit: (data: string) => void;
@@ -14,20 +14,17 @@ type Props = {
 const RoomChat: Component<Props> = (props) => {
   return (
     <div class="flex flex-1 flex-col">
-      <div class="border-grey-200 border-b-2 bg-gray-100 py-3 px-6 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-        Chat ja toive historia
-      </div>
       <div class="flex h-full flex-col bg-white p-2">
-        <div class="flex-1 overflow-y-auto">
+        <div class="flex-1 overflow-y-scroll">
           <Show
-            when={props.messages().length}
+            when={props.messages.length}
             fallback={
               <div class="flex flex-col items-center text-white">
                 Ei viestejä
               </div>
             }
           >
-            <For each={props.messages()}>
+            <For each={props.messages}>
               {(message) => (
                 <div class="flex space-x-2">
                   <div>
@@ -47,14 +44,14 @@ const RoomChat: Component<Props> = (props) => {
           <input
             id="chat"
             type="text"
-            class="mx-2 block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            class="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="Your message..."
             onChange={(e) => props.onChange(e.currentTarget.value)}
             value={props.currentMessage()}
           />
           <button
             type="submit"
-            class="inline-flex cursor-pointer  justify-center rounded-full p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
+            class="ml-2 inline-flex cursor-pointer  justify-center rounded-full p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
             onClick={() => props.onSubmit(props.currentMessage())}
           >
             <svg

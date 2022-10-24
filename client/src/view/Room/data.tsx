@@ -1,14 +1,9 @@
-import {
-  onMount,
-  createResource,
-  createSignal,
-  onCleanup,
-  Signal,
-} from "solid-js";
-import { IncomingMessage, Room } from "trpc/types";
+import { onMount, createResource, onCleanup, Signal } from "solid-js";
+import { Room } from "trpc/types";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
 import useSnackbar from "hooks/useSnackbar";
+import { RouteDataFuncArgs } from "@solidjs/router";
 
 function createDeepSignal<T>(value: T): Signal<T> {
   const [store, setStore] = createStore({
@@ -26,55 +21,41 @@ function createDeepSignal<T>(value: T): Signal<T> {
   ] as Signal<T>;
 }
 
-function RoomData() {
+function RoomData({ navigate }: RouteDataFuncArgs) {
   const snackbar = useSnackbar();
 
-  const [room] = createResource<Room>(async () => trpcClient.room.get.query(), {
-    storage: createDeepSignal,
-  });
-
-  const [messages, setMessages] = createSignal<IncomingMessage[]>([]);
-
-  // onMount(() => {
-  //   const lobbyId = Number(params.id);
-  //   if (!lobbyId) throw new Error("Lobby not found");
-  //
-  //   const lobbyUpdate = trpcClient.room.onUpdate.subscribe(
-  //     { lobbyId },
-  //     {
-  //       onData(updatedLobby) {
-  //         mutate((existingLobby) => {
-  //           if (!existingLobby) return existingLobby;
-  //
-  //           return {
-  //             ...existingLobby,
-  //             ...updatedLobby,
-  //           };
-  //         });
-  //       },
-  //       onError(err) {
-  //         snackbar.error(err.message);
-  //         console.error("error", err);
-  //       },
-  //       onComplete() {
-  //         snackbar.success("Poistuttiin huoneesta");
-  //         navigate("/lobby/list");
-  //       },
-  //     }
-  //   );
-
-  //   onCleanup(() => {
-  //     lobbyUpdate.unsubscribe();
-  //   });
-  // });
+  const [room, { mutate }] = createResource<Room>(
+    () => trpcClient.room.get.query(),
+    {
+      storage: createDeepSignal,
+    }
+  );
 
   onMount(() => {
-    const lobbyUpdate = trpcClient.room.onMessage.subscribe(undefined, {
-      onData(message) {
-        setMessages((messages) => [...messages, message]);
+    const lobbyUpdate = trpcClient.room.onUpdate.subscribe(undefined, {
+      onData(updatedLobby) {
+        mutate((existingLobby) => {
+          console.log("updatedLobby", updatedLobby);
+          if (!existingLobby) return existingLobby;
+
+          const messages = existingLobby.messages.concat(
+            updatedLobby.messages || []
+          );
+
+          return {
+            ...existingLobby,
+            ...updatedLobby,
+            messages,
+          };
+        });
       },
       onError(err) {
         snackbar.error(err.message);
+        console.error("error", err);
+      },
+      onComplete() {
+        snackbar.success("Poistuttiin huoneesta");
+        navigate("/");
       },
     });
 
@@ -83,7 +64,7 @@ function RoomData() {
     });
   });
 
-  return { room, messages };
+  return room;
 }
 
 export default RoomData;

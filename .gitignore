@@ -4,3 +4,4 @@ dist
 key.pem
 cert.pem
 hande-storage.db
+hande-storage.db-journal

@@ -1,12 +1,11 @@
 import type { Component } from "solid-js";
-import { Accessor } from "solid-js";
-import { createSignal, createEffect, on } from "solid-js";
+import { createSignal, createEffect } from "solid-js";
 import trpcClient from "trpc";
 import Chat from "./Chat";
 import { IncomingMessage } from "trpc/types";
 
 type Props = {
-  messages: Accessor<IncomingMessage[]>;
+  messages: IncomingMessage[];
 };
 
 const RoomChat: Component<Props> = (props) => {
@@ -16,11 +15,13 @@ const RoomChat: Component<Props> = (props) => {
 
   const handleSendMessage = async (content: string) => {
     try {
-      await trpcClient.room.message.mutate({
-        content,
-      });
+      if (content.length > 0) {
+        await trpcClient.room.message.mutate({
+          content,
+        });
 
-      setMessage("");
+        setMessage("");
+      }
     } catch (e) {
       if (e instanceof Error) {
         console.log("e", e);
@@ -28,17 +29,11 @@ const RoomChat: Component<Props> = (props) => {
     }
   };
 
-  createEffect(
-    on(
-      props.messages,
-      (messages) => {
-        if (messages.length && ref) {
-          ref.scrollIntoView({ behavior: "smooth" });
-        }
-      },
-      { defer: true }
-    )
-  );
+  createEffect(() => {
+    if (props.messages.length && ref) {
+      ref.scrollIntoView({ behavior: "smooth" });
+    }
+  });
 
   return (
     <Chat
