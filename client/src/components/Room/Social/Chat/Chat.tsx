@@ -14,7 +14,7 @@ type Props = {
 const RoomChat: Component<Props> = (props) => {
   return (
     <div class="flex flex-1 flex-col">
-      <div class="flex h-full flex-col bg-white p-2">
+      <div class="flex h-full flex-col bg-white">
         <div class="flex-1 overflow-y-scroll">
           <Show
             when={props.messages.length}
@@ -45,7 +45,7 @@ const RoomChat: Component<Props> = (props) => {
             id="chat"
             type="text"
             class="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="Your message..."
+            placeholder="Kirjoita viestisi tähän..."
             onChange={(e) => props.onChange(e.currentTarget.value)}
             value={props.currentMessage()}
           />

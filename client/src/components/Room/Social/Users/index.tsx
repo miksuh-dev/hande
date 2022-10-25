@@ -16,7 +16,7 @@ const RoomUsers: Component<Props> = (props) => {
               <Show
                 when={props.users.length}
                 fallback={
-                  <td class="whitespace-nowrap py-4 px-6 text-sm font-medium text-gray-900 dark:text-white">
+                  <td class="whitespace-nowrap py-2 px-2 text-sm font-medium text-gray-900 dark:text-white">
                     Ei paikalla olevia käyttäjiä
                   </td>
                 }
@@ -24,7 +24,7 @@ const RoomUsers: Component<Props> = (props) => {
                 <For each={props.users}>
                   {(user) => (
                     <tr>
-                      <td class="whitespace-nowrap py-4 px-6 text-sm font-medium text-gray-900 dark:text-white">
+                      <td class="whitespace-nowrap py-2 px-2 text-sm font-medium text-gray-900 dark:text-white">
                         {user.name}
                       </td>
                     </tr>
