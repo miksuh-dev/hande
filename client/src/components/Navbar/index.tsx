@@ -8,13 +8,13 @@ const Navbar: Component = () => {
   const [menuOpen, setMenuOpen] = createSignal(false);
 
   return (
-    <nav class=" rounded border-gray-200 bg-neutral-900 px-2 py-2.5 dark:bg-gray-900 sm:px-4">
-      <div class="container mx-auto flex flex-wrap items-center justify-between">
+    <nav class=" rounded border-gray-200 bg-neutral-800 px-2 py-2.5 dark:bg-gray-900 sm:px-4">
+      <div class="mx-auto flex flex-wrap items-center justify-between px-2">
         <Link
           href="/"
           class="self-center whitespace-nowrap text-xl font-semibold text-white"
         >
-          Ykkönen
+          Hande
         </Link>
         <div class="flex items-center md:order-2">
           <button
@@ -29,8 +29,8 @@ const Navbar: Component = () => {
             <span class="sr-only">Open user menu</span>
             <div class="h-8 w-8 rounded-full">
               <div class="avatar online placeholder">
-                <span class="bold text-xl text-white">
-                  {auth.user()?.username.substring(0, 2) ?? ""}
+                <span class="bold text-lg text-white">
+                  {auth.user()?.name.substring(0, 1) ?? ""}
                 </span>
               </div>
             </div>
@@ -43,7 +43,7 @@ const Navbar: Component = () => {
               >
                 <div class="py-3 px-4">
                   <span class="block text-sm text-gray-900 dark:text-white">
-                    {auth.user()?.username}
+                    {auth.user()?.name}
                   </span>
                 </div>
                 <ul class="py-1" aria-labelledby="user-menu-button">

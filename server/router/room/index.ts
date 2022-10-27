@@ -1,5 +1,6 @@
 // import { TRPCError } from "@trpc/server";
 import { Song } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import ee from "../../eventEmitter";
@@ -17,31 +18,93 @@ interface Message {
   timestamp: number;
 }
 
-interface Room {
-  song: Song[];
-  users: MumbleUser[];
-  messages: Message[];
+interface UpdateEvent {
+  song: {
+    add?: Song;
+    remove?: Song["id"];
+    setPlaying?: Song;
+  };
+  message: {
+    add?: Message;
+  };
+  user: {
+    join?: MumbleUser;
+    leave?: MumbleUser["hash"];
+  };
 }
 
 export const roomRouter = t.router({
   get: authedProcedure.query(async ({ ctx }) => {
     const { user, prisma } = ctx;
 
-    const songs = await prisma.song.findMany({
+    const playlist = await prisma.song.findMany({
       where: {
         serverHash: user.serverHash,
+        endedAt: null,
       },
     });
+
+    const [currentSong, ...otherSongs] = playlist;
 
     const users = roomOnlineUsers.get(user.serverHash) ?? [];
     const messages = roomMessages.get(user.serverHash) ?? [];
 
     return {
-      songs,
+      playing: currentSong,
+      songs: otherSongs,
       messages,
       users,
     };
   }),
+  addSong: authedProcedure
+    .input(
+      z.object({
+        id: z.string().min(1),
+        title: z.string().min(1),
+        thumbnail: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { user, prisma } = ctx;
+      const song = await prisma.song.create({
+        data: {
+          videoId: input.id,
+          title: input.title,
+          thumbnail: input.thumbnail,
+          serverHash: ctx.user.serverHash,
+          requester: user.name,
+        },
+      });
+
+      ee.emit(`onUpdate-${user.serverHash}`, { song: { add: song } });
+
+      return { song };
+    }),
+  removeSong: authedProcedure
+    .input(
+      z.object({
+        id: z.number().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { user, prisma } = ctx;
+      try {
+        const song = await prisma.song.delete({
+          where: {
+            id: input.id,
+          },
+        });
+
+        ee.emit(`onUpdate-${user.serverHash}`, { song: { remove: song.id } });
+
+        return { song };
+      } catch (e) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Song not found",
+        });
+      }
+    }),
   message: authedProcedure
     .input(
       z.object({
@@ -51,24 +114,22 @@ export const roomRouter = t.router({
     .mutation(({ ctx, input }) => {
       const { user } = ctx;
 
-      const message = [
-        {
-          id: Date.now().toString(),
-          username: user.name,
-          content: input.content,
-          timestamp: Date.now(),
-        },
-      ];
+      const message = {
+        id: Date.now().toString(),
+        username: user.name,
+        content: input.content,
+        timestamp: Date.now(),
+      };
 
-      ee.emit(`onUpdate-${user.serverHash}`, { messages: message });
+      ee.emit(`onUpdate-${user.serverHash}`, { message: { add: message } });
 
       return message;
     }),
   onUpdate: authedProcedure.subscription(({ ctx }) => {
     const { user } = ctx;
 
-    return observable<Partial<Room>>((emit) => {
-      const onUpdate = (updatedLobby: Partial<Room>) => {
+    return observable<Partial<UpdateEvent>>((emit) => {
+      const onUpdate = (updatedLobby: Partial<UpdateEvent>) => {
         emit.next(updatedLobby);
       };
 
@@ -78,14 +139,14 @@ export const roomRouter = t.router({
       roomOnlineUsers.set(user.serverHash, [...users, user]);
 
       ee.emit(`onUpdate-${user.serverHash}`, {
-        users: roomOnlineUsers.get(user.serverHash) ?? [],
+        user: { join: user },
       });
 
       return () => {
         roomOnlineUsers.delete(user.serverHash);
 
         ee.emit(`onUpdate-${user.serverHash}`, {
-          users: roomOnlineUsers.get(user.serverHash) ?? [],
+          user: { leave: user.hash },
         });
 
         ee.off(`onUpdate-${user.serverHash}`, onUpdate);

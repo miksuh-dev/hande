@@ -28,7 +28,7 @@ const RoomChat: Component<Props> = (props) => {
               {(message) => (
                 <div class="flex space-x-2">
                   <div>
-                    {DateTime.fromSeconds(message.timestamp).toFormat(
+                    {DateTime.fromSeconds(message.timestamp / 1000).toFormat(
                       "HH:mm:ss"
                     )}
                   </div>
@@ -44,14 +44,14 @@ const RoomChat: Component<Props> = (props) => {
           <input
             id="chat"
             type="text"
-            class="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            class="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-custom-aqua-500 focus:ring-custom-aqua-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-custom-aqua-500 dark:focus:ring-custom-aqua-500"
             placeholder="Kirjoita viestisi tähän..."
             onChange={(e) => props.onChange(e.currentTarget.value)}
             value={props.currentMessage()}
           />
           <button
             type="submit"
-            class="ml-2 inline-flex cursor-pointer  justify-center rounded-full p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
+            class="ml-2 inline-flex cursor-pointer  justify-center rounded-full p-2 text-custom-aqua-600 hover:bg-blue-100 dark:text-custom-aqua-500 dark:hover:bg-gray-600"
             onClick={() => props.onSubmit(props.currentMessage())}
           >
             <svg

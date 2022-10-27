@@ -10,7 +10,7 @@ const Tab: Component<Props> = (props) => {
   return (
     <li class="mr-2" role="presentation">
       <button
-        class="inline-block rounded-t-lg border-b-2 p-4  hover:border-custom-aqua-900 hover:text-custom-aqua-900"
+        class="inline-block rounded-t-lg border-b-2 p-4 hover:border-custom-aqua-900 hover:text-custom-aqua-900"
         classList={{
           "border-custom-aqua-900 text-custom-aqua-900": props.selected,
         }}

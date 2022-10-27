@@ -4,6 +4,7 @@ import { inferAsyncReturnType } from "@trpc/server";
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { NodeHTTPCreateContextFnOptions } from "@trpc/server/adapters/node-http";
 import ws from "ws";
+import prisma from "./prisma";
 import { getUserFromRequest } from "./utils/auth";
 
 export const createContext = ({
@@ -19,6 +20,7 @@ export const createContext = ({
     user,
     req,
     res,
+    prisma,
   };
 };
 

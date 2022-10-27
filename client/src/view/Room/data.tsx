@@ -1,9 +1,77 @@
 import { onMount, createResource, onCleanup, Signal } from "solid-js";
-import { Room } from "trpc/types";
+import { Room, RoomUpdateEvent } from "trpc/types";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
 import useSnackbar from "hooks/useSnackbar";
 import { RouteDataFuncArgs } from "@solidjs/router";
+
+const handleUpdateEvent = (
+  existingRoom: Room,
+  event: RoomUpdateEvent
+): Room => {
+  if (!existingRoom) {
+    return existingRoom;
+  }
+
+  if (event.user) {
+    if (event.user.join) {
+      return {
+        ...existingRoom,
+        users: [...existingRoom.users, event.user.join],
+      };
+    }
+
+    if (event.user.leave) {
+      const userHash = event.user.leave;
+      return {
+        ...existingRoom,
+        users: existingRoom.users.filter((u) => u.hash !== userHash),
+      };
+    }
+  }
+
+  if (event.message) {
+    if (event.message.add) {
+      const message = event.message.add;
+
+      return {
+        ...existingRoom,
+        messages: [...existingRoom.messages, message],
+      };
+    }
+  }
+
+  if (event.song) {
+    if (event.song.add) {
+      const song = event.song.add;
+
+      return {
+        ...existingRoom,
+        songs: [...existingRoom.songs, song],
+      };
+    }
+
+    if (event.song.remove) {
+      const songId = event.song.remove;
+
+      return {
+        ...existingRoom,
+        songs: existingRoom.songs.filter((s) => s.id !== songId),
+      };
+    }
+
+    if (event.song.setPlaying) {
+      const song = event.song.setPlaying;
+
+      return {
+        ...existingRoom,
+        playing: song,
+      };
+    }
+  }
+
+  return existingRoom;
+};
 
 function createDeepSignal<T>(value: T): Signal<T> {
   const [store, setStore] = createStore({
@@ -33,20 +101,13 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
 
   onMount(() => {
     const lobbyUpdate = trpcClient.room.onUpdate.subscribe(undefined, {
-      onData(updatedLobby) {
-        mutate((existingLobby) => {
-          console.log("updatedLobby", updatedLobby);
-          if (!existingLobby) return existingLobby;
+      onData(event) {
+        mutate((existingRoom) => {
+          if (!existingRoom) {
+            return existingRoom;
+          }
 
-          const messages = existingLobby.messages.concat(
-            updatedLobby.messages || []
-          );
-
-          return {
-            ...existingLobby,
-            ...updatedLobby,
-            messages,
-          };
+          return handleUpdateEvent(existingRoom, event);
         });
       },
       onError(err) {

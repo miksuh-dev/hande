@@ -1,11 +1,11 @@
+import { Song } from "@prisma/client";
 import useSnackbar from "hooks/useSnackbar";
 import { Component } from "solid-js";
 import trpcClient from "trpc";
-import { Song } from "trpc/types";
 import { RoomData } from "../index";
-import Playlist from "./Playlist";
+import Playing from "./Playing";
 
-const PlaylistComponent: Component<{ roomData: RoomData }> = (props) => {
+const PlayingComponent: Component<{ roomData: RoomData }> = (props) => {
   const snackbar = useSnackbar();
 
   const handleSkip = async (song: Song) => {
@@ -14,24 +14,23 @@ const PlaylistComponent: Component<{ roomData: RoomData }> = (props) => {
         id: song.id,
       });
 
-      snackbar.success(`Kappale "${song.title}" poistettu jonosta`);
+      snackbar.success(`Ohitettiin kappale "${song.title}"`);
     } catch (error) {
       if (error instanceof Error) {
         snackbar.error(error.message);
       }
     }
   };
-
   return (
-    <div class="flex h-1 flex-1 flex-col overflow-hidden rounded-md bg-white xl:h-full">
+    <div class="flex-0 flex  flex-col overflow-hidden rounded-md bg-white">
       <div class="border-b border-gray-300 dark:border-neutral-700">
-        <div class="inline-block rounded-t-lg p-4">Seuraavana vuorossa:</div>
+        <div class="inline-block rounded-t-lg p-4">Soi tällä hetkellä:</div>
       </div>
-      <div class="overflow-hidden p-4 pr-0">
-        <Playlist roomData={props.roomData} onSkip={handleSkip} />
+      <div class="overflow-hidden p-4">
+        <Playing roomData={props.roomData} onSkip={handleSkip} />
       </div>
     </div>
   );
 };
 
-export default PlaylistComponent;
+export default PlayingComponent;
