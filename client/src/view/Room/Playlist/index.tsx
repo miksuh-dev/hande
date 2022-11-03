@@ -1,11 +1,14 @@
+import { useRouteData } from "@solidjs/router";
 import useSnackbar from "hooks/useSnackbar";
-import { Component } from "solid-js";
+import { Component, Resource } from "solid-js";
 import trpcClient from "trpc";
 import { Song } from "trpc/types";
-import { RoomData } from "../index";
+import type { RoomData } from "../data";
 import Playlist from "./Playlist";
 
-const PlaylistComponent: Component<{ roomData: RoomData }> = (props) => {
+const PlaylistComponent: Component = () => {
+  const roomData = useRouteData<Resource<RoomData>>();
+
   const snackbar = useSnackbar();
 
   const handleSkip = async (song: Song) => {
@@ -22,13 +25,14 @@ const PlaylistComponent: Component<{ roomData: RoomData }> = (props) => {
     }
   };
 
+  if (!roomData) return null;
   return (
     <div class="flex h-1 flex-1 flex-col overflow-hidden rounded-md bg-white xl:h-full">
       <div class="border-b border-gray-300 dark:border-neutral-700">
         <div class="inline-block rounded-t-lg p-4">Seuraavana vuorossa:</div>
       </div>
       <div class="overflow-hidden p-4 pr-0">
-        <Playlist roomData={props.roomData} onSkip={handleSkip} />
+        <Playlist songs={roomData().songs} onSkip={handleSkip} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { onMount, createResource, onCleanup, Signal } from "solid-js";
+import { onMount, createResource, onCleanup, Signal, Resource } from "solid-js";
 import { Room, RoomUpdateEvent } from "trpc/types";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
@@ -15,7 +15,7 @@ const handleUpdateEvent = (
 
   if (event.user) {
     if (event.user.join) {
-      return {
+      existingRoom = {
         ...existingRoom,
         users: [...existingRoom.users, event.user.join],
       };
@@ -23,7 +23,8 @@ const handleUpdateEvent = (
 
     if (event.user.leave) {
       const userHash = event.user.leave;
-      return {
+
+      existingRoom = {
         ...existingRoom,
         users: existingRoom.users.filter((u) => u.hash !== userHash),
       };
@@ -34,7 +35,7 @@ const handleUpdateEvent = (
     if (event.message.add) {
       const message = event.message.add;
 
-      return {
+      existingRoom = {
         ...existingRoom,
         messages: [...existingRoom.messages, message],
       };
@@ -45,7 +46,7 @@ const handleUpdateEvent = (
     if (event.song.add) {
       const song = event.song.add;
 
-      return {
+      existingRoom = {
         ...existingRoom,
         songs: [...existingRoom.songs, song],
       };
@@ -54,16 +55,28 @@ const handleUpdateEvent = (
     if (event.song.remove) {
       const songId = event.song.remove;
 
-      return {
+      existingRoom = {
         ...existingRoom,
         songs: existingRoom.songs.filter((s) => s.id !== songId),
+      };
+    }
+
+    if (event.song.skip) {
+      const songId = event.song.skip;
+
+      existingRoom = {
+        ...existingRoom,
+        playing:
+          existingRoom.playing?.id === songId
+            ? undefined
+            : existingRoom.playing,
       };
     }
 
     if (event.song.setPlaying) {
       const song = event.song.setPlaying;
 
-      return {
+      existingRoom = {
         ...existingRoom,
         playing: song,
       };
@@ -93,9 +106,15 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
   const snackbar = useSnackbar();
 
   const [room, { mutate }] = createResource<Room>(
-    () => trpcClient.room.get.query(),
+    async () => trpcClient.room.get.query(),
     {
       storage: createDeepSignal,
+      initialValue: {
+        users: [],
+        messages: [],
+        songs: [],
+        playing: undefined,
+      },
     }
   );
 
@@ -107,7 +126,10 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
             return existingRoom;
           }
 
-          return handleUpdateEvent(existingRoom, event);
+          const asd = handleUpdateEvent(existingRoom, event);
+          console.log("asd", asd);
+
+          return asd;
         });
       },
       onError(err) {
@@ -125,7 +147,12 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
     });
   });
 
+  if (room.state === "errored") {
+    throw room.error;
+  }
+
   return room;
 }
 
 export default RoomData;
+export type RoomData = ReturnType<typeof RoomData>;

@@ -1,16 +1,15 @@
 import { Song } from "@prisma/client";
 import { Component, Show } from "solid-js";
-import { RoomData } from "../index";
 
 type Props = {
-  roomData: RoomData;
   onSkip: (song: Song) => void;
+  playing: Song | undefined;
 };
 
 const PlayingComponent: Component<Props> = (props) => {
   return (
     <div class="max-h-full">
-      <Show when={props.roomData()?.playing} keyd>
+      <Show when={props.playing} keyd>
         {(song) => (
           <div class="flex flex-row items-center justify-between">
             <div class="flex flex-row space-x-8">

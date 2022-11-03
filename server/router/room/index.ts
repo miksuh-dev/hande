@@ -1,8 +1,13 @@
-// import { TRPCError } from "@trpc/server";
 import { Song } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod";
+import {
+  addSong,
+  getCurrentSong,
+  removeSong,
+  skipCurrentSong,
+} from "common/playlist";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import { MumbleUser } from "../../types/auth";
@@ -23,6 +28,7 @@ interface UpdateEvent {
     add?: Song;
     remove?: Song["id"];
     setPlaying?: Song;
+    skip?: Song["id"];
   };
   message: {
     add?: Message;
@@ -39,19 +45,20 @@ export const roomRouter = t.router({
 
     const playlist = await prisma.song.findMany({
       where: {
-        serverHash: user.serverHash,
+        serverHash: ctx.user.serverHash,
         endedAt: null,
+        id: {
+          not: getCurrentSong(ctx.user.serverHash)?.id,
+        },
       },
     });
-
-    const [currentSong, ...otherSongs] = playlist;
 
     const users = roomOnlineUsers.get(user.serverHash) ?? [];
     const messages = roomMessages.get(user.serverHash) ?? [];
 
     return {
-      playing: currentSong,
-      songs: otherSongs,
+      playing: getCurrentSong(user.serverHash),
+      songs: playlist,
       messages,
       users,
     };
@@ -65,16 +72,15 @@ export const roomRouter = t.router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { user, prisma } = ctx;
-      const song = await prisma.song.create({
-        data: {
-          videoId: input.id,
-          title: input.title,
-          thumbnail: input.thumbnail,
-          serverHash: ctx.user.serverHash,
-          requester: user.name,
-        },
-      });
+      const { user } = ctx;
+
+      const { id, title, thumbnail } = input;
+
+      const song = await addSong(
+        { id, title, thumbnail },
+        user.serverHash,
+        user
+      );
 
       ee.emit(`onUpdate-${user.serverHash}`, { song: { add: song } });
 
@@ -87,17 +93,44 @@ export const roomRouter = t.router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { user, prisma } = ctx;
+      const { user } = ctx;
       try {
-        const song = await prisma.song.delete({
-          where: {
-            id: input.id,
-          },
-        });
+        const song = await removeSong(input.id, user.serverHash);
 
         ee.emit(`onUpdate-${user.serverHash}`, { song: { remove: song.id } });
 
         return { song };
+      } catch (e) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Song not found",
+        });
+      }
+    }),
+  skipSong: authedProcedure
+    .input(
+      z.object({
+        id: z.number().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { user } = ctx;
+      try {
+        const currentSong = getCurrentSong(user.serverHash);
+        if (!currentSong) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "No song is playing",
+          });
+        }
+
+        const newSong = await skipCurrentSong(input.id, user.serverHash);
+
+        ee.emit(`onUpdate-${user.serverHash}`, {
+          song: { skip: currentSong.id, setPlaying: newSong },
+        });
+
+        return { song: currentSong };
       } catch (e) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

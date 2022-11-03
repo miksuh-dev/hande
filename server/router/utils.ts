@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import prisma from "prisma";
+import prisma from "../prisma";
 import { t } from "../trpc";
 
 const isAuthed = t.middleware(({ next, ctx }) => {

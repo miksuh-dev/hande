@@ -4,9 +4,7 @@ import type { AppRouter } from "../../../server/router";
 
 export type Room = inferProcedureOutput<AppRouter["room"]["get"]>;
 
-export type Song = inferProcedureOutput<
-  AppRouter["room"]["get"]
->["songs"][number];
+export type Song = Room["songs"][number];
 
 export type User = Room["users"][number];
 export type IncomingMessage = Room["messages"][number];

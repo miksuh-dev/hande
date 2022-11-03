@@ -63,7 +63,7 @@ const Search: Component<Props> = (props) => {
       </div>
       <button
         type="submit"
-        class="ml-2 rounded-lg border border-custom-aqua-700 bg-custom-aqua-900  p-2.5 text-sm font-medium text-white hover:bg-custom-aqua-800 focus:outline-none focus:ring-4 focus:ring-custom-aqua-300 disabled:opacity-50 dark:bg-custom-aqua-600 dark:hover:bg-custom-aqua-700 dark:focus:ring-custom-aqua-800"
+        class="ml-2 rounded-lg border border-custom-aqua-700 bg-custom-aqua-900  p-2.5 text-sm font-medium text-white hover:bg-custom-aqua-800 focus:outline-none focus:ring-4 focus:ring-custom-aqua-300 dark:bg-custom-aqua-600 dark:hover:bg-custom-aqua-700 dark:focus:ring-custom-aqua-800"
         onClick={() => props.onSubmit(props.text())}
         disabled={props.loading()}
       >

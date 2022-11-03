@@ -28,8 +28,6 @@ const handleGenerateToken = (message: Message) => {
     serverHash,
   });
 
-  console.log("token", token);
-
   const basePath = process.env.WWW_BASE_PATH;
   if (!basePath) {
     throw new Error("No base path");

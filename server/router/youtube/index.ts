@@ -1,8 +1,8 @@
 import { z } from "zod";
+import { searchList } from "../../common/youtube/query";
+import { parseSearchListItem } from "../../common/youtube/utils";
 import { t } from "../../trpc";
 import { authedProcedure } from "../utils";
-import { searchList } from "./query";
-import { parseSearchListItem } from "./utils";
 
 export const youtubeRouter = t.router({
   search: authedProcedure

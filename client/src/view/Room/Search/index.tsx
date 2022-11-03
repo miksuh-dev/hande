@@ -1,11 +1,22 @@
-import { Component, createSignal, onCleanup, onMount, Show } from "solid-js";
+import {
+  Component,
+  createSignal,
+  onCleanup,
+  onMount,
+  Resource,
+  Show,
+} from "solid-js";
 import trpcClient from "trpc";
 import Result from "./Result";
 import Search from "./Search";
 import { YoutubeSearchResult } from "trpc/types";
 import useSnackbar from "hooks/useSnackbar";
+import type { RoomData } from "../data";
+import { useRouteData } from "@solidjs/router";
 
 const SearchComponent: Component = () => {
+  const roomData = useRouteData<Resource<RoomData>>();
+
   const snackbar = useSnackbar();
   const [text, setText] = createSignal("");
   const [results, setResults] = createSignal<YoutubeSearchResult[]>([]);
@@ -57,7 +68,6 @@ const SearchComponent: Component = () => {
 
   onMount(() => {
     const close = (e: KeyboardEvent) => {
-      console.log(e);
       if (e.key === "Escape") {
         setResultsOpen(false);
       }
@@ -79,6 +89,7 @@ const SearchComponent: Component = () => {
     });
   });
 
+  if (!roomData) return null;
   return (
     <div
       class="relative flex flex-col rounded-md bg-white"

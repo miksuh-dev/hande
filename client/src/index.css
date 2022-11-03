@@ -31,4 +31,8 @@
   .btn-secondary-full {
     @apply btn-secondary w-full;
   }
+
+  button {
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
 }

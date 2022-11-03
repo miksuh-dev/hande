@@ -17,7 +17,7 @@ const App: Component = () => {
     <Suspense fallback={<Loading />}>
       <Show when={auth.ready()} fallback={<Loading />}>
         <Routes>
-          <Show when={auth.authenticated()} fallback={<>asd</>}>
+          <Show when={auth.authenticated()}>
             <Route path="/room" component={RoomView} data={roomData} />
           </Show>
           <Route path="/" component={MainView} data={mainData} />

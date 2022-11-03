@@ -1,12 +1,16 @@
-import { Component, createSignal, Match, Switch } from "solid-js";
+import { Component, createSignal, Match, Resource, Switch } from "solid-js";
 import Users from "./Users";
 import Chat from "./Chat";
-import { RoomData } from "../index";
+import { RoomData } from "../data";
 import Tabs, { Tab } from "components/Tabs";
+import { useRouteData } from "@solidjs/router";
 
-const SocialComponent: Component<{ roomData: RoomData }> = (props) => {
+const SocialComponent: Component = () => {
+  const roomData = useRouteData<Resource<RoomData>>();
+
   const [selectedTab, setSelectedTab] = createSignal(0);
 
+  if (!roomData) return null;
   return (
     <div class="flex h-1 flex-1 flex-col rounded-md bg-white xl:h-full">
       <div class="border-b border-gray-300 dark:border-neutral-700">
@@ -22,7 +26,7 @@ const SocialComponent: Component<{ roomData: RoomData }> = (props) => {
             text={
               <span class="flex items-center">
                 <span class="mr-2">Käyttäjät</span>
-                <span>{props.roomData()?.users.length}</span>
+                <span>{roomData()?.users?.length}</span>
               </span>
             }
           />
@@ -31,10 +35,10 @@ const SocialComponent: Component<{ roomData: RoomData }> = (props) => {
       <div class="flex h-full w-full overflow-hidden p-3">
         <Switch>
           <Match when={selectedTab() === 0}>
-            <Chat messages={props.roomData()?.messages || []} />
+            <Chat messages={roomData()?.messages || []} />
           </Match>
           <Match when={selectedTab() === 1}>
-            <Users users={props.roomData()?.users || []} />
+            <Users users={roomData()?.users || []} />
           </Match>
         </Switch>
       </div>

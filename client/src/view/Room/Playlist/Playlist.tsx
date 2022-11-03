@@ -1,15 +1,15 @@
 import { Component, For } from "solid-js";
-import { RoomData } from "../index";
+import { Song } from "trpc/types";
 
 type Props = {
-  roomData: RoomData;
-  onSkip: (id: string) => void;
+  onSkip: (song: Song) => void;
+  songs?: Song[];
 };
 
 const PlaylistComponent: Component<Props> = (props) => {
   return (
     <div class="max-h-full space-y-4 overflow-y-auto rounded-md pr-4">
-      <For each={props.roomData()?.songs || []}>
+      <For each={props.songs}>
         {(song) => (
           <div class="flex flex-row items-center justify-between border border-neutral-200 p-4 shadow-md">
             <div class="flex flex-row space-x-8">

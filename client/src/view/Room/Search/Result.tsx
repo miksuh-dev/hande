@@ -37,29 +37,31 @@ const Result: Component<Props> = (props) => {
         }
       >
         <For each={props.results()}>
-          {(result) => (
-            <div class="w-full bg-white p-3">
-              <div class="flex items-center">
-                <img
-                  class="h-10 w-10 rounded-full"
-                  src={result.thumbnail.url}
-                  alt=""
-                />
-                <div class="ml-2">
-                  <h5 class="text-sm font-medium text-gray-900">
-                    {result.title}
-                  </h5>
+          {(result) => {
+            return (
+              <div class="w-full bg-white p-3">
+                <div class="flex items-center">
+                  <img
+                    class="h-10 w-10 rounded-full"
+                    src={result.thumbnail.url}
+                    alt=""
+                  />
+                  <div class="ml-2">
+                    <h5 class="text-sm font-medium text-gray-900">
+                      {result.title}
+                    </h5>
+                  </div>
+                  <button
+                    type="button"
+                    class="ml-auto inline-flex items-center rounded border border-transparent bg-custom-aqua-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-aqua-800 focus:outline-none focus:ring-2 focus:ring-custom-aqua-500 focus:ring-offset-2"
+                    onClick={() => props.onAdd(result)}
+                  >
+                    Lisää jonoon
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  class="ml-auto inline-flex items-center rounded border border-transparent bg-custom-aqua-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-aqua-800 focus:outline-none focus:ring-2 focus:ring-custom-aqua-500 focus:ring-offset-2"
-                  onClick={() => props.onAdd(result)}
-                >
-                  Lisää jonoon
-                </button>
               </div>
-            </div>
-          )}
+            );
+          }}
         </For>
       </Show>
     </div>

@@ -1,3 +1,5 @@
+import { parseSearchListItem } from "./utils";
+
 export interface SearchListResult {
   data: {
     items: SearchResultItem[];
@@ -32,3 +34,5 @@ export interface SearchResultItem {
     title: string;
   };
 }
+
+export type SearchResultOutput = ReturnType<typeof parseSearchListItem>;
