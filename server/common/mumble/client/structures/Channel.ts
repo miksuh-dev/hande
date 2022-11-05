@@ -1,4 +1,4 @@
-import { ChannelStateData } from "mumble/handlers/ChannelState";
+import { ChannelStateData } from "../handlers/ChannelState";
 import Client from "../index";
 import TextMessage from "./TextMessage";
 

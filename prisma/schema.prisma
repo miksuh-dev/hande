@@ -13,8 +13,9 @@ model Song {
   title     String
   serverHash String
   thumbnail String
-  startedAt  DateTime?
-  endedAt   DateTime?
+  started  Boolean @default(false)
+  ended  Boolean @default(false)
+  skipped   Boolean @default(false)
   createdAt DateTime @default(now())
   requester  String
 }

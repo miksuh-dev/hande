@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import { Readable } from "node:stream";
 import ffmpeg, { FfmpegCommand } from "fluent-ffmpeg";
-import Connection from "mumble/Connection";
+import Connection from "../Connection";
 import Client from "../index";
 import DispatchStream from "./DispatchStream";
 
@@ -22,7 +22,7 @@ export default class Dispatcher extends EventEmitter {
   }
 
   playStream(stream: Readable, voiceTarget: number) {
-    this.play(stream, voiceTarget);
+    return this.play(stream, voiceTarget);
   }
 
   play(stream: Parameters<typeof ffmpeg>[0], voiceTarget: number) {
@@ -41,6 +41,8 @@ export default class Dispatcher extends EventEmitter {
         this.emit("error", e);
       });
     this.command.run();
+
+    return this.command;
   }
 
   setVolume(volume: number) {

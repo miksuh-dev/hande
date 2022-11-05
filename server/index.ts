@@ -1,100 +1,16 @@
-import fs from "fs";
 import http from "http";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import "dotenv/config";
 import express from "express";
 import ws from "ws";
+import client from "common/mumble";
 import { createContext } from "./context";
-import handleMessage from "./handlers/message";
-import NoodleJS from "./mumble";
 import { appRouter, AppRouter } from "./router";
 
-try {
-  // const YoutubeDlWrap = require("youtube-dl-wrap");
-  // const youtubeDlWrap = new YoutubeDlWrap("/usr/bin/youtube-dl");
-  //
-
-  const options = {
-    url: process.env.MUMBLE_ADDRESS,
-    port: process.env.MUMBLE_PORT,
-    name: process.env.MUMBLE_USERNAME,
-    password: process.env.MUMBLE_PASSWORD,
-    key: fs.readFileSync("./key.pem"),
-    cert: fs.readFileSync("./cert.pem"),
-    // rejectUnauthorized: true,
-  };
-
-  const client = new NoodleJS(options);
-  // console.log("client", client);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // client.on("read", handleReady.bind(this));
-  // client.on("ready", (info: Client) => {
-  // console.log("info", info);
-  // client.sendMessage("asd", false);
-  // });
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  client.on("data", (data: any) => {
-    console.log("data", data);
-  });
-
-  client.on("message", handleMessage.bind(this));
-  // try {
-  //   console.log("message", message);
-  //   if (message.content === "ping") {
-  //     await message.reply("pong");
-  //   }
-  //
-  //   try {
-  //     const readStream = youtubeDlWrap.execStream([
-  //       "https://www.youtube.com/watch?v=MV_3Dpw-BRY",
-  //       "-f",
-  //       "best",
-  //     ]) as Readable;
-  //
-  //     client.voiceConnection.playStream(readStream, 0);
-  //   } catch (error) {
-  //     console.log("error", error);
-  //   }
-  // } catch (error) {
-  //   console.log("error", error);
-  // }
-  // const filehandle = fs.createReadStream("myfile.opus");
-  // client.voiceConnection.playStream(filehandle);
-  // filehandle.on("end", function () {
-  //   console.log("fuck");
-  // });
-  //
-  // client.voiceConnection.playFile(
-  //   "/home/miksuh/Projects/personal/hande/villielain.mp3"
-  // );
-  // }
-  // });
-
-  // client.on(
-  //   "message",
-  //   (message: { content: string; reply: (arg0: string) => void }) => {
-  //     if (message.content === "ping") {
-  //       message.reply("pong");
-  //     }
-  //   }
-  // );
-
-  client.on("error", (error: unknown) => {
-    console.log("error", error);
-    throw error;
-    // client.sendMessage("Mumble error:");
-    // client.sendMessage(error);
-    // console.log(error);
-    // client.reconnect();
-  });
-
-  client.connect();
-} catch (err) {
-  console.log(err);
-}
+client.on("ready", () => {
+  console.log("ready");
+});
 
 const app = express();
 const server = http.createServer(app);

@@ -53,12 +53,13 @@ const SearchComponent: Component = () => {
 
   const handleAdd = async (result: YoutubeSearchResult) => {
     try {
-      await trpcClient.room.addSong.mutate({
+      const song = await trpcClient.room.addSong.mutate({
         id: result.id,
         title: result.title,
         thumbnail: result.thumbnail.url,
       });
-      snackbar.success("Lisätty jonoon");
+
+      snackbar.success(`Lisätty jonoon ${song.title}`);
     } catch (error) {
       if (error instanceof Error) {
         snackbar.error(error.message);
@@ -110,6 +111,7 @@ const SearchComponent: Component = () => {
       </div>
       <Show when={resultsOpen()}>
         <Result
+          roomData={roomData}
           results={results}
           onAdd={handleAdd}
           onClose={() => setResultsOpen(false)}

@@ -1,4 +1,4 @@
-import { UserStateData } from "mumble/handlers/UserState";
+import { UserStateData } from "../handlers/UserState";
 import Client from "../index";
 import Channel from "./Channel";
 // import Channel from "./Channel";

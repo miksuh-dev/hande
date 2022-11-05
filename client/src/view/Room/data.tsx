@@ -1,4 +1,4 @@
-import { onMount, createResource, onCleanup, Signal, Resource } from "solid-js";
+import { onMount, createResource, onCleanup, Signal } from "solid-js";
 import { Room, RoomUpdateEvent } from "trpc/types";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
@@ -79,6 +79,7 @@ const handleUpdateEvent = (
       existingRoom = {
         ...existingRoom,
         playing: song,
+        songs: existingRoom.songs.filter((s) => s.id !== song.id),
       };
     }
   }
@@ -127,7 +128,6 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
           }
 
           const asd = handleUpdateEvent(existingRoom, event);
-          console.log("asd", asd);
 
           return asd;
         });

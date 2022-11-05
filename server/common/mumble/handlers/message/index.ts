@@ -1,6 +1,6 @@
-import { BASE } from "../../constants";
+import { BASE } from "../../../../constants";
 // import { BASE, ACTION } from "../constants";
-import { Message } from "../../mumble/types";
+import { Message } from "../../client/types";
 import ACTION from "./action";
 import generateToken from "./generateToken";
 

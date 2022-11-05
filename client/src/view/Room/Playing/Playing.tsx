@@ -9,7 +9,16 @@ type Props = {
 const PlayingComponent: Component<Props> = (props) => {
   return (
     <div class="max-h-full">
-      <Show when={props.playing} keyd>
+      <Show
+        when={props.playing}
+        keyd
+        fallback={
+          <div class="p-4 text-center">
+            <h5 class="text-xl">Tällä hetkellä ei soi mitään</h5>
+            <p>Lisää uusia kappaleita jonoon aloittaaksesi toiston</p>
+          </div>
+        }
+      >
         {(song) => (
           <div class="flex flex-row items-center justify-between">
             <div class="flex flex-row space-x-8">

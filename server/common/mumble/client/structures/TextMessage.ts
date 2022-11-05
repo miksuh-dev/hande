@@ -1,4 +1,4 @@
-import { TextMessageData } from "mumble/handlers/TextMessage";
+import { TextMessageData } from "../handlers/TextMessage";
 import Client from "../index";
 import Channel from "./Channel";
 import User from "./User";

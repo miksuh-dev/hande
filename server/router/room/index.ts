@@ -3,11 +3,11 @@ import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import {
-  addSong,
   getCurrentSong,
-  removeSong,
-  skipCurrentSong,
-} from "common/playlist";
+  getNextSong,
+  playSong,
+} from "common/playlist/internal";
+import { addSong, removeSong } from "common/playlist/user";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import { MumbleUser } from "../../types/auth";
@@ -46,9 +46,10 @@ export const roomRouter = t.router({
     const playlist = await prisma.song.findMany({
       where: {
         serverHash: ctx.user.serverHash,
-        endedAt: null,
+        ended: false,
+        skipped: false,
         id: {
-          not: getCurrentSong(ctx.user.serverHash)?.id,
+          not: getCurrentSong()?.id,
         },
       },
     });
@@ -57,7 +58,7 @@ export const roomRouter = t.router({
     const messages = roomMessages.get(user.serverHash) ?? [];
 
     return {
-      playing: getCurrentSong(user.serverHash),
+      playing: getCurrentSong(),
       songs: playlist,
       messages,
       users,
@@ -82,9 +83,21 @@ export const roomRouter = t.router({
         user
       );
 
+      const currentSong = getCurrentSong();
+      if (!currentSong) {
+        const nextSong = await getNextSong();
+        if (nextSong) {
+          playSong(nextSong);
+
+          ee.emit(`onUpdate-${user.serverHash}`, {
+            song: { setPlaying: nextSong },
+          });
+        }
+      }
+
       ee.emit(`onUpdate-${user.serverHash}`, { song: { add: song } });
 
-      return { song };
+      return song;
     }),
   removeSong: authedProcedure
     .input(
@@ -95,42 +108,25 @@ export const roomRouter = t.router({
     .mutation(async ({ input, ctx }) => {
       const { user } = ctx;
       try {
-        const song = await removeSong(input.id, user.serverHash);
+        const currentSong = getCurrentSong();
+
+        const song = await removeSong(input.id, user.serverHash, user);
+
+        const isCurrentSong = currentSong?.id === song.id;
+        if (isCurrentSong || !currentSong) {
+          const nextSong = await getNextSong();
+          if (nextSong) {
+            playSong(nextSong);
+
+            ee.emit(`onUpdate-${user.serverHash}`, {
+              song: { setPlaying: nextSong },
+            });
+          }
+        }
 
         ee.emit(`onUpdate-${user.serverHash}`, { song: { remove: song.id } });
 
         return { song };
-      } catch (e) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Song not found",
-        });
-      }
-    }),
-  skipSong: authedProcedure
-    .input(
-      z.object({
-        id: z.number().min(1),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const { user } = ctx;
-      try {
-        const currentSong = getCurrentSong(user.serverHash);
-        if (!currentSong) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "No song is playing",
-          });
-        }
-
-        const newSong = await skipCurrentSong(input.id, user.serverHash);
-
-        ee.emit(`onUpdate-${user.serverHash}`, {
-          song: { skip: currentSong.id, setPlaying: newSong },
-        });
-
-        return { song: currentSong };
       } catch (e) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

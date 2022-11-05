@@ -12,7 +12,7 @@ const PlayingComponent: Component = () => {
 
   const handleSkip = async (song: Song) => {
     try {
-      await trpcClient.room.skipSong.mutate({
+      await trpcClient.room.removeSong.mutate({
         id: song.id,
       });
 

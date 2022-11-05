@@ -1,6 +1,6 @@
 import crypto from "crypto";
-import { Message } from "../../mumble/types";
-import { createSession } from "../../utils/auth";
+import { createSession } from "../../../../utils/auth";
+import { Message } from "../../client/types";
 
 const handleGenerateToken = (message: Message) => {
   const { sender } = message;
