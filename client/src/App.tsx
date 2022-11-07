@@ -1,6 +1,6 @@
-import { Component /* , ErrorBoundary */, Show } from "solid-js";
+import { Component, Show } from "solid-js";
 import { lazy, Suspense } from "solid-js";
-import { Routes, Route } from "@solidjs/router";
+import { Routes, Route, Navigate } from "@solidjs/router";
 
 import useAuth from "hooks/useAuth";
 import mainData from "view/Main/data";
@@ -17,10 +17,18 @@ const App: Component = () => {
     <Suspense fallback={<Loading />}>
       <Show when={auth.ready()} fallback={<Loading />}>
         <Routes>
-          <Show when={auth.authenticated()}>
-            <Route path="/room" component={RoomView} data={roomData} />
-          </Show>
-          <Route path="/" component={MainView} data={mainData} />
+          <Route path="/room">
+            <Show when={!auth.authenticated()}>
+              <Navigate href="/" />
+            </Show>
+            <Route path="/" component={RoomView} data={roomData} />
+          </Route>
+          <Route path="/">
+            <Show when={auth.authenticated()} fallback={<Navigate href="/" />}>
+              <Navigate href="/room" />
+            </Show>
+            <Route path="/" component={MainView} data={mainData} />
+          </Route>
         </Routes>
       </Show>
     </Suspense>
