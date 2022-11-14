@@ -20,7 +20,7 @@ const Tab: Component<Props> = (props) => {
         role="tab"
         aria-controls="profile"
         aria-selected="false"
-        onClick={props.onClick}
+        onClick={() => props.onClick()}
       >
         {props.text}
       </button>

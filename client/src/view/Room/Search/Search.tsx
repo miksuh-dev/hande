@@ -56,7 +56,7 @@ const Search: Component<Props> = (props) => {
           placeholder="Hae kappaletta tai soittolistaa"
           required
           onChange={(e) => props.onChange(e.currentTarget.value)}
-          onFocus={props.onFocus}
+          onFocus={(e) => props.onFocus(e)}
           value={props.text()}
           disabled={props.loading()}
         />

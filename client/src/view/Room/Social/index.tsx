@@ -10,7 +10,6 @@ const SocialComponent: Component = () => {
 
   const [selectedTab, setSelectedTab] = createSignal(0);
 
-  if (!roomData) return null;
   return (
     <div class="flex h-1 flex-1 flex-col rounded-md bg-white xl:h-full">
       <div class="border-b border-gray-300 dark:border-neutral-700">
@@ -26,7 +25,7 @@ const SocialComponent: Component = () => {
             text={
               <span class="flex items-center">
                 <span class="mr-2">Käyttäjät</span>
-                <span>{roomData()?.users?.length}</span>
+                <span>{roomData?.()?.users?.length}</span>
               </span>
             }
           />
@@ -35,10 +34,10 @@ const SocialComponent: Component = () => {
       <div class="flex h-full w-full overflow-hidden p-3">
         <Switch>
           <Match when={selectedTab() === 0}>
-            <Chat messages={roomData()?.messages || []} />
+            <Chat messages={roomData?.()?.messages || []} />
           </Match>
           <Match when={selectedTab() === 1}>
-            <Users users={roomData()?.users || []} />
+            <Users users={roomData?.()?.users || []} />
           </Match>
         </Switch>
       </div>
