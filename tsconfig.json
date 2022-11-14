@@ -11,8 +11,8 @@
     "strict": true,
 
     "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
+    "noImplicitOverride": false,
+    "noImplicitReturns": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "useUnknownInCatchVariables": true,
@@ -21,8 +21,9 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+    "downlevelIteration": true
   },
   "include": ["server/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./NoodleJS"]
 }
