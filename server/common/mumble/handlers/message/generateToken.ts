@@ -34,7 +34,6 @@ const handleGenerateToken = (message: Message) => {
   }
 
   const formattedToken = token.replace(/\./g, "%2E");
-  console.log("formattedToken", formattedToken);
 
   const url = `<a href="${basePath}?token=${formattedToken}">tästä<a/>`;
 

@@ -5,6 +5,7 @@ import type { AppRouter } from "../../../server/router";
 export type Room = inferProcedureOutput<AppRouter["room"]["get"]>;
 
 export type Song = Room["songs"][number];
+export type PlayingSong = Song & { startedAt: string };
 
 export type User = Room["users"][number];
 export type IncomingMessage = Room["messages"][number];

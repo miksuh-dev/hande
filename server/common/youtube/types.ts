@@ -6,6 +6,30 @@ export interface SearchListResult {
   };
 }
 
+export interface VideoContentDetails {
+  contentDetails: {
+    duration: string;
+    dimension: "2d" | "3d";
+    definition: "hd" | "sd";
+    caption: "true" | "false";
+    licensedContent: "allowed" | "blocked";
+    contentRating: string[];
+    projection: "rectangular" | "360";
+  };
+}
+
+export interface VideoDetail {
+  data: {
+    kind: string;
+    etag: string;
+    items: VideoContentDetails[];
+  };
+}
+
+export type VideoDetails = Omit<VideoDetail, "data.items.contentDetails"> & {
+  duration: number | null;
+};
+
 interface SearchResultThumbnail {
   height: number;
   url: string;

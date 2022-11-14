@@ -1,10 +1,8 @@
 import { BASE } from "../../../../constants";
-// import { BASE, ACTION } from "../constants";
 import { Message } from "../../client/types";
-import ACTION from "./action";
-import generateToken from "./generateToken";
+import commands from "./commands";
 
-const baseHandler = new Map([[ACTION.GENERATE_TOKEN, generateToken]]);
+const baseHandler = new Map(commands.map((c) => [c.command, c.action]));
 
 const handleMessage = (message: Message) => {
   if (message.content.startsWith(BASE)) {
@@ -17,7 +15,9 @@ const handleMessage = (message: Message) => {
       return;
     }
 
-    throw new Error(`Unknown command ${action}`);
+    message.reply(
+      `Tuntematon komento ${action}. Lähetä "hande apua" nähdäksesi komennot.`
+    );
   }
 };
 

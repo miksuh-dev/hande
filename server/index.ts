@@ -4,7 +4,7 @@ import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import "dotenv/config";
 import express from "express";
 import ws from "ws";
-import client from "common/mumble";
+import client from "./common/mumble";
 import { createContext } from "./context";
 import { appRouter, AppRouter } from "./router";
 

@@ -1,4 +1,4 @@
-import { Song } from "@prisma/client";
+import { Song } from "trpc/types";
 import { useRouteData } from "@solidjs/router";
 import useSnackbar from "hooks/useSnackbar";
 import { Component, Resource } from "solid-js";
@@ -12,7 +12,7 @@ const PlayingComponent: Component = () => {
 
   const handleSkip = async (song: Song) => {
     try {
-      await trpcClient.room.removeSong.mutate({
+      await trpcClient.room.skipCurrent.mutate({
         id: song.id,
       });
 
@@ -24,14 +24,13 @@ const PlayingComponent: Component = () => {
     }
   };
 
-  if (!roomData) return null;
   return (
     <div class="flex-0 flex  flex-col overflow-hidden rounded-md bg-white">
       <div class="border-b border-gray-300 dark:border-neutral-700">
         <div class="inline-block rounded-t-lg p-4">Soi tällä hetkellä:</div>
       </div>
       <div class="overflow-hidden p-4">
-        <Playing playing={roomData().playing} onSkip={handleSkip} />
+        <Playing playing={roomData?.()?.playing} onSkip={handleSkip} />
       </div>
     </div>
   );

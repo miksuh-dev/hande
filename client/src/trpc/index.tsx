@@ -3,6 +3,7 @@ import { splitLink } from "@trpc/client/links/splitLink";
 import { createTRPCProxyClient } from "@trpc/client";
 import { createWSClient, wsLink } from "@trpc/client/links/wsLink";
 import type { AppRouter } from "../../../server/router";
+import superjson from "superjson";
 import env from "../config";
 
 const getAuthToken = () => localStorage.getItem("token") || "";
@@ -21,6 +22,7 @@ export const wsClient = createWSClient({
 });
 
 const trpcClient = createTRPCProxyClient<AppRouter>({
+  transformer: superjson,
   links: [
     splitLink({
       condition(op) {

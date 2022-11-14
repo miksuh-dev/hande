@@ -11,10 +11,10 @@ model Song {
   id        Int    @id @default(autoincrement())
   videoId   String
   title     String
-  serverHash String
   thumbnail String
-  started  Boolean @default(false)
-  ended  Boolean @default(false)
+  duration  Int
+  started Boolean @default(false)
+  ended   Boolean @default(false)
   skipped   Boolean @default(false)
   createdAt DateTime @default(now())
   requester  String

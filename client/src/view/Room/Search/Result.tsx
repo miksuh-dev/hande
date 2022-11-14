@@ -12,7 +12,7 @@ type Props = {
 
 const Result: Component<Props> = (props) => {
   return (
-    <div class="absolute top-full left-0 right-0 space-y-2 rounded-sm rounded-t-none bg-neutral-400 p-2">
+    <div class="absolute top-full left-0 right-0 max-h-[500px]  space-y-2 overflow-auto rounded-sm rounded-t-none bg-neutral-400 p-2">
       <Show
         when={!props.loading()}
         fallback={

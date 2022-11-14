@@ -1,7 +1,12 @@
-import ee from "eventEmitter";
 import { MumbleUser } from "types/auth";
+import ee from "../../eventEmitter";
 import prisma from "../../prisma";
-import { getCurrentSong } from "./internal";
+import {
+  getCurrentSong,
+  getNextSong,
+  playSong,
+  stopCurrentSong,
+} from "./internal";
 
 const sendLogMessage = (content: string) => {
   const message = {
@@ -11,7 +16,7 @@ const sendLogMessage = (content: string) => {
     timestamp: Date.now(),
   };
 
-  ee.emit("onUpdate", { message: { add: message } });
+  ee.emit(`onUpdate`, { message: { add: message } });
 };
 
 export const addSong = async (
@@ -19,8 +24,8 @@ export const addSong = async (
     id: string;
     title: string;
     thumbnail: string;
+    duration: number;
   },
-  serverHash: string,
   requester: MumbleUser
 ) => {
   const addedSong = await prisma.song.create({
@@ -28,48 +33,76 @@ export const addSong = async (
       videoId: song.id,
       title: song.title,
       thumbnail: song.thumbnail,
-      serverHash: serverHash,
       requester: requester.name,
+      duration: song.duration,
     },
   });
 
-  sendLogMessage(`${requester.name} lisäsi kappaleen ${song.title} jonoon`);
+  sendLogMessage(`${requester.name} lisäsi kappaleen "${song.title}" jonoon`);
+
+  if (!getCurrentSong()) {
+    const nextSong = await getNextSong();
+    if (nextSong) {
+      playSong(nextSong);
+    }
+
+    return addedSong;
+  }
+
+  ee.emit(`onUpdate`, { song: { add: song } });
 
   return addedSong;
 };
 
-export const removeSong = async (
-  id: number,
-  serverHash: string,
-  user: MumbleUser
-) => {
-  const song = await prisma.song.findFirst({
-    where: {
-      id: id,
-      serverHash: serverHash,
-    },
-  });
+export const startPlay = async (user: MumbleUser) => {
+  const currentSong = getCurrentSong();
 
-  if (!song) {
-    throw new Error("Song not found");
+  if (currentSong) {
+    throw new Error("Kappale on jo soimassa");
   }
 
-  const isCurrentSong = song.id === getCurrentSong()?.id;
+  const nextSong = await getNextSong();
+  if (nextSong) {
+    playSong(nextSong);
 
-  if (isCurrentSong) {
-    sendLogMessage(`${user.name} ohitti kapaleen ${song.title}`);
-  } else {
-    sendLogMessage(`${user.name} poisti ${song.title} kappaleen jonosta`);
+    sendLogMessage(`${user.name} aloitti kappaleen ${nextSong.title}`);
+
+    return nextSong;
   }
 
-  await prisma.song.update({
+  throw new Error("Ei kappaleita jonossa");
+};
+
+export const removeSong = async (id: number, user: MumbleUser) => {
+  const song = await prisma.song.update({
     where: {
-      id: song.id,
+      id,
     },
     data: {
       skipped: true,
     },
   });
+
+  if (song.id === getCurrentSong()?.id) {
+    sendLogMessage(`${user.name} ohitti kappaleen "${song.title}"`);
+
+    stopCurrentSong().catch((e) => {
+      console.log("e", e);
+    });
+
+    return song;
+  }
+
+  if (!getCurrentSong()) {
+    const nextSong = await getNextSong();
+    if (nextSong) {
+      playSong(nextSong);
+    }
+  }
+
+  ee.emit(`onUpdate`, { song: { remove: song.id } });
+
+  sendLogMessage(`${user.name} poisti "${song.title}" kappaleen jonosta`);
 
   return song;
 };

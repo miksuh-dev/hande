@@ -15,7 +15,7 @@ const handleUpdateEvent = (
 
   if (event.user) {
     if (event.user.join) {
-      existingRoom = {
+      return {
         ...existingRoom,
         users: [...existingRoom.users, event.user.join],
       };
@@ -24,7 +24,7 @@ const handleUpdateEvent = (
     if (event.user.leave) {
       const userHash = event.user.leave;
 
-      existingRoom = {
+      return {
         ...existingRoom,
         users: existingRoom.users.filter((u) => u.hash !== userHash),
       };
@@ -35,7 +35,7 @@ const handleUpdateEvent = (
     if (event.message.add) {
       const message = event.message.add;
 
-      existingRoom = {
+      return {
         ...existingRoom,
         messages: [...existingRoom.messages, message],
       };
@@ -46,7 +46,7 @@ const handleUpdateEvent = (
     if (event.song.add) {
       const song = event.song.add;
 
-      existingRoom = {
+      return {
         ...existingRoom,
         songs: [...existingRoom.songs, song],
       };
@@ -55,28 +55,20 @@ const handleUpdateEvent = (
     if (event.song.remove) {
       const songId = event.song.remove;
 
-      existingRoom = {
+      return {
         ...existingRoom,
         songs: existingRoom.songs.filter((s) => s.id !== songId),
       };
     }
 
-    if (event.song.skip) {
-      const songId = event.song.skip;
-
-      existingRoom = {
-        ...existingRoom,
-        playing:
-          existingRoom.playing?.id === songId
-            ? undefined
-            : existingRoom.playing,
-      };
-    }
-
-    if (event.song.setPlaying) {
+    if ("setPlaying" in event.song) {
       const song = event.song.setPlaying;
 
-      existingRoom = {
+      if (!song) {
+        return { ...existingRoom, playing: undefined };
+      }
+
+      return {
         ...existingRoom,
         playing: song,
         songs: existingRoom.songs.filter((s) => s.id !== song.id),
@@ -107,7 +99,7 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
   const snackbar = useSnackbar();
 
   const [room, { mutate }] = createResource<Room>(
-    async () => trpcClient.room.get.query(),
+    () => trpcClient.room.get.query(),
     {
       storage: createDeepSignal,
       initialValue: {
@@ -126,8 +118,10 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
           if (!existingRoom) {
             return existingRoom;
           }
+          console.log("event", event);
 
           const asd = handleUpdateEvent(existingRoom, event);
+          console.log("asd", asd);
 
           return asd;
         });
@@ -146,10 +140,6 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
       lobbyUpdate.unsubscribe();
     });
   });
-
-  if (room.state === "errored") {
-    throw room.error;
-  }
 
   return room;
 }
