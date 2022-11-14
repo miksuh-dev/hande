@@ -13,6 +13,7 @@
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
     "autoprefixer": "^10.4.8",
+    "babel-preset-solid": "^1.6.2",
     "concurrently": "^3.5.0",
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
@@ -23,15 +24,16 @@
     "prettier-plugin-tailwindcss": "^0.1.13",
     "tailwindcss": "^3.1.8",
     "typescript": "^4.8.3",
-    "vite": "^3.0.9",
+    "vite": "^3.2.3",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-solid": "^2.3.0",
+    "vite-plugin-solid": "^2.4.0",
     "vitest-tsconfig-paths": "^3.4.1"
   },
   "dependencies": {
     "@solidjs/router": "^0.5.0",
     "@trpc/client": "^10.0.0-proxy-beta.7",
     "luxon": "^3.0.4",
-    "solid-js": "^1.6.1"
+    "solid-js": "^1.6.1",
+    "superjson": "^1.11.0"
   }
 }

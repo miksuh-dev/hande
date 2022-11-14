@@ -3,6 +3,6 @@
   "parser": "@typescript-eslint/parser",
   "root": true,
   "plugins": ["@typescript-eslint", "import", "solid"],
-  "extends": ["prettier"],
+  "extends": ["prettier", "plugin:solid/recommended"],
   "ignorePatterns": ["node_modules/", "build/", "dist/"]
 }
