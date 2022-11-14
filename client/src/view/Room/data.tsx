@@ -118,12 +118,8 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
           if (!existingRoom) {
             return existingRoom;
           }
-          console.log("event", event);
 
-          const asd = handleUpdateEvent(existingRoom, event);
-          console.log("asd", asd);
-
-          return asd;
+          return handleUpdateEvent(existingRoom, event);
         });
       },
       onError(err) {
