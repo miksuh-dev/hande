@@ -117,6 +117,10 @@ export const stopCurrentSong = async () => {
   const nextSong = await getNextSong();
   if (nextSong) {
     playSong(nextSong);
+  } else {
+    ee.emit(`onUpdate`, {
+      song: { setPlaying: undefined },
+    });
   }
 };
 
