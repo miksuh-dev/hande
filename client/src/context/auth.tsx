@@ -43,20 +43,17 @@ export const AuthProvider: Component<{
   const [user, setUser] = createSignal<User | null>(null);
   const [ready, setReady] = createSignal<boolean>(false);
 
-  const fetchAndSetMe = () => {
-    trpcClient.user.me
-      .query()
-      .then((res) => {
-        batch(() => {
-          setUser(res);
-          setAuthenticated(true);
-          setReady(true);
-        });
-      })
-      .catch((e) => {
-        console.log("e", e);
-        logout();
+  const fetchAndSetMe = async () => {
+    try {
+      const me = await trpcClient.user.me.query().then();
+
+      batch(() => {
+        setUser(me);
+        setAuthenticated;
       });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const login = async (token: UserLoginInput) => {
@@ -64,6 +61,8 @@ export const AuthProvider: Component<{
       await trpcClient.user.login.mutate(token);
 
       localStorage.setItem("token", token);
+
+      await fetchAndSetMe();
     } catch (err) {
       throw err;
     }
@@ -76,14 +75,14 @@ export const AuthProvider: Component<{
     win.location.reload();
   };
 
-  onMount(() => {
+  onMount(async () => {
     const token = localStorage.getItem("token");
 
     if (token && !user()) {
-      fetchAndSetMe();
-    } else {
-      setReady(true);
+      await login(token);
     }
+
+    setReady(true);
   });
 
   const value = {
