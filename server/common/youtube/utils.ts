@@ -2,7 +2,7 @@ import { SearchResultItem } from "./types";
 
 export const parseSearchListItem = (item: SearchResultItem) => {
   return {
-    id: item.id.videoId,
+    videoId: item.id.videoId,
     title: item.snippet.title,
     description: item.snippet.description,
     thumbnail: item.snippet.thumbnails.medium,

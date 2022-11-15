@@ -43,7 +43,7 @@ const SearchComponent: Component = () => {
   const handleAdd = async (result: YoutubeSearchResult) => {
     try {
       const song = await trpcClient.room.addSong.mutate({
-        id: result.id,
+        videoId: result.videoId,
         title: result.title,
         thumbnail: result.thumbnail.url,
       });

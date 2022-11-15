@@ -21,7 +21,7 @@ const sendLogMessage = (content: string) => {
 
 export const addSong = async (
   song: {
-    id: string;
+    videoId: string;
     title: string;
     thumbnail: string;
     duration: number;
@@ -30,7 +30,7 @@ export const addSong = async (
 ) => {
   const addedSong = await prisma.song.create({
     data: {
-      videoId: song.id,
+      videoId: song.videoId,
       title: song.title,
       thumbnail: song.thumbnail,
       requester: requester.name,
@@ -45,11 +45,9 @@ export const addSong = async (
     if (nextSong) {
       playSong(nextSong);
     }
-
-    return addedSong;
   }
 
-  ee.emit(`onUpdate`, { song: { add: song } });
+  ee.emit(`onUpdate`, { song: { add: addedSong } });
 
   return addedSong;
 };

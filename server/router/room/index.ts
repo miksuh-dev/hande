@@ -36,7 +36,7 @@ export const roomRouter = t.router({
   addSong: authedProcedure
     .input(
       z.object({
-        id: z.string().min(1),
+        videoId: z.string().min(1),
         title: z.string().min(1),
         thumbnail: z.string().min(1),
       })
@@ -44,12 +44,12 @@ export const roomRouter = t.router({
     .mutation(async ({ input, ctx }) => {
       const { user } = ctx;
 
-      const { id, title, thumbnail } = input;
+      const { videoId, title, thumbnail } = input;
 
-      const details = await getVideoDetails(id);
+      const details = await getVideoDetails(videoId);
 
       const song = await addSong(
-        { id, title, thumbnail, duration: details.duration },
+        { videoId, title, thumbnail, duration: details.duration },
         user
       );
 
