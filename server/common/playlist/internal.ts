@@ -15,6 +15,9 @@ const youtubeDlWrap = new YoutubeDlWrap("/usr/bin/youtube-dl");
 
 let playing: PlayingSong | undefined;
 
+let stream: Readable | undefined;
+let endTimeout: NodeJS.Timeout | undefined;
+
 export const onSongEnd = async () => {
   if (!playing) return;
 
@@ -27,17 +30,18 @@ export const onSongEnd = async () => {
     },
   });
 
-  await stopCurrentSong();
+  sendMessage(`Kappale ${playing.title} päättyi.`);
 
-  ee.emit(`onUpdate`, {
-    song: { setPlaying: undefined },
-  });
+  stopCurrentSong();
 
   client.voiceConnection.stopStream();
-
   const nextSong = await getNextSong();
   if (nextSong) {
     playSong(nextSong);
+  } else {
+    ee.emit(`onUpdate`, {
+      song: { setPlaying: undefined },
+    });
   }
 };
 
@@ -46,7 +50,7 @@ const createStream = (song: Song) => {
     const readStream = youtubeDlWrap.execStream([
       `https://www.youtube.com/watch?v=${song.videoId}`,
       "-f",
-      "best",
+      "m4a",
     ]) as Readable;
 
     return readStream;
@@ -61,14 +65,17 @@ const onPlayError = (song: Song, error: string) => {
   );
 
   setTimeout(() => {
-    onSongEnd().catch((e) => console.log("e", e));
+    if (playing?.id === song.id) {
+      onSongEnd().catch((e) => console.log("e", e));
+    }
   }, 5000);
 };
 
 export const playSong = (song: Song) => {
+  console.log("play");
   const currentSong = setCurrentSong({
     ...song,
-    startedAt: DateTime.now().plus({ seconds: 5 }),
+    startedAt: DateTime.now(),
   });
 
   ee.emit(`onUpdate`, {
@@ -79,36 +86,41 @@ export const playSong = (song: Song) => {
     song: { remove: currentSong.id },
   });
 
-  const stream = createStream(song);
+  sendMessage(`Soitetaan kappale ${currentSong.title}.`);
+
+  if (stream) {
+    stream.destroy();
+  }
+
+  if (endTimeout) {
+    clearTimeout(endTimeout);
+  }
+
+  const secondsLeft = currentSong.startedAt
+    .plus({ seconds: currentSong.duration })
+    .diffNow("seconds").seconds;
+
+  console.log("secondsLeft", secondsLeft);
+
+  endTimeout = setTimeout(() => {
+    onSongEnd().catch((e) => console.log("e", e));
+  }, secondsLeft * 1000);
+
+  stream = createStream(song);
   if (!stream) {
-    sendErrorMessage("Failed to create stream");
+    sendErrorMessage("Virhe luodessa streamia");
     return;
   }
 
-  stream
-    .on("close", () => {
-      void (async () => {
-        sendMessage(`Kappale ${currentSong.title} päättyi.`);
-        await onSongEnd().catch((e) => {
-          if (e instanceof Error) {
-            onPlayError(currentSong, e.message);
-          }
-        });
-      })();
-
-      stream.destroy();
-    })
-    .on("error", (e) => {
-      if (e instanceof Error) {
-        onPlayError(currentSong, e.message);
-      }
-    });
+  stream.on("error", (e) => {
+    if (e instanceof Error) {
+      onPlayError(currentSong, e.message);
+    }
+  });
 
   client.voiceConnection
-    .playStream(stream, "asd")
+    .playStream(stream, "0")
     .on("start", async () => {
-      sendMessage(`Soitetaan kappale ${currentSong.title}.`);
-
       await prisma.song.update({
         where: {
           id: currentSong.id,
@@ -131,19 +143,11 @@ export const setCurrentSong = (song: PlayingSong) => {
   return (playing = song);
 };
 
-export const stopCurrentSong = async () => {
+export const stopCurrentSong = () => {
   playing = undefined;
 
   client.voiceConnection.stopStream();
-
-  const nextSong = await getNextSong();
-  if (nextSong) {
-    playSong(nextSong);
-  } else {
-    ee.emit(`onUpdate`, {
-      song: { setPlaying: undefined },
-    });
-  }
+  clearTimeout(endTimeout);
 };
 
 export const getNextSong = async (): Promise<Song | null> => {
