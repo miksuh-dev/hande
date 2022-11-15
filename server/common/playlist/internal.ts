@@ -35,10 +35,6 @@ export const onSongEnd = async () => {
   const nextSong = await getNextSong();
   if (nextSong) {
     await playSong(nextSong);
-  } else {
-    ee.emit(`onUpdate`, {
-      song: { setPlaying: undefined },
-    });
   }
 };
 
@@ -131,6 +127,10 @@ export const stopCurrentSong = () => {
 
   client.voiceConnection.stopStream();
   clearTimeout(endTimeout);
+
+  ee.emit(`onUpdate`, {
+    song: { setPlaying: undefined },
+  });
 };
 
 export const getNextSong = async (): Promise<Song | null> => {

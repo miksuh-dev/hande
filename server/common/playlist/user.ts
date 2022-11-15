@@ -31,7 +31,7 @@ export const addSong = async (
   if (!getCurrentSong()) {
     const nextSong = await getNextSong();
     if (nextSong) {
-      playSong(nextSong);
+      await playSong(nextSong);
     }
   }
 
@@ -49,7 +49,7 @@ export const startPlay = async (user: MumbleUser) => {
 
   const nextSong = await getNextSong();
   if (nextSong) {
-    playSong(nextSong);
+    await playSong(nextSong);
 
     sendMessage(`${user.name} aloitti kappaleen ${nextSong.title}`);
 
@@ -74,13 +74,18 @@ export const removeSong = async (id: number, user: MumbleUser) => {
 
     stopCurrentSong();
 
+    const nextSong = await getNextSong();
+    if (nextSong) {
+      await playSong(nextSong);
+    }
+
     return song;
   }
 
   if (!getCurrentSong()) {
     const nextSong = await getNextSong();
     if (nextSong) {
-      playSong(nextSong);
+      await playSong(nextSong);
     }
   }
 
