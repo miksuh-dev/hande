@@ -4,7 +4,6 @@ import { Message } from "../../client/types";
 
 const handleGenerateToken = (message: Message) => {
   const { sender } = message;
-  console.log("message", message);
 
   if (!sender) {
     throw new Error("No sender");
