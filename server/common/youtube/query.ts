@@ -22,9 +22,9 @@ export const searchList = async (content: string) => {
     return data.items;
   } catch (error) {
     console.error(error);
-  }
 
-  return [];
+    throw new Error("Failed to search");
+  }
 };
 
 export const getVideoDetails = async (id: string) => {

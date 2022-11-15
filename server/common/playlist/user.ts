@@ -1,23 +1,13 @@
 import { MumbleUser } from "types/auth";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
+import { sendMessage } from "../../router/room/message";
 import {
   getCurrentSong,
   getNextSong,
   playSong,
   stopCurrentSong,
 } from "./internal";
-
-const sendLogMessage = (content: string) => {
-  const message = {
-    id: Date.now().toString(),
-    username: "Hande",
-    content,
-    timestamp: Date.now(),
-  };
-
-  ee.emit(`onUpdate`, { message: { add: message } });
-};
 
 export const addSong = async (
   song: {
@@ -38,7 +28,7 @@ export const addSong = async (
     },
   });
 
-  sendLogMessage(`${requester.name} lisäsi kappaleen "${song.title}" jonoon`);
+  sendMessage(`${requester.name} lisäsi kappaleen "${song.title}" jonoon`);
 
   if (!getCurrentSong()) {
     const nextSong = await getNextSong();
@@ -63,7 +53,7 @@ export const startPlay = async (user: MumbleUser) => {
   if (nextSong) {
     playSong(nextSong);
 
-    sendLogMessage(`${user.name} aloitti kappaleen ${nextSong.title}`);
+    sendMessage(`${user.name} aloitti kappaleen ${nextSong.title}`);
 
     return nextSong;
   }
@@ -82,11 +72,9 @@ export const removeSong = async (id: number, user: MumbleUser) => {
   });
 
   if (song.id === getCurrentSong()?.id) {
-    sendLogMessage(`${user.name} ohitti kappaleen "${song.title}"`);
+    sendMessage(`${user.name} ohitti kappaleen "${song.title}"`);
 
-    stopCurrentSong().catch((e) => {
-      console.log("e", e);
-    });
+    stopCurrentSong();
 
     return song;
   }
@@ -100,7 +88,7 @@ export const removeSong = async (id: number, user: MumbleUser) => {
 
   ee.emit(`onUpdate`, { song: { remove: song.id } });
 
-  sendLogMessage(`${user.name} poisti "${song.title}" kappaleen jonosta`);
+  sendMessage(`${user.name} poisti "${song.title}" kappaleen jonosta`);
 
   return song;
 };
