@@ -49,12 +49,12 @@ app.use(
   })
 );
 
-app.use(express.static("client/build"));
-app.use("/images", express.static("client/build/images"));
-app.use("/assets", express.static("client/build/assets"));
+app.use(express.static("dist/client"));
+app.use("/images", express.static("dist/client/images"));
+app.use("/assets", express.static("dist/client/assets"));
 app.get("*", (_, res) => {
   res.sendFile("index.html", {
-    root: "client/build",
+    root: "dist/client",
   });
 });
 

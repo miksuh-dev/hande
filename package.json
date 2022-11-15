@@ -9,9 +9,10 @@
     "client": "npm run dev --prefix client",
     "server": "npm run dev",
     "lint": "eslint ./src",
-    "build": "tsc",
+    "build": "tsc && npm run build --prefix client && npm run copy-files",
+    "copy-files": "cp ./NoodleJS/Mumble.proto ./dist/NoodleJS/",
     "postinstall": "npx prisma generate",
-    "start:prod": "NODE_PATH=./dist NODE_ENV=production node dist/app.js",
+    "start:prod": "NODE_PATH=./dist NODE_ENV=production node dist/server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
