@@ -10,13 +10,15 @@ export const sendMessage = (
 ) => {
   const message = {
     id: Date.now().toString(),
-    username: options?.user?.name ?? "Hande",
+    username: options?.user?.name ?? process.env.MUMBLE_USERNAME ?? "System",
     content,
     timestamp: Date.now(),
     type: options?.type ?? MessageType.MESSAGE,
+    isSystem: !options?.user,
   };
 
-  messages.concat(message).splice(-100);
+  messages.push(message);
+  messages.splice(0, messages.length - 100);
 
   ee.emit(`onUpdate`, { message: { add: message } });
 

@@ -15,6 +15,7 @@ export interface Message {
   content: string;
   timestamp: number;
   type: MessageType;
+  isSystem: boolean;
 }
 
 export interface UpdateEvent {

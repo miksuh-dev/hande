@@ -32,7 +32,14 @@ const RoomChat: Component<Props> = (props) => {
                       "HH:mm:ss"
                     )}
                   </div>
-                  <div class="font-bold">{message.username}:</div>
+                  <Show
+                    when={message.isSystem}
+                    fallback={<div class="font-bold">{message.username}:</div>}
+                  >
+                    <div class="font-bold text-custom-aqua-900">
+                      {message.username}:
+                    </div>
+                  </Show>
                   <div>{message.content}</div>
                 </div>
               )}
