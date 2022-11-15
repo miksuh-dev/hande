@@ -18,18 +18,6 @@ export interface VideoContentDetails {
   };
 }
 
-export interface VideoDetail {
-  data: {
-    kind: string;
-    etag: string;
-    items: VideoContentDetails[];
-  };
-}
-
-export type VideoDetails = Omit<VideoDetail, "data.items.contentDetails"> & {
-  duration: number | null;
-};
-
 interface SearchResultThumbnail {
   height: number;
   url: string;

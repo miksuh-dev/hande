@@ -3,7 +3,6 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import { getCurrentSong } from "../../common/playlist/internal";
 import { addSong, removeSong, startPlay } from "../../common/playlist/user";
-import { getVideoDetails } from "../../common/youtube/query";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import { authedProcedure } from "../utils";
@@ -46,12 +45,7 @@ export const roomRouter = t.router({
 
       const { videoId, title, thumbnail } = input;
 
-      const details = await getVideoDetails(videoId);
-
-      const song = await addSong(
-        { videoId, title, thumbnail, duration: details.duration },
-        user
-      );
+      const song = await addSong({ videoId, title, thumbnail }, user);
 
       return song;
     }),

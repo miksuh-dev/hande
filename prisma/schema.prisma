@@ -12,7 +12,6 @@ model Song {
   videoId   String
   title     String
   thumbnail String
-  duration  Int
   started Boolean @default(false)
   ended   Boolean @default(false)
   skipped   Boolean @default(false)

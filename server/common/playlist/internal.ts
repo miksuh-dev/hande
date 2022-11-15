@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Readable } from "stream";
 import { Song } from "@prisma/client";
 import { DateTime } from "luxon";
@@ -10,8 +8,7 @@ import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendErrorMessage, sendMessage } from "../../router/room/message";
 import client from "../mumble";
-const YoutubeDlWrap = require("youtube-dl-wrap");
-const youtubeDlWrap = new YoutubeDlWrap("/usr/bin/youtube-dl");
+import { createStream, getVideoInfo } from "../youtube-dl";
 
 let playing: PlayingSong | undefined;
 
@@ -37,25 +34,11 @@ export const onSongEnd = async () => {
   client.voiceConnection.stopStream();
   const nextSong = await getNextSong();
   if (nextSong) {
-    playSong(nextSong);
+    await playSong(nextSong);
   } else {
     ee.emit(`onUpdate`, {
       song: { setPlaying: undefined },
     });
-  }
-};
-
-const createStream = (song: Song) => {
-  try {
-    const readStream = youtubeDlWrap.execStream([
-      `https://www.youtube.com/watch?v=${song.videoId}`,
-      "-f",
-      "m4a",
-    ]) as Readable;
-
-    return readStream;
-  } catch (e) {
-    console.log("e", e);
   }
 };
 
@@ -71,11 +54,17 @@ const onPlayError = (song: Song, error: string) => {
   }, 5000);
 };
 
-export const playSong = (song: Song) => {
-  console.log("play");
+export const playSong = async (song: Song) => {
+  const videoInfo = await getVideoInfo(song);
+  if (!videoInfo) {
+    onPlayError(song, "Ei videoinfoa");
+    return;
+  }
+
   const currentSong = setCurrentSong({
     ...song,
     startedAt: DateTime.now(),
+    duration: videoInfo.duration,
   });
 
   ee.emit(`onUpdate`, {
@@ -97,20 +86,14 @@ export const playSong = (song: Song) => {
   }
 
   const secondsLeft = currentSong.startedAt
-    .plus({ seconds: currentSong.duration })
+    .plus({ seconds: videoInfo.duration })
     .diffNow("seconds").seconds;
-
-  console.log("secondsLeft", secondsLeft);
 
   endTimeout = setTimeout(() => {
     onSongEnd().catch((e) => console.log("e", e));
   }, secondsLeft * 1000);
 
   stream = createStream(song);
-  if (!stream) {
-    sendErrorMessage("Virhe luodessa streamia");
-    return;
-  }
 
   stream.on("error", (e) => {
     if (e instanceof Error) {

@@ -14,7 +14,6 @@ export const addSong = async (
     videoId: string;
     title: string;
     thumbnail: string;
-    duration: number;
   },
   requester: MumbleUser
 ) => {
@@ -24,7 +23,6 @@ export const addSong = async (
       title: song.title,
       thumbnail: song.thumbnail,
       requester: requester.name,
-      duration: song.duration,
     },
   });
 
