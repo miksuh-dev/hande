@@ -12,7 +12,7 @@ const Navbar: Component = () => {
     <nav class=" rounded border-neutral-200 bg-neutral-800 px-2 py-2.5 dark:bg-neutral-900 sm:px-4">
       <div class="mx-auto flex flex-wrap items-center justify-between px-2">
         <Link
-          href="/"
+          href="/room"
           class="self-center whitespace-nowrap text-xl font-semibold text-white"
         >
           Hande

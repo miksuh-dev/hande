@@ -39,15 +39,15 @@ export const SnackbarProvider: Component<{
         <div class="absolute bottom-2 flex w-full justify-center">
           <div
             id="alert-1"
-            class="mb-4 flex rounded-lg bg-neutral-100 p-4"
+            class="mb-4 flex space-x-4 rounded-lg border-2 bg-neutral-100 p-4 dark:border-neutral-500 dark:bg-neutral-900"
             role="alert"
           >
-            <div class="ml-3 text-sm font-medium text-neutral-700">
+            <div class="ml-3 text-sm font-medium text-neutral-700 dark:text-neutral-100">
               {snackbar()?.message}
             </div>
             <button
               type="button"
-              class="-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 rounded-lg bg-neutral-100 p-1.5 text-neutral-500 hover:bg-neutral-200 focus:ring-2 focus:ring-neutral-400"
+              class="-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 rounded-lg bg-neutral-100 p-1.5 text-neutral-500 hover:bg-neutral-200 focus:ring-2 focus:ring-neutral-400 dark:bg-transparent dark:text-neutral-100 dark:hover:text-red-600"
               data-dismiss-target="#alert-1"
               aria-label="Close"
               onClick={() => hide()}
