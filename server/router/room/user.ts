@@ -9,8 +9,7 @@ export const userJoin = (user: MumbleUser) => {
   if (!users.some((u) => u.hash === user.hash)) {
     users.push(user);
 
-    sendMessage(`Käyttäjä ${user.name} liittyi huoneeseen`, {
-      user,
+    sendMessage(`Käyttäjä ${user.name} liittyi huoneeseen.`, {
       type: MessageType.MESSAGE,
     });
 
@@ -21,10 +20,12 @@ export const userJoin = (user: MumbleUser) => {
 };
 
 export const userLeave = (user: MumbleUser) => {
-  users.filter((u) => u.hash !== user.hash);
+  const index = users.findIndex((u) => u.hash === user.hash);
+  if (index !== -1) {
+    users.splice(index, 1);
+  }
 
-  sendMessage(`Käyttäjä ${user.name} poistui huoneesta`, {
-    user,
+  sendMessage(`Käyttäjä ${user.name} poistui huoneesta.`, {
     type: MessageType.MESSAGE,
   });
 
