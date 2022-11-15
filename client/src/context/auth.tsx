@@ -49,7 +49,7 @@ export const AuthProvider: Component<{
 
       batch(() => {
         setUser(me);
-        setAuthenticated;
+        setAuthenticated(true);
       });
     } catch (error) {
       console.error(error);
@@ -79,7 +79,11 @@ export const AuthProvider: Component<{
     const token = localStorage.getItem("token");
 
     if (token && !user()) {
-      await login(token);
+      await fetchAndSetMe().catch(async () => {
+        await login(token).catch(async () => {
+          logout();
+        });
+      });
     }
 
     setReady(true);

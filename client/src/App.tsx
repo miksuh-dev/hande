@@ -23,12 +23,7 @@ const App: Component = () => {
             </Show>
             <Route path="/" component={RoomView} data={roomData} />
           </Route>
-          <Route path="/">
-            <Show when={auth.authenticated()} fallback={<Navigate href="/" />}>
-              <Navigate href="/room" />
-            </Show>
-            <Route path="/" component={MainView} data={mainData} />
-          </Route>
+          <Route path="/" component={MainView} data={mainData} />
         </Routes>
       </Show>
     </Suspense>

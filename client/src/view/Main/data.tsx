@@ -30,8 +30,6 @@ async function TokenData({ location }: RouteDataFuncArgs) {
   const token = getTokenFromStorage() || getTokenFromUrl();
 
   if (!token) {
-    navigate("/");
-
     return;
   }
 
