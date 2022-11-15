@@ -8,18 +8,12 @@ import { DateTime } from "luxon";
 import { PlayingSong } from "types/app";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
-import { sendErrorMessage } from "../../router/room/message";
+import { sendErrorMessage, sendMessage } from "../../router/room/message";
 import client from "../mumble";
 const YoutubeDlWrap = require("youtube-dl-wrap");
 const youtubeDlWrap = new YoutubeDlWrap("/usr/bin/youtube-dl");
 
 let playing: PlayingSong | undefined;
-
-client.voiceConnection.on("end", () => {
-  onSongEnd.call(this).catch((e) => {
-    console.log("e", e);
-  });
-});
 
 export const onSongEnd = async () => {
   if (!playing) return;
@@ -61,6 +55,16 @@ const createStream = (song: Song) => {
   }
 };
 
+const onPlayError = (song: Song, error: string) => {
+  sendErrorMessage(
+    `Virhe kappaleen ${song.title} toistossa. Siirrytään seuraavaan kappaleeseen 5 sekunnin kuluttua. (${error})`
+  );
+
+  setTimeout(() => {
+    onSongEnd().catch((e) => console.log("e", e));
+  }, 5000);
+};
+
 export const playSong = (song: Song) => {
   const currentSong = setCurrentSong({
     ...song,
@@ -76,10 +80,35 @@ export const playSong = (song: Song) => {
   });
 
   const stream = createStream(song);
+  if (!stream) {
+    sendErrorMessage("Failed to create stream");
+    return;
+  }
+
+  stream
+    .on("close", () => {
+      void (async () => {
+        sendMessage(`Kappale ${currentSong.title} päättyi.`);
+        await onSongEnd().catch((e) => {
+          if (e instanceof Error) {
+            onPlayError(currentSong, e.message);
+          }
+        });
+      })();
+
+      stream.destroy();
+    })
+    .on("error", (e) => {
+      if (e instanceof Error) {
+        onPlayError(currentSong, e.message);
+      }
+    });
 
   client.voiceConnection
     .playStream(stream, "asd")
     .on("start", async () => {
+      sendMessage(`Soitetaan kappale ${currentSong.title}.`);
+
       await prisma.song.update({
         where: {
           id: currentSong.id,
@@ -90,14 +119,7 @@ export const playSong = (song: Song) => {
       });
     })
     .on("error", (message: string) => {
-      sendErrorMessage(
-        `Virhe kappaleen ${song.title} toistossa. Siirrytään seuraavaan kappaleeseen 5 sekunnin kuluttua. (${message})`
-      );
-      setTimeout(() => {
-        onSongEnd.call(this).catch((e) => {
-          console.log("e", e);
-        });
-      }, 5000);
+      onPlayError(currentSong, message);
     });
 };
 
