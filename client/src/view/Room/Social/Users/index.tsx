@@ -8,15 +8,15 @@ type Props = {
 
 const RoomUsers: Component<Props> = (props) => {
   return (
-    <div class="flex-1 overflow-x-auto bg-white">
+    <div class="flex-1 overflow-x-auto bg-white dark:bg-neutral-900">
       <div class="inline-block min-w-full align-middle">
-        <div class="overflow-hidden ">
-          <table class="min-w-full table-fixed divide-y-2 divide-gray-200 dark:divide-gray-700">
-            <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
+        <div class="overflow-hidden">
+          <table class="min-w-full table-fixed divide-y-2 divide-neutral-200 dark:divide-neutral-700">
+            <tbody class="divide-y divide-neutral-200 bg-white dark:divide-neutral-700 dark:bg-neutral-900">
               <Show
                 when={props.users.length}
                 fallback={
-                  <td class="whitespace-nowrap py-2 px-2 text-sm font-medium text-gray-900 dark:text-white">
+                  <td class="whitespace-nowrap py-2 px-2 text-sm font-medium text-neutral-900 dark:text-white">
                     Ei paikalla olevia käyttäjiä
                   </td>
                 }
@@ -24,7 +24,7 @@ const RoomUsers: Component<Props> = (props) => {
                 <For each={props.users}>
                   {(user) => (
                     <tr>
-                      <td class="whitespace-nowrap py-2 px-2 text-sm font-medium text-gray-900 dark:text-white">
+                      <td class="whitespace-nowrap py-2 px-2 text-sm font-medium text-neutral-900 dark:text-white">
                         {user.name}
                       </td>
                     </tr>

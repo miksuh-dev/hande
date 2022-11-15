@@ -11,7 +11,7 @@ const PlaylistComponent: Component<Props> = (props) => {
     <div class="max-h-full space-y-4 overflow-y-auto rounded-md pr-4">
       <For each={props.songs}>
         {(song) => (
-          <div class="flex flex-row items-center justify-between border border-neutral-200 p-4 shadow-md">
+          <div class="flex flex-row items-center justify-between border border-neutral-200 p-4 shadow-md dark:border-neutral-700 dark:bg-neutral-800">
             <div class="flex flex-row space-x-8">
               <div class="flex items-center">
                 <img class="w-42 h-32 " src={song.thumbnail} alt="" />
@@ -25,7 +25,7 @@ const PlaylistComponent: Component<Props> = (props) => {
             <div class="pr-2">
               <button
                 onClick={() => props.onSkip(song)}
-                class="flex rounded-md  py-2 px-2 font-bold text-black hover:text-red-600"
+                class="flex rounded-md  py-2 px-2 font-bold text-black hover:text-red-600 dark:text-white dark:hover:text-red-600"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

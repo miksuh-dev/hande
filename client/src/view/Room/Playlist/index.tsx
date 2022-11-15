@@ -26,8 +26,8 @@ const PlaylistComponent: Component = () => {
   };
 
   return (
-    <div class="flex h-1 flex-1 flex-col overflow-hidden rounded-md bg-white xl:h-full">
-      <div class="border-b border-gray-300 dark:border-neutral-700">
+    <div class="flex h-1 flex-1 flex-col overflow-hidden rounded-md bg-white dark:bg-neutral-900 xl:h-full">
+      <div class="border-b border-neutral-300 dark:border-neutral-700">
         <div class="inline-block rounded-t-lg p-4">Seuraavana vuorossa:</div>
       </div>
       <div class="overflow-hidden p-4 pr-0">

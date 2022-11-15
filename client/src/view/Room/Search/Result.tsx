@@ -19,7 +19,7 @@ const Result: Component<Props> = (props) => {
           <div class="flex justify-center py-2">
             <svg
               aria-hidden="true"
-              class="h-10 w-10 animate-spin fill-custom-aqua-600 text-gray-200 dark:text-gray-600"
+              class="h-10 w-10 animate-spin fill-custom-aqua-600 text-neutral-200 dark:text-gray-600"
               viewBox="0 0 100 101"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@ const Result: Component<Props> = (props) => {
                     alt=""
                   />
                   <div class="ml-2">
-                    <h5 class="text-sm font-medium text-gray-900">
+                    <h5 class="text-sm font-medium text-neutral-900">
                       {result.title}
                     </h5>
                   </div>

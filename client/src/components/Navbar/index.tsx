@@ -2,13 +2,14 @@ import type { Component } from "solid-js";
 import { createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
 import useAuth from "hooks/useAuth";
+import { ToggleThemeButton } from "components/DarkToggle";
 
 const Navbar: Component = () => {
   const auth = useAuth();
   const [menuOpen, setMenuOpen] = createSignal(false);
 
   return (
-    <nav class=" rounded border-gray-200 bg-neutral-800 px-2 py-2.5 dark:bg-gray-900 sm:px-4">
+    <nav class=" rounded border-neutral-200 bg-neutral-800 px-2 py-2.5 dark:bg-neutral-900 sm:px-4">
       <div class="mx-auto flex flex-wrap items-center justify-between px-2">
         <Link
           href="/"
@@ -16,10 +17,11 @@ const Navbar: Component = () => {
         >
           Hande
         </Link>
-        <div class="flex items-center md:order-2">
+        <div class="flex items-center space-x-4 md:order-2">
+          <ToggleThemeButton />
           <button
             type="button"
-            class="mr-3 flex rounded-full bg-custom-aqua-900 text-sm focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 md:mr-0"
+            class="flex rounded-full bg-custom-aqua-900 text-sm focus:ring-4 focus:ring-neutral-300 dark:focus:ring-gray-600"
             id="user-menu-button"
             aria-expanded="false"
             data-dropdown-toggle="user-dropdown"
@@ -38,11 +40,11 @@ const Navbar: Component = () => {
           <Show when={menuOpen()}>
             <div class="relative">
               <div
-                class="absolute right-0 top-4 z-50 my-4 w-[150px] list-none divide-y divide-gray-100 rounded bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700"
+                class="absolute right-0 top-4 z-50 my-4 w-[150px] list-none divide-y divide-neutral-100 rounded bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700"
                 id="user-dropdown"
               >
                 <div class="py-3 px-4">
-                  <span class="block text-sm text-gray-900 dark:text-white">
+                  <span class="block text-sm text-neutral-900 dark:text-white">
                     {auth.user()?.name}
                   </span>
                 </div>
@@ -50,7 +52,7 @@ const Navbar: Component = () => {
                   <li>
                     <button
                       onClick={() => auth.action.logout()}
-                      class="block w-full py-2 px-4 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                      class="block w-full py-2 px-4 text-left text-sm text-neutral-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       Kirjaudu ulos
                     </button>

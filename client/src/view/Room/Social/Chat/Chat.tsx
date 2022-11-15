@@ -14,12 +14,12 @@ type Props = {
 const RoomChat: Component<Props> = (props) => {
   return (
     <div class="flex flex-1 flex-col">
-      <div class="flex h-full flex-col bg-white">
-        <div class="flex-1 overflow-y-scroll">
+      <div class="flex h-full flex-col bg-white dark:bg-neutral-900">
+        <div class="flex-1 overflow-y-scroll pb-2">
           <Show
             when={props.messages.length}
             fallback={
-              <div class="flex flex-col items-center text-white">
+              <div class="flex flex-col items-center text-black">
                 Ei viestejä
               </div>
             }
@@ -51,14 +51,14 @@ const RoomChat: Component<Props> = (props) => {
           <input
             id="chat"
             type="text"
-            class="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-custom-aqua-500 focus:ring-custom-aqua-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-custom-aqua-500 dark:focus:ring-custom-aqua-500"
+            class="block w-full rounded-lg border border-neutral-300 bg-white p-2.5 text-sm text-gray-900 focus:border-custom-aqua-500 focus:ring-custom-aqua-500 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white dark:placeholder-gray-400"
             placeholder="Kirjoita viestisi tähän..."
             onChange={(e) => props.onChange(e.currentTarget.value)}
             value={props.currentMessage()}
           />
           <button
             type="submit"
-            class="ml-2 inline-flex cursor-pointer  justify-center rounded-full p-2 text-custom-aqua-600 hover:bg-blue-100 dark:text-custom-aqua-500 dark:hover:bg-gray-600"
+            class="ml-2 inline-flex cursor-pointer  justify-center rounded-full p-2 text-custom-aqua-600 hover:bg-blue-100 dark:text-custom-aqua-500 dark:hover:bg-neutral-600"
             onClick={() => props.onSubmit(props.currentMessage())}
           >
             <svg

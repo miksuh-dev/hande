@@ -37,7 +37,7 @@ const PlayingComponent: Component<Props> = (props) => {
               <div class="pr-2">
                 <button
                   onClick={() => props.onSkip(song)}
-                  class="flex rounded-md  py-2 px-2 font-bold text-black hover:text-red-600"
+                  class="flex rounded-md  py-2 px-2 font-bold text-black hover:text-red-600 dark:text-white dark:hover:text-red-600"
                 >
                   <svg
                     class="h-6 w-6"
