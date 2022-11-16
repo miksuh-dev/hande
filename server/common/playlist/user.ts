@@ -28,14 +28,14 @@ export const addSong = async (
 
   sendMessage(`${requester.name} lisäsi kappaleen "${song.title}" jonoon`);
 
+  ee.emit(`onUpdate`, { song: { add: addedSong } });
+
   if (!getCurrentSong()) {
     const nextSong = await getNextSong();
     if (nextSong) {
       await playSong(nextSong);
     }
   }
-
-  ee.emit(`onUpdate`, { song: { add: addedSong } });
 
   return addedSong;
 };
@@ -69,6 +69,13 @@ export const removeSong = async (id: number, user: MumbleUser) => {
     },
   });
 
+  if (!getCurrentSong()) {
+    const nextSong = await getNextSong();
+    if (nextSong) {
+      await playSong(nextSong);
+    }
+  }
+
   if (song.id === getCurrentSong()?.id) {
     sendMessage(`${user.name} ohitti kappaleen "${song.title}"`);
 
@@ -80,13 +87,6 @@ export const removeSong = async (id: number, user: MumbleUser) => {
     }
 
     return song;
-  }
-
-  if (!getCurrentSong()) {
-    const nextSong = await getNextSong();
-    if (nextSong) {
-      await playSong(nextSong);
-    }
   }
 
   ee.emit(`onUpdate`, { song: { remove: song.id } });

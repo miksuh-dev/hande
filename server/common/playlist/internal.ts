@@ -67,10 +67,6 @@ export const playSong = async (song: Song) => {
     song: { setPlaying: currentSong },
   });
 
-  ee.emit(`onUpdate`, {
-    song: { remove: currentSong.id },
-  });
-
   sendMessage(`Soitetaan kappale ${currentSong.title}.`);
 
   if (stream) {
