@@ -69,29 +69,20 @@ export const removeSong = async (id: number, user: MumbleUser) => {
     },
   });
 
+  if (song.id === getCurrentSong()?.id) {
+    sendMessage(`${user.name} ohitti kappaleen "${song.title}"`);
+    stopCurrentSong();
+  } else {
+    sendMessage(`${user.name} poisti "${song.title}" kappaleen jonosta`);
+    ee.emit(`onUpdate`, { song: { remove: song.id } });
+  }
+
   if (!getCurrentSong()) {
     const nextSong = await getNextSong();
     if (nextSong) {
       await playSong(nextSong);
     }
   }
-
-  if (song.id === getCurrentSong()?.id) {
-    sendMessage(`${user.name} ohitti kappaleen "${song.title}"`);
-
-    stopCurrentSong();
-
-    const nextSong = await getNextSong();
-    if (nextSong) {
-      await playSong(nextSong);
-    }
-
-    return song;
-  }
-
-  ee.emit(`onUpdate`, { song: { remove: song.id } });
-
-  sendMessage(`${user.name} poisti "${song.title}" kappaleen jonosta`);
 
   return song;
 };

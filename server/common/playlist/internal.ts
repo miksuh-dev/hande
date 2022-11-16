@@ -15,19 +15,17 @@ let playing: PlayingSong | undefined;
 let stream: Readable | undefined;
 let endTimeout: NodeJS.Timeout | undefined;
 
-export const onSongEnd = async () => {
-  if (!playing) return;
-
+export const onSongEnd = async (song: Song) => {
   await prisma.song.update({
     where: {
-      id: playing.id,
+      id: song.id,
     },
     data: {
       ended: true,
     },
   });
 
-  sendMessage(`Kappale ${playing.title} päättyi.`);
+  sendMessage(`Kappale ${song.title} päättyi.`);
 
   stopCurrentSong();
 
@@ -44,8 +42,13 @@ const onPlayError = (song: Song, error: string) => {
   );
 
   setTimeout(() => {
-    if (playing?.id === song.id) {
-      onSongEnd().catch((e) => console.log("e", e));
+    if (playing?.id === song.id || !playing) {
+      onSongEnd(song).catch((e) => {
+        if (e instanceof Error) {
+          onPlayError(song, `Virhe kappaleen päättämisessä: ${e.message}`);
+        }
+        console.log("e", e);
+      });
     }
   }, 5000);
 };
@@ -53,7 +56,7 @@ const onPlayError = (song: Song, error: string) => {
 export const playSong = async (song: Song) => {
   const videoInfo = await getVideoInfo(song);
   if (!videoInfo) {
-    onPlayError(song, "Ei videoinfoa");
+    onPlayError(song, "Videon tiedot eivät ole saatavilla");
     return;
   }
 
@@ -82,7 +85,12 @@ export const playSong = async (song: Song) => {
     .diffNow("seconds").seconds;
 
   endTimeout = setTimeout(() => {
-    onSongEnd().catch((e) => console.log("e", e));
+    onSongEnd(song).catch((e) => {
+      if (e instanceof Error) {
+        onPlayError(song, `Virhe kappaleen päättämisessä: ${e.message}`);
+      }
+      console.log("e", e);
+    });
   }, secondsLeft * 1000);
 
   stream = createStream(song);
