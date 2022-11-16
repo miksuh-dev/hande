@@ -10,21 +10,19 @@ type Props = {
 
 const PlayingComponent: Component<Props> = (props) => {
   return (
-    <div class="max-h-full">
+    <div class="flex max-h-full min-h-[160px] items-center">
       <Show
         when={props.playing}
         fallback={
-          <div class="flex flex-row items-center p-4">
-            <div class="flex-1 text-center">
-              <h5 class="text-xl">Tällä hetkellä ei soi mitään</h5>
-              <p>Lisää uusia kappaleita jonoon aloittaaksesi toiston</p>
-            </div>
+          <div class="flex-1 flex-col justify-center text-center">
+            <h5 class="text-xl">Tällä hetkellä ei soi mitään</h5>
+            <p>Lisää uusia kappaleita jonoon aloittaaksesi toiston</p>
           </div>
         }
         keyd
       >
         {(song) => (
-          <div class="space-y-2">
+          <div class="w-full space-y-2">
             <div class="flex flex-row items-center justify-between">
               <div class="flex flex-row space-x-8">
                 <div class="flex items-center">
@@ -36,10 +34,7 @@ const PlayingComponent: Component<Props> = (props) => {
                 </div>
               </div>
               <div class="pr-2">
-                <button
-                  onClick={() => props.onSkip(song)}
-                  class="flex rounded-md  py-2 px-2 font-bold text-black hover:text-red-600 dark:text-white dark:hover:text-red-600"
-                >
+                <button onClick={() => props.onSkip(song)} class="icon-button">
                   <svg
                     class="h-6 w-6"
                     fill="none"

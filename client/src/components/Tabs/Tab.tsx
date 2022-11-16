@@ -10,9 +10,9 @@ const Tab: Component<Props> = (props) => {
   return (
     <li class="mr-2" role="presentation">
       <button
-        class="inline-block rounded-t-lg border-b-2  p-4 hover:border-custom-aqua-900 hover:text-custom-aqua-900"
+        class="inline-block rounded-t-lg border-b-2 p-4 font-bold hover:border-custom-primary-900 hover:text-custom-primary-900"
         classList={{
-          "border-custom-aqua-900 text-custom-aqua-900": props.selected,
+          "border-custom-primary-900 text-custom-primary-900": props.selected,
           "border-neutral-300 dark:border-neutral-700": !props.selected,
         }}
         id="profile-tab"

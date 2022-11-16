@@ -19,7 +19,7 @@ const Result: Component<Props> = (props) => {
           <div class="flex justify-center py-2">
             <svg
               aria-hidden="true"
-              class="h-10 w-10 animate-spin fill-custom-aqua-600 text-neutral-200 dark:text-gray-600"
+              class="h-10 w-10 animate-spin fill-custom-primary-600 text-neutral-200 dark:text-neutral-600"
               viewBox="0 0 100 101"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ const Result: Component<Props> = (props) => {
                   </div>
                   <button
                     type="button"
-                    class="ml-auto inline-flex items-center rounded border border-transparent bg-custom-aqua-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-aqua-800 focus:outline-none focus:ring-2 focus:ring-custom-aqua-500 focus:ring-offset-2 dark:bg-custom-aqua-900 dark:hover:bg-custom-aqua-800 dark:focus:ring-custom-aqua-500"
+                    class="ml-auto inline-flex items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
                     onClick={() => props.onAdd(result)}
                   >
                     Lisää jonoon

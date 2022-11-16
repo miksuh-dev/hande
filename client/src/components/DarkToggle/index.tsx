@@ -42,7 +42,7 @@ export const ToggleThemeButton = () => {
   return (
     <button
       type="button"
-      class="flex w-8 rounded-full text-sm text-custom-aqua-900"
+      class="flex w-8 rounded-full text-sm text-custom-primary-900"
       onClick={() => toggleTheme()}
     >
       <Show

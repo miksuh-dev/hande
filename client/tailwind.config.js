@@ -8,7 +8,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "custom-pink": {
+        ["neutral"]: {
+          750: "#313131",
+        },
+        "custom-primary": {
           50: "#ff58a4",
           100: "#ff4e9a",
           200: "#ff4490",
@@ -32,7 +35,7 @@ module.exports = {
           800: "#88c410",
           900: "#7eba06",
         },
-        "custom-aqua": {
+        "custom-pink": {
           50: "#98ffff",
           100: "#8effff",
           200: "#84f7ff",

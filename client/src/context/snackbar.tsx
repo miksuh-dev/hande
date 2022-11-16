@@ -42,12 +42,24 @@ export const SnackbarProvider: Component<{
             class="mb-4 flex space-x-4 rounded-lg border-2 bg-neutral-100 p-4 dark:border-neutral-500 dark:bg-neutral-900"
             role="alert"
           >
-            <div class="ml-3 text-sm font-medium text-neutral-700 dark:text-neutral-100">
+            <Show when={snackbar()?.type === "error"}>
+              <div class="ml-3 flex items-center">
+                <svg
+                  id="exclamation-triangle-fill"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  class="h-6 w-6 text-custom-primary-900"
+                >
+                  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                </svg>
+              </div>
+            </Show>
+            <div class="ml-3 self-center text-sm font-medium text-neutral-700 dark:text-neutral-100">
               {snackbar()?.message}
             </div>
             <button
               type="button"
-              class="-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 rounded-lg bg-neutral-100 p-1.5 text-neutral-500 hover:bg-neutral-200 focus:ring-2 focus:ring-neutral-400 dark:bg-transparent dark:text-neutral-100 dark:hover:text-red-600"
+              class="icon-button"
               data-dismiss-target="#alert-1"
               aria-label="Close"
               onClick={() => hide()}

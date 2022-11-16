@@ -4,7 +4,7 @@ const Loading: Component = () => {
   return (
     <div class="flex h-full items-center justify-center">
       <svg
-        class="mr-2 inline h-16 w-16 animate-spin fill-custom-aqua-700 text-neutral-200 dark:text-gray-600"
+        class="mr-2 inline h-16 w-16 animate-spin fill-custom-primary-700 text-neutral-200 dark:text-neutral-600"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

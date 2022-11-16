@@ -28,7 +28,9 @@ const PlayingComponent: Component = () => {
   return (
     <div class="flex-0 flex  flex-col overflow-hidden rounded-md bg-white dark:bg-neutral-900">
       <div class="border-b border-neutral-300 dark:border-neutral-700">
-        <div class="inline-block rounded-t-lg p-4">Soi tällä hetkellä:</div>
+        <div class="inline-block rounded-t-lg p-4 font-bold">
+          Soi tällä hetkellä:
+        </div>
       </div>
       <div class="overflow-hidden p-4 dark:bg-neutral-800">
         <Playing playing={roomData?.()?.playing} onSkip={handleSkip} />

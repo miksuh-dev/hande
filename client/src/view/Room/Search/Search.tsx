@@ -22,7 +22,7 @@ const Search: Component<Props> = (props) => {
         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <svg
             aria-hidden="true"
-            class="h-5 w-5 text-neutral-500 dark:text-gray-400"
+            class="h-5 w-5 text-neutral-500 dark:text-neutral-400"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ const Search: Component<Props> = (props) => {
           <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <svg
               aria-hidden="true"
-              class="h-5 w-5 text-neutral-500 dark:text-gray-400"
+              class="h-5 w-5 text-neutral-500 dark:text-neutral-400"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ const Search: Component<Props> = (props) => {
         <input
           type="text"
           id="simple-search"
-          class="block w-full rounded-lg border border-neutral-300 bg-white p-2.5 pl-10 text-sm text-gray-900 focus:border-custom-aqua-500 focus:ring-custom-aqua-500 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white "
+          class="input p-2.5 pl-10"
           placeholder="Hae kappaletta tai soittolistaa"
           required
           onChange={(e) => props.onChange(e.currentTarget.value)}
@@ -63,7 +63,7 @@ const Search: Component<Props> = (props) => {
       </div>
       <button
         type="submit"
-        class="ml-2 rounded-lg border border-custom-aqua-700 bg-custom-aqua-900  p-2.5 text-sm font-medium text-white hover:bg-custom-aqua-800 focus:outline-none focus:ring-4 focus:ring-custom-aqua-300 dark:bg-custom-aqua-900 dark:hover:bg-custom-aqua-800 dark:focus:ring-custom-aqua-500"
+        class="ml-2 rounded-lg border border-custom-primary-700 bg-custom-primary-900  p-2.5 text-sm font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-4 focus:ring-custom-primary-300 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
         onClick={() => props.onSubmit(props.text())}
         disabled={props.loading()}
       >

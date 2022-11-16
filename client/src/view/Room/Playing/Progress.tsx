@@ -48,7 +48,7 @@ const ProgressComponent: Component<Props> = (props) => {
       <div>{secondsToTime(progress())}</div>
       <div class="block h-[6px] max-h-full w-full  flex-1 bg-neutral-500">
         <div
-          class="h-full w-full bg-custom-aqua-700"
+          class="h-full w-full bg-custom-primary-700"
           style={{ width: `${(progress() / props.playing.duration) * 100}%` }}
         />
       </div>
