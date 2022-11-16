@@ -2,6 +2,7 @@ import { Component } from "solid-js";
 import { Accessor, Setter, Show, For } from "solid-js";
 import { DateTime } from "luxon";
 import { IncomingMessage } from "trpc/types";
+import { htmlDecode } from "utils/parse";
 
 type Props = {
   messages: IncomingMessage[];
@@ -40,7 +41,7 @@ const RoomChat: Component<Props> = (props) => {
                       {message.username}:
                     </div>
                   </Show>
-                  <div>{message.content}</div>
+                  <div>{htmlDecode(message.content)}</div>
                 </div>
               )}
             </For>

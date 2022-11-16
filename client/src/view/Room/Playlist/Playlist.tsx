@@ -1,5 +1,6 @@
 import { Component, For } from "solid-js";
 import { Song } from "trpc/types";
+import { htmlDecode } from "utils/parse";
 
 type Props = {
   onSkip: (song: Song) => void;
@@ -17,7 +18,7 @@ const PlaylistComponent: Component<Props> = (props) => {
                 <img class="w-42 h-32 " src={song.thumbnail} alt="" />
               </div>
               <div class="flex flex-col">
-                <h1>{song.title}</h1>
+                <h1>{htmlDecode(song.title)}</h1>
                 <p>Toivoja: {song.requester}</p>
               </div>
             </div>

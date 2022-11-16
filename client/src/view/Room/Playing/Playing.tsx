@@ -1,5 +1,6 @@
 import { Component, Show } from "solid-js";
 import { Song, PlayingSong } from "trpc/types";
+import { htmlDecode } from "utils/parse";
 import Progress from "./Progress";
 
 type Props = {
@@ -30,7 +31,7 @@ const PlayingComponent: Component<Props> = (props) => {
                   <img class="w-42 h-32 " src={song.thumbnail} alt="" />
                 </div>
                 <div class="flex flex-col">
-                  <h1>{song.title}</h1>
+                  <h1>{htmlDecode(song.title)}</h1>
                   <p>Toivoja: {song.requester}</p>
                 </div>
               </div>

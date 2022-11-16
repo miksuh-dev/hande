@@ -3,6 +3,7 @@ import useSnackbar from "hooks/useSnackbar";
 import { Component, Resource } from "solid-js";
 import trpcClient from "trpc";
 import { Song } from "trpc/types";
+import { htmlDecode } from "utils/parse";
 import type { RoomData } from "../data";
 import Playlist from "./Playlist";
 
@@ -17,7 +18,7 @@ const PlaylistComponent: Component = () => {
         id: song.id,
       });
 
-      snackbar.success(`Kappale "${song.title}" poistettu jonosta`);
+      snackbar.success(`Kappale "${htmlDecode(song.title)}" poistettu jonosta`);
     } catch (error) {
       if (error instanceof Error) {
         snackbar.error(error.message);

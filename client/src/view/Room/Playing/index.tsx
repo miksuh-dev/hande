@@ -5,6 +5,7 @@ import { Component, Resource } from "solid-js";
 import trpcClient from "trpc";
 import { RoomData } from "../data";
 import Playing from "./Playing";
+import { htmlDecode } from "utils/parse";
 
 const PlayingComponent: Component = () => {
   const roomData = useRouteData<Resource<RoomData>>();
@@ -16,7 +17,7 @@ const PlayingComponent: Component = () => {
         id: song.id,
       });
 
-      snackbar.success(`Ohitettiin kappale "${song.title}"`);
+      snackbar.success(`Ohitettiin kappale "${htmlDecode(song.title)}"`);
     } catch (error) {
       if (error instanceof Error) {
         snackbar.error(error.message);

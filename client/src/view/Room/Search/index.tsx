@@ -4,6 +4,7 @@ import Result from "./Result";
 import Search from "./Search";
 import { YoutubeSearchResult } from "trpc/types";
 import useSnackbar from "hooks/useSnackbar";
+import { htmlDecode } from "utils/parse";
 
 const SearchComponent: Component = () => {
   const snackbar = useSnackbar();
@@ -48,7 +49,7 @@ const SearchComponent: Component = () => {
         thumbnail: result.thumbnail.url,
       });
 
-      snackbar.success(`Lisätty jonoon ${song.title}`);
+      snackbar.success(`Lisätty jonoon ${htmlDecode(song.title)}`);
     } catch (error) {
       if (error instanceof Error) {
         snackbar.error(error.message);
