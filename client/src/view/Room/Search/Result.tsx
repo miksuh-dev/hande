@@ -12,7 +12,7 @@ type Props = {
 
 const Result: Component<Props> = (props) => {
   return (
-    <div class="absolute top-full left-0 right-0 max-h-[500px]  space-y-2 overflow-auto rounded-sm rounded-t-none bg-neutral-400 p-2">
+    <div class="absolute top-full left-0 right-0 max-h-[500px]  space-y-2 overflow-auto rounded-sm rounded-t-none bg-neutral-400 p-2 dark:bg-neutral-900">
       <Show
         when={!props.loading()}
         fallback={
@@ -39,7 +39,7 @@ const Result: Component<Props> = (props) => {
         <For each={props.results()}>
           {(result) => {
             return (
-              <div class="w-full bg-white p-3">
+              <div class="w-full bg-white p-3 dark:bg-neutral-800 ">
                 <div class="flex items-center">
                   <img
                     class="h-10 w-10 rounded-full"
@@ -47,13 +47,13 @@ const Result: Component<Props> = (props) => {
                     alt=""
                   />
                   <div class="ml-2">
-                    <h5 class="text-sm font-medium text-neutral-900">
+                    <h5 class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
                       {result.title}
                     </h5>
                   </div>
                   <button
                     type="button"
-                    class="ml-auto inline-flex items-center rounded border border-transparent bg-custom-aqua-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-aqua-800 focus:outline-none focus:ring-2 focus:ring-custom-aqua-500 focus:ring-offset-2"
+                    class="ml-auto inline-flex items-center rounded border border-transparent bg-custom-aqua-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-aqua-800 focus:outline-none focus:ring-2 focus:ring-custom-aqua-500 focus:ring-offset-2 dark:bg-custom-aqua-900 dark:hover:bg-custom-aqua-800 dark:focus:ring-custom-aqua-500"
                     onClick={() => props.onAdd(result)}
                   >
                     Lisää jonoon
