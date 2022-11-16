@@ -18,10 +18,9 @@ const App: Component = () => {
       <Show when={auth.ready()} fallback={<Loading />}>
         <Routes>
           <Route path="/room">
-            <Show when={!auth.authenticated()}>
-              <Navigate href="/" />
+            <Show when={auth.authenticated()} fallback={<Navigate href="/" />}>
+              <Route path="/" component={RoomView} data={roomData} />
             </Show>
-            <Route path="/" component={RoomView} data={roomData} />
           </Route>
           <Route path="/" component={MainView} data={mainData} />
         </Routes>
