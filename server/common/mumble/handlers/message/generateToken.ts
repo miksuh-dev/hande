@@ -6,7 +6,8 @@ const handleGenerateToken = (message: Message) => {
   const { sender } = message;
 
   if (!sender) {
-    throw new Error("No sender");
+    console.log("no sender");
+    return;
   }
 
   const serverUrl = message.client?.connection.options.url;
@@ -22,7 +23,7 @@ const handleGenerateToken = (message: Message) => {
 
   const token = createSession({
     session: sender.session,
-    name: sender.name,
+    name: sender.name || "Nimetön",
     hash: sender.hash,
     serverHash,
   });
