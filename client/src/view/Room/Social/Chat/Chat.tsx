@@ -20,7 +20,7 @@ const RoomChat: Component<Props> = (props) => {
           <Show
             when={props.messages.length}
             fallback={
-              <div class="flex flex-col items-center text-black">
+              <div class="flex flex-col items-center text-black dark:text-neutral-100">
                 Ei viestejä
               </div>
             }
