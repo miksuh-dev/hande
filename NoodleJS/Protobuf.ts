@@ -1,46 +1,71 @@
-import Promise from "bluebird"
-import * as path from "path"
-import Messages from "./Messages"
-import protobufjs from "protobufjs"
+import * as path from "path";
+import protobufjs from "protobufjs";
+import Messages from "./Messages";
 
 class Protobuf {
-  mumble: any
+  mumble: protobufjs.Root | undefined;
 
-  load = (): globalThis.Promise<this> => {
-    return protobufjs
+  async load() {
+    return await protobufjs
       .load(path.join(__dirname, "Mumble.proto"))
-      .then((root: any) => {
-        this.mumble = root
-        return Promise.resolve(this)
+      .then((root) => {
+        this.mumble = root;
+
+        return Promise.resolve(this);
       })
       .catch((err: any) => {
-        console.error(err)
-        throw new Error(err)
-      })
+        console.log();
+        throw err;
+      });
   }
+  // load = (): globalThis.Promise<this> => {
+  //   return protobufjs
+  //     .load(path.join(__dirname, "Mumble.proto"))
+  //     .then((root) => {
+  //       this.mumble = root
+  //       return Promise.resolve(this)
+  //     })
+  //     .catch((err: any) => {
+  //       console.error(err)
+  //       throw new Error(err)
+  //     })
+  // }
+  //
+  encodePacket(type: number | string, payload: Record<string, unknown>) {
+    if (!this.mumble) {
+      throw new Error("Protobuf not loaded");
+    }
 
-  encodePacket(type: any, payload: any) {
-    const packet = this.mumble.lookup(`MumbleProto.${type}`)
-    if (packet.verify(payload)) throw new Error(`Error verifying payload for packet ${type}`)
-    const message = packet.create(payload)
-    return packet.encode(message).finish()
+    const packet = this.mumble.lookupType(`MumbleProto.${type}`);
+
+    if (packet.verify(payload)) {
+      throw new Error(`Error verifying payload for packet ${type}`);
+    }
+    const message = packet.create(payload);
+    return packet.encode(message).finish();
   }
 
   decodePacket(type_id: any, buffer: any) {
-    const type = this.nameById(type_id)
-    const packet = this.mumble.lookup(`MumbleProto.${type}`)
-    return packet.decode(buffer).toJSON()
+    if (!this.mumble) {
+      throw new Error("Protobuf not loaded");
+    }
+    const type = this.nameById(type_id);
+    if (!type) {
+      throw new Error(`Unknown packet type: ${type_id}`);
+    }
+    const packet = this.mumble.lookupType(`MumbleProto.${type}`);
+    return packet.decode(buffer).toJSON();
   }
 
   nameById(id: number) {
-    return Messages[id] as any
+    return Messages[id] as any;
   }
 
   idByName(name: string) {
     for (const key in Messages) {
-      if (Messages[key] == name) return key
+      if (Messages[key] == name) return key;
     }
   }
 }
 
-export default Protobuf
+export default Protobuf;

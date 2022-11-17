@@ -74,25 +74,25 @@ class Collection extends Map {
    * @example
    * collection.find(val => val.username === 'Bob');
    */
-  find(propOrFn: any, value: any) {
-    if (typeof propOrFn === "string") {
-      if (typeof value === "undefined")
-        throw new Error("Value must be specified.");
-      for (const item of this.values()) {
-        if (item[propOrFn] === value) return item;
-      }
-      return null;
-    } else if (typeof propOrFn === "function") {
-      for (const [key, val] of this) {
-        if (propOrFn(val, key, this)) return val;
-      }
-      return null;
-    } else {
-      throw new Error(
-        "First argument must be a property string or a function."
-      );
-    }
-  }
+  // find(propOrFn: string | undefined, value: any) {
+  //   if (typeof propOrFn === "string") {
+  //     if (typeof value === "undefined")
+  //       throw new Error("Value must be specified.");
+  //     for (const item of this.values()) {
+  //       if (item[propOrFn] === value) return item;
+  //     }
+  //     return null;
+  //   } else if (typeof propOrFn === "function") {
+  //     for (const [key, val] of this) {
+  //       if (propOrFn(val, key, this)) return val;
+  //     }
+  //     return null;
+  //   } else {
+  //     throw new Error(
+  //       "First argument must be a property string or a function."
+  //     );
+  //   }
+  // }
 }
 
 export default Collection;

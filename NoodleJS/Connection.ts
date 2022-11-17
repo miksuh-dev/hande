@@ -1,22 +1,20 @@
+import { EventEmitter } from "events";
 import * as tls from "tls";
-import * as Constants from "./Constants";
-
+import { OpusEncoder } from "@discordjs/opus";
 import Promise from "bluebird";
+import * as Constants from "./Constants";
+import { ClientOptions } from "./index";
 import Protobuf from "./Protobuf";
 import Util from "./Util";
-
-import { EventEmitter } from "events";
-import { OpusEncoder } from "@discordjs/opus";
-import { ClientOptions } from "./index";
 
 class Connection extends EventEmitter {
   options: ClientOptions;
   opusEncoder: OpusEncoder;
-  currentEncoder: any;
+  currentEncoder: OpusEncoder;
   voiceSequence: number;
   codec: number;
-  codecWarningShown: any;
-  protobuf: any;
+  codecWarningShown: Record<number, number>;
+  protobuf: Protobuf | undefined;
   socket: tls.TLSSocket | undefined;
 
   constructor(options: ClientOptions) {
@@ -35,7 +33,7 @@ class Connection extends EventEmitter {
   }
 
   connect() {
-    return new Protobuf().load().then((protobuf: any) => {
+    return new Protobuf().load().then((protobuf) => {
       this.protobuf = protobuf;
       this.socket = tls.connect(
         this.options.port,
@@ -68,7 +66,7 @@ class Connection extends EventEmitter {
     };
   }
 
-  _onReceiveData(data: any) {
+  _onReceiveData(data: Buffer) {
     while (data.length > 6) {
       const type = data.readUInt16BE(0);
       const length = data.readUInt32BE(2);
@@ -79,16 +77,22 @@ class Connection extends EventEmitter {
     }
   }
 
-  _processData(type: any, data: any) {
+  _processData(type: number, data: Buffer) {
+    if (!this.protobuf) {
+      throw new Error("Protobuf not loaded");
+    }
     if (this.protobuf.nameById(type) === "UDPTunnel") {
       this.readAudio(data);
     } else {
-      var msg = this.protobuf.decodePacket(type, data);
+      const msg = this.protobuf.decodePacket(type, data);
       this._processMessage(type, msg);
     }
   }
 
-  _processMessage(type: any, msg: any) {
+  _processMessage(type: number, msg: any) {
+    if (!this.protobuf) {
+      throw new Error("Protobuf not loaded");
+    }
     this.emit(this.protobuf.nameById(type), msg);
   }
 
@@ -107,6 +111,9 @@ class Connection extends EventEmitter {
 
   writeProto(type: any, data: any) {
     try {
+      if (!this.protobuf) {
+        throw new Error("Protobuf not loaded");
+      }
       const packet = this.protobuf.encodePacket(type, data);
       this._writeHeader(this.protobuf.idByName(type), packet.length);
       this._writePacket(packet);
@@ -151,12 +158,11 @@ class Connection extends EventEmitter {
     if (audioType != Connection.codec().Opus) {
       // Not OPUS-encoded => not supported :/
       // Check if we already printed a warning for this audiostream
-      if (
-        !this.codecWarningShown[sender] ||
-        sequence < this.codecWarningShown[sender]
-      ) {
+      const warning = this.codecWarningShown[sender];
+
+      if (!warning || (warning && warning > sequence)) {
         console.warn(
-          "Unspported audio codec in voice stream from user " + sender + ": ",
+          `Unspported audio codec in voice stream from user ${sender}`,
           audioType
         );
       }
@@ -203,6 +209,10 @@ class Connection extends EventEmitter {
     voiceSequence: any,
     final: any
   ) {
+    if (!this.protobuf) {
+      throw new Error("Protobuf not loaded");
+    }
+
     packet = this.currentEncoder.encode(packet);
 
     const type = codec === Connection.codec().Opus ? 4 : 0;

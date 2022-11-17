@@ -1,6 +1,5 @@
 import Client from "../index";
 import DispatchStream from "./DispatchStream";
-
 const EventEmitter = require("events").EventEmitter;
 const ffmpeg = require("fluent-ffmpeg");
 

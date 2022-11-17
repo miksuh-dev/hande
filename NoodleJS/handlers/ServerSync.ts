@@ -1,5 +1,5 @@
-import AbstractHandler from "./AbstractHandler";
 import Util from "../Util";
+import AbstractHandler from "./AbstractHandler";
 
 export default class ServerSync extends AbstractHandler {
   handle(data: any) {

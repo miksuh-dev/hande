@@ -1,4 +1,4 @@
-const Messages: { [key: number]: string } = {
+const Messages: Record<number, string> = {
   0: "Version",
   1: "UDPTunnel",
   2: "Authenticate",
@@ -25,6 +25,6 @@ const Messages: { [key: number]: string } = {
   23: "RequestBlob",
   24: "ServerConfig",
   25: "SuggestConfig",
-}
+};
 
-export default Messages
+export default Messages;

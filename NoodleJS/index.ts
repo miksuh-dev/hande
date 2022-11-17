@@ -1,18 +1,17 @@
-import * as Constants from "./Constants";
-import Promise from "bluebird";
-
 import { EventEmitter } from "events";
+import Promise from "bluebird";
 import Connection from "./Connection";
-import Collection from "./structures/Collection";
-import Dispatcher from "./voice/Dispatcher";
-
-import Util from "./Util";
-import ServerSync from "./handlers/ServerSync";
-import UserState from "./handlers/UserState";
-import UserRemove from "./handlers/UserRemove";
-import ChannelState from "./handlers/ChannelState";
+import * as Constants from "./Constants";
 import ChannelRemove from "./handlers/ChannelRemove";
+import ChannelState from "./handlers/ChannelState";
+import ServerSync from "./handlers/ServerSync";
 import TextMessage from "./handlers/TextMessage";
+import UserRemove from "./handlers/UserRemove";
+import UserState from "./handlers/UserState";
+import Collection from "./structures/Collection";
+import User from "./structures/User";
+import Util from "./Util";
+import Dispatcher from "./voice/Dispatcher";
 
 export interface ClientOptions {
   url: string;
@@ -20,7 +19,9 @@ export interface ClientOptions {
   rejectUnauthorized: boolean;
   name: string;
   password: string;
-  tokens: Array<string>;
+  key?: Buffer;
+  cert?: Buffer;
+  tokens: string[];
 }
 
 /**
@@ -33,14 +34,14 @@ export default class Client extends EventEmitter {
   channels: Collection;
   users: Collection;
   voiceConnection: Dispatcher;
-  ping: any;
-  user: any;
-  synced: any;
+  ping: ReturnType<typeof setInterval> | undefined;
+  user: User | undefined;
+  synced = false;
 
   /**
    * @param  {ClientOptions} [options] Options for the client
    */
-  constructor(options = {}) {
+  constructor(options: Partial<ClientOptions> = {}) {
     super();
 
     /**
@@ -61,8 +62,8 @@ export default class Client extends EventEmitter {
 
     this.connection.on("connected", () => {
       this.connection.writeProto("Version", {
-        version: Util.encodeVersion(1, 0, 0),
-        release: "NoodleJS Client",
+        version: Util.encodeVersion(1, 2, 0),
+        release: "NoodleJS Extended Client",
         os: "NodeJS",
         os_version: process.version,
       });
@@ -103,7 +104,20 @@ export default class Client extends EventEmitter {
     const textMessage = new TextMessage(this);
 
     this.connection.on("ServerSync", (data: any) => serverSync.handle(data));
-    this.connection.on("UserState", (data: any) => userState.handle(data));
+    this.connection.on("UserState", (data: any) => {
+      userState.handle(data);
+
+      this.connection.writeProto("RequestBlob", {
+        username: this.options.name,
+        password: this.options.password,
+        opus: true,
+        tokens: this.options.tokens,
+      });
+
+      if (data.name === this.options.name) {
+        this.user = this.users.get(data.session);
+      }
+    });
     this.connection.on("UserRemove", (data: any) => userRemove.handle(data));
     this.connection.on("ChannelRemove", (data: any) =>
       channelRemove.handle(data)
@@ -141,7 +155,7 @@ export default class Client extends EventEmitter {
    * @return {Promise<TextMessage>}
    */
   sendMessage(message: string, recursive: boolean) {
-    return this.user.channel.sendMessage(message, recursive);
+    return this.user?.channel?.sendMessage(message, recursive);
   }
 
   /**
@@ -150,6 +164,10 @@ export default class Client extends EventEmitter {
    * @return {Promise<any>}
    */
   switchChannel(id: number) {
+    if (!this.user?.session) {
+      return Promise.reject("User not initialized");
+    }
+
     if (this.channels.has(id)) {
       return this.connection.writeProto("UserState", {
         session: this.user.session,
@@ -167,6 +185,10 @@ export default class Client extends EventEmitter {
    * @return {Promise<any>}
    */
   startListeningToChannel(id: number) {
+    if (!this.user?.session) {
+      return Promise.reject("User not initialized");
+    }
+
     if (this.channels.has(id)) {
       return this.connection.writeProto("UserState", {
         session: this.user.session,
@@ -183,6 +205,10 @@ export default class Client extends EventEmitter {
    * @return {Promise<any>}
    */
   stopListeningToChannel(id: number) {
+    if (!this.user?.session) {
+      return Promise.reject("User not initialized");
+    }
+
     if (this.channels.has(id)) {
       return this.connection.writeProto("UserState", {
         session: this.user.session,
@@ -200,19 +226,15 @@ export default class Client extends EventEmitter {
    * @param  {Number} channelId      ChannelId to send to. Ignored when userIds is not empty.
    * @return {Promise<any>}
    */
-  setupVoiceTarget(
-    targetId: number,
-    userIds: Array<number>,
-    channelId: number
-  ) {
+  setupVoiceTarget(targetId: number, userIds: number[], channelId: number) {
     if (targetId < 4 || targetId > 30) {
       return Promise.reject("targetId must be between 3 and 30");
     }
 
     if (userIds.length) {
-      for (var idx in userIds) {
+      for (const idx of userIds) {
         if (!this.users.has(userIds[idx])) {
-          return Promise.reject("userId " + userIds[idx] + " unknown");
+          return Promise.reject(`userId ${userIds[idx]} unknown`);
         }
       }
       return this.connection.writeProto("VoiceTarget", {
@@ -231,7 +253,11 @@ export default class Client extends EventEmitter {
   }
 
   mute() {
-    this.connection.writeProto("UserState", {
+    if (!this.user?.session) {
+      return Promise.reject("User not initialized");
+    }
+
+    return this.connection.writeProto("UserState", {
       session: this.user.session,
       actor: this.user.session,
       selfMute: true,
@@ -239,7 +265,11 @@ export default class Client extends EventEmitter {
   }
 
   unmute() {
-    this.connection.writeProto("UserState", {
+    if (!this.user?.session) {
+      return Promise.reject("User not initialized");
+    }
+
+    return this.connection.writeProto("UserState", {
       session: this.user.session,
       actor: this.user.session,
       selfMute: false,

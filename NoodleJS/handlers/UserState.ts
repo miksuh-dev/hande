@@ -1,6 +1,31 @@
-import AbstractHandler from "./AbstractHandler";
 import User from "../structures/User";
 import Util from "../Util";
+import AbstractHandler from "./AbstractHandler";
+
+export interface UserStateData {
+  session: number;
+  name: string;
+  userId?: number;
+  channelId?: number;
+  hash: string;
+  actor?: number;
+  mute?: boolean;
+  deaf?: boolean;
+  suppress?: boolean;
+  selfMute?: boolean;
+  selfDeaf?: boolean;
+  texture?: string;
+  pluginContext?: string;
+  pluginIdentity?: string;
+  comment?: string;
+  commentHash?: string;
+  textureHash?: string;
+  prioritySpeaker?: boolean;
+  recording?: boolean;
+  tempopraryAccessTokens?: string[];
+  listeningChannelAdd?: number[];
+  listeningChannelRemove?: number[];
+}
 
 export default class UserState extends AbstractHandler {
   handle(data: any) {
