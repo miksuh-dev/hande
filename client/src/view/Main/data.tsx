@@ -1,6 +1,7 @@
 import { RouteDataFuncArgs } from "@solidjs/router";
 import useAuth from "hooks/useAuth";
 import useSnackbar from "hooks/useSnackbar";
+import env from "../../config";
 
 async function TokenData({ location }: RouteDataFuncArgs) {
   const auth = useAuth();
@@ -10,7 +11,7 @@ async function TokenData({ location }: RouteDataFuncArgs) {
     try {
       await auth.action.login(token);
 
-      window.location.href = "/room";
+      window.location.href = `${env.BASE_PATH}"/room`;
     } catch (err) {
       if (err instanceof Error) {
         snackbar.error(err.message);

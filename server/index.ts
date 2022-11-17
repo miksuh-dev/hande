@@ -27,8 +27,19 @@ app.use((req, res, next) => {
   // TODO: Fix these at some point
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Request-Method", "*");
-  res.setHeader("Access-Control-Allow-Methods", "*");
+  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET");
   res.setHeader("Access-Control-Allow-Headers", "*");
+
+  const proto = req.headers["x-forwarded-proto"];
+  if (proto && proto === "http") {
+    // redirect to ssl
+    res.writeHead(303, {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      location: `https://${req.headers.host}${req.headers.url ?? ""}`,
+    });
+    res.end();
+    return;
+  }
 
   console.log("⬅️ ", req.method, req.path, req.body ?? req.query);
 
@@ -58,7 +69,7 @@ app.get("*", (_, res) => {
   });
 });
 
-const port = Number(process.env.PORT);
+const port = 2021;
 server.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
 });

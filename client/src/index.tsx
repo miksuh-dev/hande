@@ -3,6 +3,7 @@ import "./index.css";
 import { Router } from "@solidjs/router";
 import { render } from "solid-js/web";
 import BaseProvider from "./context";
+import env from "config";
 
 import App from "./App";
 
@@ -11,7 +12,7 @@ if (!root) throw new Error("No root element found");
 
 render(
   () => (
-    <Router>
+    <Router base={env.BASE_PATH}>
       <BaseProvider>
         <App />
       </BaseProvider>
