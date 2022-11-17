@@ -15,10 +15,12 @@ const handleMessage = async (message: Message) => {
       return;
     }
 
-    await message.client?.user?.channel?.sendMessage(
-      `Tuntematon komento ${action}. Lähetä "hande apua" nähdäksesi komennot.`,
-      false
-    );
+    const content = `Tuntematon komento ${action}. Lähetä "hande apua" nähdäksesi komennot.`;
+    if (message.sender) {
+      await message.reply(content);
+    } else if (message.client?.user?.channel) {
+      await message.client.user.channel.sendMessage(content, false);
+    }
   }
 };
 

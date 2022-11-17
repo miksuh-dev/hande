@@ -11,7 +11,11 @@ const handleGenerateToken = async (message: Message) => {
   content +=
     "<br />Huom! Handen yksityisviestit toimivat vain jos käyttäjällä ei ole (liian pitkää) kommenttia ";
 
-  await message.client?.user?.channel?.sendMessage(content, false);
+  if (message.sender) {
+    await message.reply(content);
+  } else if (message.client?.user?.channel) {
+    await message.client.user.channel.sendMessage(content, false);
+  }
 };
 
 export default handleGenerateToken;
