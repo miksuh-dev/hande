@@ -5,14 +5,13 @@
   "main": "index.ts",
   "scripts": {
     "dev": "NODE_PATH=./server NODE_OPTIONS='--tls-min-v1.0' nodemon server/index.ts",
-    "start": "nodemon ./server/index.ts",
     "client": "npm run dev --prefix client",
     "server": "npm run dev",
     "lint": "eslint ./src",
     "build": "tsc && npm run build --prefix client && npm run copy-files",
     "copy-files": "cp ./NoodleJS/Mumble.proto ./dist/NoodleJS/",
     "postinstall": "npx prisma generate",
-    "start:prod": "NODE_PATH=./dist NODE_ENV=production node dist/server/index.js",
+    "start:prod": "NODE_PATH=./dist NODE_OPTIONS='--tls-min-v1.0' NODE_ENV=production node dist/server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
