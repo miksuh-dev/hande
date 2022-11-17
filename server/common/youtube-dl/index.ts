@@ -6,7 +6,7 @@ import { Readable } from "stream";
 import { Song } from "@prisma/client";
 import { VideoInfo } from "./types";
 const YoutubeDlWrap = require("youtube-dl-wrap");
-const youtubeDlWrap = new YoutubeDlWrap("/usr/bin/youtube-dl");
+const youtubeDlWrap = new YoutubeDlWrap(process.env.YOUTUBE_DL_LOCATION);
 
 export const createStream = (song: Song) => {
   const readStream = youtubeDlWrap.execStream([
