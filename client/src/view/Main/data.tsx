@@ -11,7 +11,7 @@ async function TokenData({ location }: RouteDataFuncArgs) {
     try {
       await auth.action.login(token);
 
-      window.location.href = `${env.BASE_PATH}"/room`;
+      window.location.href = `${env.BASE_PATH}/room`;
     } catch (err) {
       if (err instanceof Error) {
         snackbar.error(err.message);
