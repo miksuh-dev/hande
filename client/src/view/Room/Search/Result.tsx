@@ -1,6 +1,7 @@
 import { Component, For, Show } from "solid-js";
 import { YoutubeSearchResult } from "trpc/types";
 import { Accessor } from "solid-js";
+import { htmlDecode } from "utils/parse";
 
 type Props = {
   results: Accessor<YoutubeSearchResult[]>;
@@ -48,7 +49,7 @@ const Result: Component<Props> = (props) => {
                   />
                   <div class="ml-2">
                     <h5 class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                      {result.title}
+                      {htmlDecode(result.title)}
                     </h5>
                   </div>
                   <button
