@@ -113,6 +113,26 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
     }
   );
 
+  onMount(async () => {
+    let timeout: NodeJS.Timeout;
+
+    const pongListen = trpcClient.room.onPong.subscribe(undefined, {
+      onData: (message) => {
+        console.log(message);
+        timeout = setTimeout(async () => {
+          trpcClient.room.ping.mutate();
+        }, 1000 * 30);
+      },
+    });
+
+    onCleanup(() => {
+      pongListen.unsubscribe();
+      clearTimeout(timeout);
+    });
+
+    await trpcClient.room.ping.mutate();
+  });
+
   onMount(() => {
     const lobbyUpdate = trpcClient.room.onUpdate.subscribe(undefined, {
       onData(event) {

@@ -87,6 +87,13 @@ export const roomRouter = t.router({
 
       return { song };
     }),
+  ping: authedProcedure.mutation(({ ctx }) => {
+    const { user } = ctx;
+
+    ee.emit(`onPing-${user.session}`, "pong");
+
+    return "pong";
+  }),
   message: authedProcedure
     .input(
       z.object({
@@ -119,6 +126,21 @@ export const roomRouter = t.router({
         userLeave(user);
 
         ee.off(`onUpdate`, onUpdate);
+      };
+    });
+  }),
+  onPong: authedProcedure.subscription(({ ctx }) => {
+    const { user } = ctx;
+
+    return observable<string>((emit) => {
+      const onPong = (message: string) => {
+        emit.next(message);
+      };
+
+      ee.on(`onPing-${user.session}`, onPong);
+
+      return () => {
+        ee.on(`onPing-${user.session}`, onPong);
       };
     });
   }),
