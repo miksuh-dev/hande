@@ -1,10 +1,19 @@
-import { Component, createSignal, onCleanup, onMount, Show } from "solid-js";
+import {
+  Component,
+  createSignal,
+  onCleanup,
+  onMount,
+  Resource,
+  Show,
+} from "solid-js";
 import trpcClient from "trpc";
 import Result from "./Result";
 import Search from "./Search";
 import { YoutubeSearchResult } from "trpc/types";
 import useSnackbar from "hooks/useSnackbar";
 import { htmlDecode } from "utils/parse";
+import RoomData from "../data";
+import { useRouteData } from "@solidjs/router";
 
 const SearchComponent: Component = () => {
   const snackbar = useSnackbar();
@@ -12,6 +21,7 @@ const SearchComponent: Component = () => {
   const [results, setResults] = createSignal<YoutubeSearchResult[]>([]);
   const [resultsOpen, setResultsOpen] = createSignal(false);
   const [loading, setLoading] = createSignal(false);
+  const roomData = useRouteData<Resource<RoomData>>();
 
   let containerRef: HTMLDivElement | undefined = undefined;
 
@@ -101,6 +111,7 @@ const SearchComponent: Component = () => {
       <Show when={resultsOpen()}>
         <Result
           results={results}
+          songs={roomData?.().songs || []}
           onAdd={handleAdd}
           onClose={() => setResultsOpen(false)}
           loading={loading}
