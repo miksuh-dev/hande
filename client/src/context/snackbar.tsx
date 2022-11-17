@@ -24,12 +24,21 @@ export const SnackbarProvider: Component<{
 }> = (props) => {
   const [snackbar, setSnackbar] = createSignal<Snackbar | null>(null);
 
+  let timeout: number;
+
   const show = (message: string, type: "success" | "error") => {
     setSnackbar({ message, type });
+
+    if (timeout) clearTimeout(timeout);
+    timeout = window.setTimeout(() => {
+      setSnackbar(null);
+    }, 5000);
   };
 
   const hide = () => {
     setSnackbar(null);
+
+    if (timeout) clearTimeout(timeout);
   };
 
   return (
