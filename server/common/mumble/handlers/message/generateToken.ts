@@ -1,11 +1,11 @@
 import crypto from "crypto";
 import { createSession } from "../../../../utils/auth";
-import { Message } from "../../client/types";
+import { Message } from "./types";
 
-const handleGenerateToken = (message: Message) => {
+const handleGenerateToken = async (message: Message) => {
   const { sender } = message;
 
-  if (!sender) {
+  if (!sender?.name) {
     console.log("no sender");
     return;
   }
@@ -23,7 +23,7 @@ const handleGenerateToken = (message: Message) => {
 
   const token = createSession({
     session: sender.session,
-    name: sender.name || "Nimetön",
+    name: sender.name,
     hash: sender.hash,
     serverHash,
   });
@@ -37,7 +37,7 @@ const handleGenerateToken = (message: Message) => {
 
   const url = `<a href="${basePath}?token=${formattedToken}">tästä<a/>`;
 
-  message.reply(`Siirry hallintapaneeliin ${url}.`);
+  await message.reply(`Siirry hallintapaneeliin ${url}.`);
 };
 
 export default handleGenerateToken;

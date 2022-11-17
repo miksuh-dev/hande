@@ -1,22 +1,23 @@
 import { BASE } from "../../../../constants";
-import { Message } from "../../client/types";
 import commands from "./commands";
+import { Message } from "./types";
 
 const baseHandler = new Map(commands.map((c) => [c.command, c.action]));
 
-const handleMessage = (message: Message) => {
+const handleMessage = async (message: Message) => {
   if (message.content.startsWith(BASE)) {
     const action = message.content.slice(BASE.length);
 
     const handler = baseHandler.get(action);
     if (handler) {
-      handler(message);
+      await handler(message);
 
       return;
     }
 
-    message.reply(
-      `Tuntematon komento ${action}. Lähetä "hande apua" nähdäksesi komennot.`
+    await message.client?.user?.channel?.sendMessage(
+      `Tuntematon komento ${action}. Lähetä "hande apua" nähdäksesi komennot.`,
+      false
     );
   }
 };

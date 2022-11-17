@@ -6,7 +6,7 @@ import handleMessage from "./handlers/message";
 
 const client = new NoodleJS({
   url: process.env.MUMBLE_ADDRESS,
-  port: process.env.MUMBLE_PORT,
+  port: Number(process.env.MUMBLE_PORT),
   name: process.env.MUMBLE_USERNAME,
   password: process.env.MUMBLE_PASSWORD,
   key: fs.readFileSync("./key.pem"),

@@ -1,11 +1,11 @@
-import { Message } from "../../client/types";
 import generateToken from "./generateToken";
 import help from "./help";
+import { Message } from "./types";
 
 export default [
   {
     command: "www",
-    description: "Generoi käyttäjälle tokenin hallintapaneeliin.",
+    description: "Generoi liittymislinkin hallintapaneeliin.",
     action: generateToken,
   },
   {
@@ -16,5 +16,5 @@ export default [
 ] as {
   command: string;
   description: string;
-  action: (message: Message) => void;
+  action: (message: Message) => void | Promise<void>;
 }[];
