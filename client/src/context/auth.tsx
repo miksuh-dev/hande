@@ -61,8 +61,6 @@ export const AuthProvider: Component<{
       await trpcClient.user.login.mutate(token);
 
       localStorage.setItem("token", token);
-
-      await fetchAndSetMe();
     } catch (err) {
       throw err;
     }
