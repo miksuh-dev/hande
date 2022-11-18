@@ -16,6 +16,7 @@ export interface Message {
   timestamp: number;
   type: MessageType;
   isSystem: boolean;
+  isVerified: boolean;
 }
 
 export interface UpdateEvent {

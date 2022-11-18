@@ -8,13 +8,16 @@ export const sendMessage = (
   content: string,
   options?: { user?: MumbleUser; type?: MessageType }
 ) => {
+  const isSystem = !options?.user;
+
   const message = {
     id: Date.now().toString(),
     username: options?.user?.name ?? process.env.MUMBLE_USERNAME ?? "System",
     content,
     timestamp: Date.now(),
     type: options?.type ?? MessageType.MESSAGE,
-    isSystem: !options?.user,
+    isSystem: isSystem,
+    isVerified: options?.user?.isMumbleUser ?? false,
   };
 
   messages.push(message);
