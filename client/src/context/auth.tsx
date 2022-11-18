@@ -10,6 +10,7 @@ import trpcClient from "trpc";
 import { User } from "trpc/types";
 import type { Component } from "solid-js";
 import { UserLoginInput } from "trpc/types";
+import { useNavigate } from "@solidjs/router";
 
 type AuthStoreProps = {
   user: Accessor<User | null>;
@@ -20,6 +21,7 @@ type AuthStoreProps = {
 interface AuthContextProps extends AuthStoreProps {
   action: {
     login: (data: UserLoginInput) => Promise<void>;
+    register: (name: string) => Promise<void>;
     logout: () => void;
   };
 }
@@ -30,6 +32,7 @@ const INITIAL_VALUE = {
   ready: () => false,
   action: {
     login: async () => {},
+    register: async () => {},
     logout: () => {},
   },
 };
@@ -39,6 +42,8 @@ export const AuthContext = createContext<AuthContextProps>(INITIAL_VALUE);
 export const AuthProvider: Component<{
   children: JSX.Element;
 }> = (props) => {
+  const navigate = useNavigate();
+
   const [authenticated, setAuthenticated] = createSignal<boolean>(false);
   const [user, setUser] = createSignal<User | null>(null);
   const [ready, setReady] = createSignal<boolean>(false);
@@ -66,6 +71,18 @@ export const AuthProvider: Component<{
     }
   };
 
+  const register = async (name: string) => {
+    try {
+      const token = await trpcClient.user.register.mutate({ name });
+
+      localStorage.setItem("token", token);
+
+      window.location.reload();
+    } catch (err) {
+      throw err;
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem("token");
 
@@ -75,6 +92,10 @@ export const AuthProvider: Component<{
 
   onMount(async () => {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/");
+    }
 
     if (token && !user()) {
       await fetchAndSetMe().catch(async () => {
@@ -93,6 +114,7 @@ export const AuthProvider: Component<{
     ready,
     action: {
       login,
+      register,
       logout,
     },
   };

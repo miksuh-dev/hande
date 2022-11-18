@@ -1,11 +1,13 @@
+import crypto from "crypto";
 import { TRPCError } from "@trpc/server";
+import { DateTime } from "luxon";
 import { z } from "zod";
 import { t } from "../../trpc";
-import { verifyJWTToken } from "../../utils/auth";
-import { authedProcedure } from "../utils";
+import { createSession, verifyJWTToken } from "../../utils/auth";
+import { userProcedure, guestProcedure } from "../utils";
 
 export const userRouter = t.router({
-  me: authedProcedure.query(({ ctx }) => {
+  me: userProcedure.query(({ ctx }) => {
     const { user } = ctx;
     return user;
   }),
@@ -21,6 +23,23 @@ export const userRouter = t.router({
 
     return { user };
   }),
+  register: guestProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .mutation(({ input }) => {
+      const session = {
+        session: DateTime.utc().toMillis(),
+        name: input.name,
+        hash: crypto.createHash("sha512").digest("hex"),
+        isGuest: false,
+        isMumbleUser: false,
+      };
+
+      return createSession(session);
+    }),
 });
 
 export type UserRouter = typeof userRouter;

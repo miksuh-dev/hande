@@ -1,14 +1,9 @@
-import crypto from "crypto";
+import { DateTime } from "luxon";
 import { createSession } from "../../../../utils/auth";
 import { Message } from "./types";
 
 const handleGenerateToken = async (message: Message) => {
   const { sender } = message;
-
-  if (!sender?.name) {
-    console.log("no sender");
-    return;
-  }
 
   const serverUrl = message.client?.connection.options.url;
   const serverPort = message.client?.connection.options.port;
@@ -16,17 +11,25 @@ const handleGenerateToken = async (message: Message) => {
   if (!serverUrl) throw new Error("No url");
   if (!serverPort) throw new Error("No port");
 
-  const serverHash = crypto
-    .createHash("sha512")
-    .update(`${serverUrl}${serverPort}`, "utf-8")
-    .digest("hex");
+  const hasSender = sender?.name;
 
-  const token = createSession({
-    session: sender.session,
-    name: sender.name,
-    hash: sender.hash,
-    serverHash,
-  });
+  const session = hasSender
+    ? {
+        session: sender.session,
+        name: sender.name,
+        hash: sender.hash,
+        isGuest: false,
+        isMumbleUser: true,
+      }
+    : {
+        session: DateTime.utc().toMillis(),
+        name: "Guest",
+        hash: "",
+        isGuest: true,
+        isMumbleUser: false,
+      };
+
+  const token = createSession(session);
 
   const basePath = process.env.WWW_BASE_PATH;
   if (!basePath) {
@@ -37,7 +40,14 @@ const handleGenerateToken = async (message: Message) => {
 
   const url = `<a href="${basePath}?token=${formattedToken}">tästä<a/>`;
 
-  await message.reply(`Siirry hallintapaneeliin ${url}.`);
+  if (hasSender) {
+    await message.reply(`Siirry hallintapaneeliin ${url}.`);
+  } else {
+    await message.client?.user?.channel?.sendMessage(
+      `Siirry hallintapaneeliin vieraana ${url}.`,
+      false
+    );
+  }
 };
 
 export default handleGenerateToken;
