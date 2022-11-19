@@ -43,7 +43,7 @@ const RoomChat: Component<Props> = (props) => {
                             version="1.1"
                             viewBox="0,0,24,24"
                             xmlns="http://www.w3.org/2000/svg"
-                            class="ml-2 h-4 w-4 self-center text-custom-primary-900"
+                            class="ml-1 h-4 w-4 self-center text-custom-primary-900"
                             fill="currentColor"
                           >
                             <path
