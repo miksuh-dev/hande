@@ -78,6 +78,8 @@ export const AuthProvider: Component<{
       localStorage.setItem("token", token);
 
       window.location.reload();
+
+      return token;
     } catch (err) {
       throw err;
     }

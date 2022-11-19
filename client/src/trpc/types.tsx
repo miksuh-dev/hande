@@ -11,6 +11,9 @@ export type User = Room["users"][number];
 export type IncomingMessage = Room["messages"][number];
 
 export type UserLoginInput = inferProcedureInput<AppRouter["user"]["login"]>;
+export type UserRegisterInput = inferProcedureInput<
+  AppRouter["user"]["register"]
+>;
 
 export type YoutubeSearchResult = inferProcedureOutput<
   AppRouter["youtube"]["search"]
