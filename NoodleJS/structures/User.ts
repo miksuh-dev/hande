@@ -91,9 +91,6 @@ export default class User {
     }
 
     const channel = this.client.channels.get(data.channelId ?? 0);
-    if (!channel) {
-      throw new Error("Channel not found");
-    }
     this.channel = channel;
 
     if (data.actor != null) this.actor = this.client.users.get(data.actor);
