@@ -21,7 +21,7 @@ export const userRouter = t.router({
       });
     }
 
-    return { user };
+    return user;
   }),
   register: guestProcedure
     .input(

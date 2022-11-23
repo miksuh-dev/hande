@@ -31,14 +31,14 @@ const handleGenerateToken = async (message: Message) => {
 
   const token = createSession(session);
 
-  const basePath = process.env.WWW_BASE_PATH;
-  if (!basePath) {
+  const tokenUrl = process.env.TOKEN_URL;
+  if (!tokenUrl) {
     throw new Error("No base path");
   }
 
   const formattedToken = token.replace(/\./g, "%2E");
 
-  const url = `<a href="${basePath}?token=${formattedToken}">tästä<a/>`;
+  const url = `<a href="${tokenUrl}?login=${formattedToken}">tästä<a/>`;
 
   if (hasSender) {
     await message.reply(`Siirry hallintapaneeliin ${url}.`);

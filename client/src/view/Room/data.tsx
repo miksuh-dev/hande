@@ -102,6 +102,7 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
 
   const [room, { mutate }] = createResource<Room>(
     () => trpcClient.room.get.query(),
+
     {
       storage: createDeepSignal,
       initialValue: {
@@ -150,7 +151,7 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
       },
       onComplete() {
         snackbar.success("Poistuttiin huoneesta");
-        navigate("/");
+        navigate("/main");
       },
     });
 

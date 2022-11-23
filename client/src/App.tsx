@@ -1,36 +1,45 @@
 import { Component, Show } from "solid-js";
 import { lazy, Suspense } from "solid-js";
-import { Routes, Route } from "@solidjs/router";
+import { Routes, Route, Navigate } from "@solidjs/router";
 
 import useAuth from "hooks/useAuth";
-import mainData from "view/Main/data";
 import roomData from "view/Room/data";
+import tokenData from "view/Token/data";
+import AuthGate from "auth/AuthGate";
 
 const Loading = lazy(() => import("components/Loading"));
 const MainView = lazy(() => import("view/Main"));
 const RoomView = lazy(() => import("view/Room"));
-const RegisterView = lazy(() => import("view/Register"));
+const GuestLoginView = lazy(() => import("view/GuestLogin"));
 
 const App: Component = () => {
   const auth = useAuth();
 
+  const getPath = () => {
+    if (auth.user()) {
+      if (auth.user().isGuest) {
+        return "/room/guest";
+      } else {
+        return "/room";
+      }
+    }
+
+    return "/main";
+  };
+
   return (
     <Suspense fallback={<Loading />}>
-      <Show when={auth.ready()} fallback={<Loading />}>
-        <Routes>
-          <Route path="/room">
-            <Show when={auth.authenticated()}>
-              <Show
-                when={!auth.user().isGuest}
-                fallback={<Route path="/" component={RegisterView} />}
-              >
-                <Route path="/" component={RoomView} data={roomData} />
-              </Show>
-            </Show>
+      <Routes>
+        <Show when={auth.ready()} fallback={<Loading />}>
+          <Route path="/room" element={<AuthGate />}>
+            <Route path="/" component={RoomView} data={roomData} />
+            <Route path="/guest" component={GuestLoginView} />
           </Route>
-          <Route path="/" component={MainView} data={mainData} />
-        </Routes>
-      </Show>
+          <Route path="/main" component={MainView} />
+          <Route path="/" element={<Navigate href={getPath} />} />
+        </Show>
+        <Route path="/token" component={Loading} data={tokenData} />
+      </Routes>
     </Suspense>
   );
 };

@@ -4,7 +4,7 @@ import { Component, createSignal, Show } from "solid-js";
 import { UserRegisterInput } from "trpc/types";
 import { handleError } from "utils/error";
 
-const RegisterView: Component = () => {
+const GuestLoginView: Component = () => {
   const auth = useAuth();
   const snackbar = useSnackbar();
   const [username, setUsername] = createSignal<string>("");
@@ -65,4 +65,4 @@ const RegisterView: Component = () => {
   );
 };
 
-export default RegisterView;
+export default GuestLoginView;

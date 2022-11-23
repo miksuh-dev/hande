@@ -12,7 +12,7 @@ import Search from "./Search";
 import { YoutubeSearchResult } from "trpc/types";
 import useSnackbar from "hooks/useSnackbar";
 import { htmlDecode } from "utils/parse";
-import RoomData from "../data";
+import { RoomData } from "../data";
 import { useRouteData } from "@solidjs/router";
 
 const SearchComponent: Component = () => {

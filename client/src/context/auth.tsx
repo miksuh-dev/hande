@@ -1,16 +1,10 @@
-import {
-  JSX,
-  createContext,
-  onMount,
-  createSignal,
-  Accessor,
-  batch,
-} from "solid-js";
+import { JSX, createContext, onMount, createSignal, Accessor } from "solid-js";
 import trpcClient from "trpc";
 import { User } from "trpc/types";
 import type { Component } from "solid-js";
 import { UserLoginInput } from "trpc/types";
 import { useNavigate } from "@solidjs/router";
+import env from "config";
 
 type AuthStoreProps = {
   user: Accessor<User | null>;
@@ -48,24 +42,16 @@ export const AuthProvider: Component<{
   const [user, setUser] = createSignal<User | null>(null);
   const [ready, setReady] = createSignal<boolean>(false);
 
-  const fetchAndSetMe = async () => {
-    try {
-      const me = await trpcClient.user.me.query().then();
-
-      batch(() => {
-        setUser(me);
-        setAuthenticated(true);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const login = async (token: UserLoginInput) => {
     try {
-      await trpcClient.user.login.mutate(token);
+      const user: User = await trpcClient.user.login.mutate(token);
 
       localStorage.setItem("token", token);
+
+      setAuthenticated(true);
+      setUser(user);
+
+      return user;
     } catch (err) {
       throw err;
     }
@@ -78,8 +64,6 @@ export const AuthProvider: Component<{
       localStorage.setItem("token", token);
 
       window.location.reload();
-
-      return token;
     } catch (err) {
       throw err;
     }
@@ -88,26 +72,33 @@ export const AuthProvider: Component<{
   const logout = () => {
     localStorage.removeItem("token");
 
-    const win: Window = window;
-    win.location.reload();
+    // Hard refresh to clear socket connection
+    window.location.href = env.BASE_PATH;
+  };
+
+  const getTokenFromStorage = () => {
+    return localStorage.getItem("token");
   };
 
   onMount(async () => {
-    const token = localStorage.getItem("token");
+    const token = getTokenFromStorage();
 
-    if (!token) {
-      navigate("/");
+    try {
+      if (token) {
+        const user = await login(token);
+
+        if (user.isGuest) {
+          navigate("/room/guest");
+        } else {
+          navigate("/room");
+        }
+      }
+    } catch (err) {
+      console.log("err", err);
+      logout();
+    } finally {
+      setReady(true);
     }
-
-    if (token && !user()) {
-      await fetchAndSetMe().catch(async () => {
-        await login(token).catch(async () => {
-          logout();
-        });
-      });
-    }
-
-    setReady(true);
   });
 
   const value = {
