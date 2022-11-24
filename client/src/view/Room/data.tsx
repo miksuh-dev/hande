@@ -4,6 +4,8 @@ import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
 import useSnackbar from "hooks/useSnackbar";
 import { RouteDataFuncArgs } from "@solidjs/router";
+import { DateTime } from "luxon";
+import useAuth from "hooks/useAuth";
 
 const handleUpdateEvent = (
   existingRoom: Room,
@@ -99,6 +101,7 @@ function createDeepSignal<T>(value: T): Signal<T> {
 
 function RoomData({ navigate }: RouteDataFuncArgs) {
   const snackbar = useSnackbar();
+  const auth = useAuth();
 
   const [room, { mutate }] = createResource<Room>(
     () => trpcClient.room.get.query(),
@@ -115,13 +118,16 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
   );
 
   onMount(async () => {
+    if (!auth.user()) return;
+
+    const pingId = `${auth.user().session}-${DateTime.now().toMillis()}`;
     let timeout: NodeJS.Timeout;
 
-    const pongListen = trpcClient.room.onPong.subscribe(undefined, {
+    const pongListen = trpcClient.room.onPong.subscribe(pingId, {
       onData: (message) => {
         console.log(message);
         timeout = setTimeout(async () => {
-          trpcClient.room.ping.mutate();
+          trpcClient.room.ping.mutate(pingId);
         }, 1000 * 30);
       },
     });
@@ -131,7 +137,7 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
       clearTimeout(timeout);
     });
 
-    await trpcClient.room.ping.mutate();
+    await trpcClient.room.ping.mutate(pingId);
   });
 
   onMount(() => {

@@ -87,10 +87,10 @@ export const roomRouter = t.router({
 
       return { song };
     }),
-  ping: authedProcedure.mutation(({ ctx }) => {
-    const { user } = ctx;
+  ping: authedProcedure.input(z.string().min(10)).mutation(({ input }) => {
+    const pingTarget = input;
 
-    ee.emit(`onPing-${user.session}`, "pong");
+    ee.emit(`onPing-${pingTarget}`, "pong");
 
     return "pong";
   }),
@@ -129,21 +129,23 @@ export const roomRouter = t.router({
       };
     });
   }),
-  onPong: authedProcedure.subscription(({ ctx }) => {
-    const { user } = ctx;
+  onPong: authedProcedure
+    .input(z.string().min(10))
+    .subscription(({ input }) => {
+      const pingTarget = input;
 
-    return observable<string>((emit) => {
-      const onPong = (message: string) => {
-        emit.next(message);
-      };
+      return observable<string>((emit) => {
+        const onPong = (message: string) => {
+          emit.next(message);
+        };
 
-      ee.on(`onPing-${user.session}`, onPong);
+        ee.on(`onPing-${pingTarget}`, onPong);
 
-      return () => {
-        ee.on(`onPing-${user.session}`, onPong);
-      };
-    });
-  }),
+        return () => {
+          ee.on(`onPing-${pingTarget}`, onPong);
+        };
+      });
+    }),
 });
 
 export type RoomRouter = typeof roomRouter;
