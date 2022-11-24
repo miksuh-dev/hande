@@ -16,6 +16,8 @@ const AuthGate: Component = () => {
       if (auth.user().isGuest) {
         return navigate("/room/guest");
       }
+
+      return navigate("/room");
     }
   });
 

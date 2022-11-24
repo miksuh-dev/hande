@@ -15,18 +15,6 @@ const GuestLoginView = lazy(() => import("view/GuestLogin"));
 const App: Component = () => {
   const auth = useAuth();
 
-  const getPath = () => {
-    if (auth.user()) {
-      if (auth.user().isGuest) {
-        return "/room/guest";
-      } else {
-        return "/room";
-      }
-    }
-
-    return "/main";
-  };
-
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
@@ -36,7 +24,7 @@ const App: Component = () => {
             <Route path="/guest" component={GuestLoginView} />
           </Route>
           <Route path="/main" component={MainView} />
-          <Route path="/" element={<Navigate href={getPath} />} />
+          <Route path="/" element={<Navigate href={"/main"} />} />
         </Show>
         <Route path="/token" component={Loading} data={tokenData} />
       </Routes>

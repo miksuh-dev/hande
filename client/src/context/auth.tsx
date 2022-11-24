@@ -73,7 +73,7 @@ export const AuthProvider: Component<{
     localStorage.removeItem("token");
 
     // Hard refresh to clear socket connection
-    window.location.href = env.BASE_PATH;
+    window.location.href = `${env.BASE_PATH}/main`;
   };
 
   const getTokenFromStorage = () => {
@@ -85,13 +85,7 @@ export const AuthProvider: Component<{
 
     try {
       if (token) {
-        const user = await login(token);
-
-        if (user.isGuest) {
-          navigate("/room/guest");
-        } else {
-          navigate("/room");
-        }
+        await login(token);
       }
     } catch (err) {
       console.log("err", err);
