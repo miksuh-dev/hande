@@ -2,7 +2,8 @@ import type { Component } from "solid-js";
 import { createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
 import useAuth from "hooks/useAuth";
-import { ToggleThemeButton } from "components/DarkToggle";
+import DarkToggle from "components/DarkToggle";
+import ThemeSelect from "components/ThemeSelect";
 
 const Navbar: Component = () => {
   const auth = useAuth();
@@ -18,7 +19,8 @@ const Navbar: Component = () => {
           Hande
         </Link>
         <div class="flex items-center space-x-4 md:order-2">
-          <ToggleThemeButton />
+          <ThemeSelect />
+          <DarkToggle />
           <div class="flex items-center md:order-2">
             <button
               type="button"

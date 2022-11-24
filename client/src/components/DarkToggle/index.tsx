@@ -1,6 +1,6 @@
 import { createEffect, createSignal, Show } from "solid-js";
 
-export const ToggleThemeButton = () => {
+const DarkToggle = () => {
   const getInitialValue = () => {
     const theme = localStorage.getItem("theme");
     const prefersDark = window.matchMedia(
@@ -84,3 +84,5 @@ export const ToggleThemeButton = () => {
     </button>
   );
 };
+
+export default DarkToggle;

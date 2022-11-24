@@ -115,7 +115,6 @@ const SearchComponent: Component = () => {
           onAdd={handleAdd}
           onClose={() => setResultsOpen(false)}
           loading={loading}
-          containerRef={containerRef}
         />
       </Show>
     </div>

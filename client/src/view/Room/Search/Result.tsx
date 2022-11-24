@@ -9,7 +9,6 @@ type Props = {
   onAdd: (data: YoutubeSearchResult) => void;
   loading: Accessor<boolean>;
   onClose: () => void;
-  containerRef: HTMLElement | undefined;
 };
 
 const Result: Component<Props> = (props) => {

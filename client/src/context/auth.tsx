@@ -3,7 +3,6 @@ import trpcClient from "trpc";
 import { User } from "trpc/types";
 import type { Component } from "solid-js";
 import { UserLoginInput } from "trpc/types";
-import { useNavigate } from "@solidjs/router";
 import env from "config";
 
 type AuthStoreProps = {
@@ -36,8 +35,6 @@ export const AuthContext = createContext<AuthContextProps>(INITIAL_VALUE);
 export const AuthProvider: Component<{
   children: JSX.Element;
 }> = (props) => {
-  const navigate = useNavigate();
-
   const [authenticated, setAuthenticated] = createSignal<boolean>(false);
   const [user, setUser] = createSignal<User | null>(null);
   const [ready, setReady] = createSignal<boolean>(false);
