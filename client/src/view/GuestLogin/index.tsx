@@ -1,4 +1,4 @@
-import { useNavigate } from "@solidjs/router";
+import env from "config";
 import useAuth from "hooks/useAuth";
 import useSnackbar from "hooks/useSnackbar";
 import { Component, createSignal, Show } from "solid-js";
@@ -7,7 +7,6 @@ import { handleError } from "utils/error";
 
 const GuestLoginView: Component = () => {
   const auth = useAuth();
-  const navigate = useNavigate();
   const snackbar = useSnackbar();
   const [username, setUsername] = createSignal<string>("");
   const [error, setError] = createSignal<Partial<UserRegisterInput>>();
@@ -16,10 +15,8 @@ const GuestLoginView: Component = () => {
     try {
       await auth.action.register(name);
 
-      navigate("/main");
-
       // Hard refresh to clear socket connection
-      window.location.reload();
+      window.location.href = `${env.BASE_PATH}`;
     } catch (err) {
       const formattedError = handleError(err);
 
