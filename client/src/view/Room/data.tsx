@@ -118,7 +118,10 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
   );
 
   onMount(async () => {
-    if (!auth.user()) return;
+    if (!auth.user()) {
+      navigate("/main");
+      return;
+    }
 
     const pingId = `${auth.user().session}-${DateTime.now().toMillis()}`;
     let timeout: NodeJS.Timeout;
@@ -132,15 +135,8 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
       },
     });
 
-    onCleanup(() => {
-      pongListen.unsubscribe();
-      clearTimeout(timeout);
-    });
-
     await trpcClient.room.ping.mutate(pingId);
-  });
 
-  onMount(() => {
     const lobbyUpdate = trpcClient.room.onUpdate.subscribe(undefined, {
       onData(event) {
         mutate((existingRoom) => {
@@ -163,6 +159,8 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
 
     onCleanup(() => {
       lobbyUpdate.unsubscribe();
+      pongListen.unsubscribe();
+      clearTimeout(timeout);
     });
   });
 

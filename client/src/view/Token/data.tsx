@@ -10,10 +10,10 @@ function TokenData({}: RouteDataFuncArgs) {
 
   if (loginToken) {
     localStorage.setItem("token", loginToken);
-
-    // Hard refresh to make sure socket connection is established
-    window.location.href = `${env.BASE_PATH}/`;
   }
+
+  // Hard refresh to make sure socket connection is established
+  window.location.href = `${env.BASE_PATH}`;
 }
 
 export default TokenData;

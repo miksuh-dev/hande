@@ -50,8 +50,6 @@ export const AuthProvider: Component<{
 
       setAuthenticated(true);
       setUser(user);
-
-      return user;
     } catch (err) {
       throw err;
     }
@@ -62,8 +60,6 @@ export const AuthProvider: Component<{
       const token = await trpcClient.user.register.mutate({ name });
 
       localStorage.setItem("token", token);
-
-      window.location.reload();
     } catch (err) {
       throw err;
     }
@@ -89,7 +85,8 @@ export const AuthProvider: Component<{
       }
     } catch (err) {
       console.log("err", err);
-      logout();
+
+      localStorage.removeItem("token");
     } finally {
       setReady(true);
     }
