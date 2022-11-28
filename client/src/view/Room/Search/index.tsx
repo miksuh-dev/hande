@@ -26,6 +26,8 @@ const SearchComponent: Component = () => {
   let containerRef: HTMLDivElement | undefined = undefined;
 
   const onSubmit = async (searchText: string) => {
+    if (!searchText) return;
+
     try {
       setLoading(true);
       setResultsOpen(true);
