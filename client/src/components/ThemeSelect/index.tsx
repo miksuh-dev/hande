@@ -67,7 +67,7 @@ const ThemeSelect = () => {
                     <div
                       class="h-10 w-10"
                       style={{
-                        ["background-color"]: value["100"],
+                        ["background-color"]: value["500"],
                       }}
                       onMouseOver={(event) => {
                         event.currentTarget.style.backgroundColor =
@@ -75,7 +75,7 @@ const ThemeSelect = () => {
                       }}
                       onMouseLeave={(event) => {
                         event.currentTarget.style.backgroundColor =
-                          value["100"];
+                          value["500"];
                       }}
                       onClick={() => {
                         theme.action.setCurrent(name);
