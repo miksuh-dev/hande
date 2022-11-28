@@ -3,12 +3,19 @@ import ee from "../../eventEmitter";
 import { sendMessage } from "./message";
 import { MessageType } from "./types";
 
-export const users = new Array<MumbleUser>();
+interface UserOnline {
+  clientIds: string[];
+  user: MumbleUser;
+}
 
-export const userJoin = (user: MumbleUser) => {
-  if (!users.some((u) => u.hash === user.hash)) {
-    users.push(user);
+// session id -> clientIds
+export const users = new Map<number, UserOnline>();
 
+export const userJoin = (user: MumbleUser, clientId: string) => {
+  const existing = users.get(user.session);
+
+  if (!existing) {
+    users.set(user.session, { user, clientIds: [clientId] });
     sendMessage(`Käyttäjä ${user.name} liittyi huoneeseen.`, {
       type: MessageType.MESSAGE,
     });
@@ -16,20 +23,36 @@ export const userJoin = (user: MumbleUser) => {
     ee.emit(`onUpdate`, {
       user: { join: user },
     });
+    return;
   }
+
+  users.set(user.session, {
+    ...existing,
+    clientIds: [...existing.clientIds, clientId],
+  });
 };
 
-export const userLeave = (user: MumbleUser) => {
-  const index = users.findIndex((u) => u.hash === user.hash);
-  if (index !== -1) {
-    users.splice(index, 1);
+export const userLeave = (user: MumbleUser, clientId: string) => {
+  const existing = users.get(user.session);
+
+  if (!existing) return;
+
+  if (existing.clientIds.length === 1) {
+    sendMessage(`Käyttäjä ${user.name} poistui huoneesta.`, {
+      type: MessageType.MESSAGE,
+    });
+
+    ee.emit(`onUpdate`, {
+      user: { leave: user.hash },
+    });
+
+    users.delete(user.session);
+
+    return;
   }
 
-  sendMessage(`Käyttäjä ${user.name} poistui huoneesta.`, {
-    type: MessageType.MESSAGE,
-  });
-
-  ee.emit(`onUpdate`, {
-    user: { leave: user.hash },
+  users.set(user.session, {
+    ...existing,
+    clientIds: existing.clientIds.filter((id) => id !== clientId),
   });
 };

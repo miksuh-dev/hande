@@ -4,8 +4,8 @@ import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
 import useSnackbar from "hooks/useSnackbar";
 import { RouteDataFuncArgs } from "@solidjs/router";
-import { DateTime } from "luxon";
 import useAuth from "hooks/useAuth";
+import { generateId } from "utils/auth";
 
 const handleUpdateEvent = (
   existingRoom: Room,
@@ -123,39 +123,45 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
       return;
     }
 
-    const pingId = `${auth.user().session}-${DateTime.now().toMillis()}`;
+    const clientId = generateId(auth.user());
     let timeout: NodeJS.Timeout;
 
-    const pongListen = trpcClient.room.onPong.subscribe(pingId, {
-      onData: (message) => {
-        console.log(message);
-        timeout = setTimeout(async () => {
-          trpcClient.room.ping.mutate(pingId);
-        }, 1000 * 30);
-      },
-    });
+    const pongListen = trpcClient.room.onPong.subscribe(
+      { clientId },
+      {
+        onData: (message) => {
+          console.log(message);
+          timeout = setTimeout(async () => {
+            trpcClient.room.ping.mutate(clientId);
+          }, 1000 * 30);
+        },
+      }
+    );
 
-    await trpcClient.room.ping.mutate(pingId);
+    await trpcClient.room.ping.mutate(clientId);
 
-    const lobbyUpdate = trpcClient.room.onUpdate.subscribe(undefined, {
-      onData(event) {
-        mutate((existingRoom) => {
-          if (!existingRoom) {
-            return existingRoom;
-          }
+    const lobbyUpdate = trpcClient.room.onUpdate.subscribe(
+      { clientId },
+      {
+        onData(event) {
+          mutate((existingRoom) => {
+            if (!existingRoom) {
+              return existingRoom;
+            }
 
-          return handleUpdateEvent(existingRoom, event);
-        });
-      },
-      onError(err) {
-        snackbar.error(err.message);
-        console.error("error", err);
-      },
-      onComplete() {
-        snackbar.success("Poistuttiin huoneesta");
-        navigate("/main");
-      },
-    });
+            return handleUpdateEvent(existingRoom, event);
+          });
+        },
+        onError(err) {
+          snackbar.error(err.message);
+          console.error("error", err);
+        },
+        onComplete() {
+          snackbar.success("Poistuttiin huoneesta");
+          navigate("/main");
+        },
+      }
+    );
 
     onCleanup(() => {
       lobbyUpdate.unsubscribe();

@@ -29,7 +29,7 @@ export const roomRouter = t.router({
       playing: getCurrentSong(),
       songs: playlist,
       messages,
-      users,
+      users: [...users.values()].map((u) => u.user),
     };
   }),
   addSong: authedProcedure
@@ -110,39 +110,50 @@ export const roomRouter = t.router({
 
       return message;
     }),
-  onUpdate: authedProcedure.subscription(({ ctx }) => {
-    const { user } = ctx;
+  onUpdate: authedProcedure
+    .input(
+      z.object({
+        clientId: z.string().min(1),
+      })
+    )
+    .subscription(({ ctx, input }) => {
+      const { user } = ctx;
+      const { clientId } = input;
 
-    return observable<Partial<UpdateEvent>>((emit) => {
-      const onUpdate = (updatedLobby: Partial<UpdateEvent>) => {
-        emit.next(updatedLobby);
-      };
+      return observable<Partial<UpdateEvent>>((emit) => {
+        const onUpdate = (updatedLobby: Partial<UpdateEvent>) => {
+          emit.next(updatedLobby);
+        };
 
-      ee.on(`onUpdate`, onUpdate);
+        ee.on(`onUpdate`, onUpdate);
 
-      userJoin(user);
+        userJoin(user, clientId);
 
-      return () => {
-        userLeave(user);
+        return () => {
+          userLeave(user, clientId);
 
-        ee.off(`onUpdate`, onUpdate);
-      };
-    });
-  }),
+          ee.off(`onUpdate`, onUpdate);
+        };
+      });
+    }),
   onPong: authedProcedure
-    .input(z.string().min(10))
+    .input(
+      z.object({
+        clientId: z.string().min(1),
+      })
+    )
     .subscription(({ input }) => {
-      const pingTarget = input;
+      const { clientId } = input;
 
       return observable<string>((emit) => {
         const onPong = (message: string) => {
           emit.next(message);
         };
 
-        ee.on(`onPing-${pingTarget}`, onPong);
+        ee.on(`onPing-${clientId}`, onPong);
 
         return () => {
-          ee.on(`onPing-${pingTarget}`, onPong);
+          ee.off(`onPing-${clientId}`, onPong);
         };
       });
     }),
