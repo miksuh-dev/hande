@@ -3,7 +3,6 @@ import { Room, RoomUpdateEvent } from "trpc/types";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
 import useSnackbar from "hooks/useSnackbar";
-import { RouteDataFuncArgs } from "@solidjs/router";
 import useAuth from "hooks/useAuth";
 import { generateId } from "utils/auth";
 
@@ -99,7 +98,7 @@ function createDeepSignal<T>(value: T): Signal<T> {
   ] as Signal<T>;
 }
 
-function RoomData({ navigate }: RouteDataFuncArgs) {
+function RoomData() {
   const snackbar = useSnackbar();
   const auth = useAuth();
 
@@ -117,9 +116,8 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
     }
   );
 
-  onMount(async () => {
+  onMount(() => {
     if (!auth.user()) {
-      navigate("/main");
       return;
     }
 
@@ -138,7 +136,10 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
       }
     );
 
-    await trpcClient.room.ping.mutate(clientId);
+    trpcClient.room.ping.mutate(clientId).catch((err) => {
+      console.error(err);
+      snackbar.error("Virhe yhdistettäessä huoneeseen");
+    });
 
     const lobbyUpdate = trpcClient.room.onUpdate.subscribe(
       { clientId },
@@ -154,11 +155,9 @@ function RoomData({ navigate }: RouteDataFuncArgs) {
         },
         onError(err) {
           snackbar.error(err.message);
-          console.error("error", err);
         },
         onComplete() {
-          snackbar.success("Poistuttiin huoneesta");
-          navigate("/main");
+          snackbar.success("Yhteys huoneeseen päätettiin");
         },
       }
     );
