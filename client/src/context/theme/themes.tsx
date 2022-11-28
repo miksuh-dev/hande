@@ -95,7 +95,7 @@ const themes = {
     800: "#9d2417",
     900: "#82241a",
   },
-  "sorrell-brown": {
+  brown: {
     50: "#faf6f2",
     100: "#f2eae2",
     200: "#e5d3c3",

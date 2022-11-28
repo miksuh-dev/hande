@@ -33,7 +33,7 @@ const Navbar: Component = () => {
             >
               <span class="sr-only">Open user menu</span>
               <div class="h-8 w-8 rounded-full">
-                <div class="avatar online placeholder">
+                <div class="avatar online placeholder h-full">
                   <span class="bold text-lg text-white">
                     {auth?.user?.()?.name?.substring(0, 1) ?? ""}
                   </span>
