@@ -29,6 +29,8 @@ export const onSongEnd = async (song: Song) => {
 
   stopCurrentSong();
 
+  ee.emit(`onUpdate`, { song: { remove: song.id } });
+
   client.voiceConnection.stopStream();
   const nextSong = await getNextSong();
   if (nextSong) {
