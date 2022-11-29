@@ -29,8 +29,6 @@ const ProgressComponent: Component<Props> = (props) => {
     let interval = setInterval(() => {
       setProgress((progress) => {
         if (progress >= props.playing.duration) {
-          clearInterval(interval);
-
           return props.playing.duration;
         }
 
