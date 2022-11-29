@@ -83,7 +83,7 @@ export const playSong = async (song: Song) => {
   }
 
   const secondsLeft = currentSong.startedAt
-    .plus({ seconds: videoInfo.duration })
+    .plus({ seconds: videoInfo.duration + 3 })
     .diffNow("seconds").seconds;
 
   endTimeout = setTimeout(() => {
