@@ -1,8 +1,8 @@
-import { MessageType } from "router/room/types";
 import { MumbleUser } from "types/auth";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendMessage } from "../../router/room/message";
+import { MessageType } from "../../router/room/types";
 import {
   getCurrentSong,
   getNextSong,
