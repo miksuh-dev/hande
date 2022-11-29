@@ -11,7 +11,7 @@ interface UserOnline {
 // session id -> clientIds
 export const users = new Map<number, UserOnline>();
 
-export const userJoin = (user: MumbleUser, clientId: string) => {
+export const join = (user: MumbleUser, clientId: string) => {
   const existing = users.get(user.session);
 
   if (!existing) {
@@ -33,7 +33,7 @@ export const userJoin = (user: MumbleUser, clientId: string) => {
   });
 };
 
-export const userLeave = (user: MumbleUser, clientId: string) => {
+export const leave = (user: MumbleUser, clientId: string) => {
   const existing = users.get(user.session);
 
   if (!existing) return;
@@ -57,4 +57,24 @@ export const userLeave = (user: MumbleUser, clientId: string) => {
     ...existing,
     clientIds: existing.clientIds.filter((id) => id !== clientId),
   });
+};
+
+export const getTheme = (user: MumbleUser) => {
+  return users.get(user.session)?.user.theme;
+};
+
+export const setTheme = (user: MumbleUser, theme: string) => {
+  const existing = users.get(user.session);
+
+  if (!existing) return;
+
+  users.set(user.session, {
+    ...existing,
+    user: {
+      ...existing.user,
+      theme,
+    },
+  });
+
+  return users.get(user.session)?.user;
 };

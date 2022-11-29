@@ -4,4 +4,5 @@ export interface MumbleUser {
   hash: string;
   isGuest: boolean;
   isMumbleUser: boolean;
+  theme?: string;
 }

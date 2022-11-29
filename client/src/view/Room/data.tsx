@@ -5,6 +5,7 @@ import trpcClient from "trpc";
 import useSnackbar from "hooks/useSnackbar";
 import useAuth from "hooks/useAuth";
 import { generateId } from "utils/auth";
+import useTheme from "hooks/useTheme";
 
 const handleUpdateEvent = (
   existingRoom: Room,
@@ -28,6 +29,21 @@ const handleUpdateEvent = (
       return {
         ...existingRoom,
         users: existingRoom.users.filter((u) => u.hash !== userHash),
+      };
+    }
+
+    if (event.user.update) {
+      const updatedUser = event.user.update;
+
+      if (!updatedUser) {
+        return existingRoom;
+      }
+
+      return {
+        ...existingRoom,
+        users: existingRoom.users.map((u) =>
+          u.hash === updatedUser.hash ? updatedUser : u
+        ),
       };
     }
   }
@@ -101,6 +117,7 @@ function createDeepSignal<T>(value: T): Signal<T> {
 function RoomData() {
   const snackbar = useSnackbar();
   const auth = useAuth();
+  const theme = useTheme();
 
   const [room, { mutate }] = createResource<Room>(
     () => trpcClient.room.get.query(),
@@ -142,7 +159,7 @@ function RoomData() {
     });
 
     const lobbyUpdate = trpcClient.room.onUpdate.subscribe(
-      { clientId },
+      { clientId, theme: theme.current() },
       {
         onData(event) {
           mutate((existingRoom) => {

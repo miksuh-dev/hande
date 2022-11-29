@@ -1,8 +1,12 @@
+import { ThemeName } from "context/theme/themes";
+import useSnackbar from "hooks/useSnackbar";
 import useTheme from "hooks/useTheme";
 import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import trpcClient from "trpc";
 
 const ThemeSelect = () => {
   const theme = useTheme();
+  const snackbar = useSnackbar();
 
   const [open, setOpen] = createSignal(false);
   let containerRef: HTMLDivElement | undefined = undefined;
@@ -29,6 +33,19 @@ const ThemeSelect = () => {
       window.removeEventListener("click", onClick);
     });
   });
+
+  const handleThemeChange = async (themeName: ThemeName) => {
+    try {
+      await trpcClient.room.theme.mutate({ theme: themeName });
+    } catch (e) {
+      if (e instanceof Error) {
+        snackbar.error('Yhteysvirhe: "' + e.message + '"');
+        console.log("e", e);
+      }
+    } finally {
+      theme.action.setCurrent(themeName);
+    }
+  };
 
   return (
     <div class="relative" ref={containerRef}>
@@ -58,7 +75,7 @@ const ThemeSelect = () => {
         </svg>
       </button>
       <Show when={open()}>
-        <div class="absolute right-0 top-8 z-50 my-4 list-none divide-y divide-neutral-100 rounded border-2 border-neutral-500 bg-white text-base shadow dark:divide-neutral-600 dark:bg-neutral-800">
+        <div class="absolute right-0 top-8 z-50 my-4 list-none divide-y divide-neutral-200 rounded border-2 border-neutral-500 bg-white text-base shadow dark:divide-neutral-600 dark:bg-neutral-800">
           <div class="py-2 px-2">
             <div class="grid w-max grid-cols-3">
               <For each={theme.list}>
@@ -77,9 +94,7 @@ const ThemeSelect = () => {
                         event.currentTarget.style.backgroundColor =
                           value["500"];
                       }}
-                      onClick={() => {
-                        theme.action.setCurrent(name);
-                      }}
+                      onClick={() => handleThemeChange(name)}
                     />
                   </button>
                 )}

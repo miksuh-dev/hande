@@ -1,30 +1,35 @@
 import ee from "../../eventEmitter";
 import { Message, MessageOptions, MessageType } from "./types";
+import * as userState from "./user";
 
 export const messages = new Array<Message>();
 
 const createMessage = (content: string, options?: MessageOptions): Message => {
   // User message
-  return options?.user
-    ? {
-        id: Date.now().toString(),
-        name: options.user.name,
-        userHash: options.user.hash,
-        content,
-        timestamp: Date.now(),
-        type: options.type ?? MessageType.MESSAGE,
-        isSystem: false,
-        isMumbleUser: options.user.isMumbleUser,
-      }
-    : // System message
-      {
-        id: Date.now().toString(),
-        name: process.env.MUMBLE_USERNAME ?? "System",
-        content,
-        timestamp: Date.now(),
-        type: options?.type ?? MessageType.MESSAGE,
-        isSystem: true,
-      };
+  if (options?.user) {
+    const theme = userState.getTheme(options.user);
+
+    return {
+      id: Date.now().toString(),
+      name: options.user.name,
+      userHash: options.user.hash,
+      content,
+      timestamp: Date.now(),
+      type: options.type ?? MessageType.MESSAGE,
+      isSystem: false,
+      isMumbleUser: options.user.isMumbleUser,
+      theme: theme ?? "default",
+    };
+  }
+
+  return {
+    id: Date.now().toString(),
+    name: process.env.MUMBLE_USERNAME ?? "System",
+    content,
+    timestamp: Date.now(),
+    type: options?.type ?? MessageType.MESSAGE,
+    isSystem: true,
+  };
 };
 
 export const sendMessage = (content: string, options?: MessageOptions) => {

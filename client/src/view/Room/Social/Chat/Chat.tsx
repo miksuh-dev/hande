@@ -40,6 +40,7 @@ const RoomChat: Component<Props> = (props) => {
                     ) : (
                       <Username
                         name={message.name}
+                        theme={message.theme}
                         isMumbleUser={message.isMumbleUser}
                       />
                     )}

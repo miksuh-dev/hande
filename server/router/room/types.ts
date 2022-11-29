@@ -28,6 +28,7 @@ export type UserMessage = Omit<SystemMessage, "isSystem"> & {
   userHash: string;
   isSystem: false;
   isMumbleUser: boolean;
+  theme: string;
 };
 
 export type Message = SystemMessage | UserMessage;
@@ -45,5 +46,6 @@ export interface UpdateEvent {
   user: {
     join?: MumbleUser;
     leave?: MumbleUser["hash"];
+    update?: MumbleUser;
   };
 }

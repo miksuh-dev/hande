@@ -43,7 +43,7 @@ const Navbar: Component = () => {
             <Show when={menuOpen()}>
               <div class="relative">
                 <div
-                  class="absolute right-0 top-4 z-50 my-4 w-[150px] list-none divide-y divide-neutral-100 rounded border-2 border-neutral-500 bg-white text-base shadow dark:divide-neutral-600 dark:bg-neutral-800"
+                  class="tooltip absolute right-0 top-4 z-50 my-4 w-[150px] list-none divide-y divide-neutral-200 text-base"
                   id="user-dropdown"
                 >
                   <div class="py-3 px-4">

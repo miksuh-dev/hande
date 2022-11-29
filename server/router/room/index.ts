@@ -8,7 +8,7 @@ import { t } from "../../trpc";
 import { authedProcedure } from "../utils";
 import { messages, sendMessage } from "./message";
 import { MessageType, UpdateEvent } from "./types";
-import { users, userJoin, userLeave } from "./user";
+import * as userState from "./user";
 
 export const roomRouter = t.router({
   get: authedProcedure.query(async ({ ctx }) => {
@@ -29,7 +29,7 @@ export const roomRouter = t.router({
       playing: getCurrentSong(),
       songs: playlist,
       messages,
-      users: [...users.values()].map((u) => u.user),
+      users: [...userState.users.values()].map((u) => u.user),
     };
   }),
   addSong: authedProcedure
@@ -110,15 +110,34 @@ export const roomRouter = t.router({
 
       return message;
     }),
+  theme: authedProcedure
+    .input(
+      z.object({
+        theme: z.string().min(1),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const { user } = ctx;
+      const { theme } = input;
+
+      const updatedUser = userState.setTheme(user, theme);
+
+      ee.emit(`onUpdate`, {
+        user: { update: updatedUser },
+      });
+
+      return theme;
+    }),
   onUpdate: authedProcedure
     .input(
       z.object({
         clientId: z.string().min(1),
+        theme: z.string().min(1),
       })
     )
     .subscription(({ ctx, input }) => {
       const { user } = ctx;
-      const { clientId } = input;
+      const { clientId, theme } = input;
 
       return observable<Partial<UpdateEvent>>((emit) => {
         const onUpdate = (updatedLobby: Partial<UpdateEvent>) => {
@@ -127,10 +146,11 @@ export const roomRouter = t.router({
 
         ee.on(`onUpdate`, onUpdate);
 
-        userJoin(user, clientId);
+        const userWithTheme = { ...user, theme };
+        userState.join(userWithTheme, clientId);
 
         return () => {
-          userLeave(user, clientId);
+          userState.leave(user, clientId);
 
           ee.off(`onUpdate`, onUpdate);
         };
