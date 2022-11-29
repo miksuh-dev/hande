@@ -1,3 +1,4 @@
+import { MessageType } from "router/room/types";
 import { MumbleUser } from "types/auth";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
@@ -26,7 +27,10 @@ export const addSong = async (
     },
   });
 
-  sendMessage(`${requester.name} lisäsi kappaleen "${song.title}" jonoon`);
+  sendMessage(`lisäsi kappaleen "${song.title}" jonoon.`, {
+    user: requester,
+    type: MessageType.ACTION,
+  });
 
   ee.emit(`onUpdate`, { song: { add: addedSong } });
 
@@ -51,7 +55,10 @@ export const startPlay = async (user: MumbleUser) => {
   if (nextSong) {
     await playSong(nextSong);
 
-    sendMessage(`${user.name} aloitti kappaleen ${nextSong.title}`);
+    sendMessage(`aloitti kappaleen ${nextSong.title}.`, {
+      user,
+      type: MessageType.ACTION,
+    });
 
     return nextSong;
   }
@@ -70,10 +77,16 @@ export const removeSong = async (id: number, user: MumbleUser) => {
   });
 
   if (song.id === getCurrentSong()?.id) {
-    sendMessage(`${user.name} ohitti kappaleen "${song.title}"`);
+    sendMessage(`ohitti kappaleen "${song.title}".`, {
+      user,
+      type: MessageType.ACTION,
+    });
     stopCurrentSong();
   } else {
-    sendMessage(`${user.name} poisti "${song.title}" kappaleen jonosta`);
+    sendMessage(`poisti "${song.title}" kappaleen jonosta.`, {
+      user,
+      type: MessageType.ACTION,
+    });
     ee.emit(`onUpdate`, { song: { remove: song.id } });
   }
 

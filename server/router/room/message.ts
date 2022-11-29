@@ -1,24 +1,34 @@
-import { MumbleUser } from "types/auth";
 import ee from "../../eventEmitter";
-import { Message, MessageType } from "./types";
+import { Message, MessageOptions, MessageType } from "./types";
 
 export const messages = new Array<Message>();
 
-export const sendMessage = (
-  content: string,
-  options?: { user?: MumbleUser; type?: MessageType }
-) => {
-  const isSystem = !options?.user;
+const createMessage = (content: string, options?: MessageOptions): Message => {
+  // User message
+  return options?.user
+    ? {
+        id: Date.now().toString(),
+        name: options.user.name,
+        userHash: options.user.hash,
+        content,
+        timestamp: Date.now(),
+        type: options.type ?? MessageType.MESSAGE,
+        isSystem: false,
+        isMumbleUser: options.user.isMumbleUser,
+      }
+    : // System message
+      {
+        id: Date.now().toString(),
+        name: process.env.MUMBLE_USERNAME ?? "System",
+        content,
+        timestamp: Date.now(),
+        type: options?.type ?? MessageType.MESSAGE,
+        isSystem: true,
+      };
+};
 
-  const message = {
-    id: Date.now().toString(),
-    username: options?.user?.name ?? process.env.MUMBLE_USERNAME ?? "System",
-    content,
-    timestamp: Date.now(),
-    type: options?.type ?? MessageType.MESSAGE,
-    isSystem: isSystem,
-    isVerified: options?.user?.isMumbleUser ?? false,
-  };
+export const sendMessage = (content: string, options?: MessageOptions) => {
+  const message = createMessage(content, options);
 
   messages.push(message);
   messages.splice(0, messages.length - 100);

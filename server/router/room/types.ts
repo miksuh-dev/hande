@@ -9,15 +9,28 @@ export enum MessageType {
   LEAVE = "LEAVE",
   ERROR = "ERROR",
 }
-export interface Message {
+
+export interface MessageOptions {
+  user?: MumbleUser;
+  type?: MessageType;
+}
+
+interface SystemMessage {
   id: string;
-  username: string;
+  name: string;
   content: string;
   timestamp: number;
   type: MessageType;
-  isSystem: boolean;
-  isVerified: boolean;
+  isSystem: true;
 }
+
+export type UserMessage = Omit<SystemMessage, "isSystem"> & {
+  userHash: string;
+  isSystem: false;
+  isMumbleUser: boolean;
+};
+
+export type Message = SystemMessage | UserMessage;
 
 export interface UpdateEvent {
   song: {

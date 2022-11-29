@@ -72,7 +72,7 @@ export const playSong = async (song: Song) => {
     song: { setPlaying: currentSong },
   });
 
-  sendMessage(`Soitetaan kappale ${currentSong.title}.`);
+  sendMessage(`Soitetaan kappale ${currentSong.title}.`, {});
 
   if (stream) {
     stream.destroy();

@@ -16,8 +16,9 @@ export const userJoin = (user: MumbleUser, clientId: string) => {
 
   if (!existing) {
     users.set(user.session, { user, clientIds: [clientId] });
-    sendMessage(`Käyttäjä ${user.name} liittyi huoneeseen.`, {
-      type: MessageType.MESSAGE,
+    sendMessage(`liittyi huoneeseen.`, {
+      type: MessageType.JOIN,
+      user,
     });
 
     ee.emit(`onUpdate`, {
@@ -38,8 +39,9 @@ export const userLeave = (user: MumbleUser, clientId: string) => {
   if (!existing) return;
 
   if (existing.clientIds.length === 1) {
-    sendMessage(`Käyttäjä ${user.name} poistui huoneesta.`, {
-      type: MessageType.MESSAGE,
+    sendMessage(`poistui huoneesta.`, {
+      type: MessageType.LEAVE,
+      user,
     });
 
     ee.emit(`onUpdate`, {
