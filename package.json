@@ -8,7 +8,7 @@
     "client": "npm run dev --prefix client",
     "server": "npm run dev",
     "lint": "eslint ./src",
-    "build": "tsc && npm run generate-changelog && npm run build --prefix client && npm run copy-files",
+    "build": "tsc && npm run build --prefix client && npm run copy-files",
     "generate-changelog": "npx marked ./CHANGELOG.md -o ./client/public/changelog.html",
     "copy-files": "cp ./NoodleJS/Mumble.proto ./dist/NoodleJS/",
     "postinstall": "npx prisma generate",
