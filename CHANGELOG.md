@@ -1,6 +1,10 @@
-# Changelog
+chasd
+### [1.0.1](https://github.com/miksuh-dev/hande/compare/v1.0.0...v1.0.1) (2022-11-30)
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### Bug Fixes
+
+* tooltip added hidden space to the bottom of chat ([1d1a24e](https://github.com/miksuh-dev/hande/commit/1d1a24e4dd963a17d839645d10fd20cf9871b2ec))
 
 ## 1.0.0 (2022-11-30)
 

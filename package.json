@@ -1,6 +1,6 @@
 {
   "name": "hande-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.ts",
   "scripts": {
@@ -8,7 +8,8 @@
     "client": "npm run dev --prefix client",
     "server": "npm run dev",
     "lint": "eslint ./src",
-    "build": "tsc && npm run build --prefix client && npm run copy-files",
+    "build": "tsc && npm run generate-changelog && npm run build --prefix client && npm run copy-files",
+    "generate-changelog": "npx marked ./CHANGELOG.md -o ./client/public/changelog.html",
     "copy-files": "cp ./NoodleJS/Mumble.proto ./dist/NoodleJS/",
     "postinstall": "npx prisma generate",
     "start:prod": "NODE_PATH=./dist NODE_OPTIONS='--tls-min-v1.0' NODE_ENV=production node dist/server/index.js",
@@ -54,6 +55,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.5.1",
     "eslint-plugin-import": "^2.26.0",
+    "marked": "^4.2.3",
     "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
     "standard-version": "^9.5.0",
