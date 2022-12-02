@@ -9,13 +9,13 @@ interface UserOnline {
 }
 
 // session id -> clientIds
-export const users = new Map<number, UserOnline>();
+export const users = new Map<string, UserOnline>();
 
 export const join = (user: MumbleUser, clientId: string) => {
-  const existing = users.get(user.session);
+  const existing = users.get(user.hash);
 
   if (!existing) {
-    users.set(user.session, { user, clientIds: [clientId] });
+    users.set(user.hash, { user, clientIds: [clientId] });
     sendMessage(`liittyi huoneeseen.`, {
       type: MessageType.JOIN,
       user,
@@ -27,14 +27,14 @@ export const join = (user: MumbleUser, clientId: string) => {
     return;
   }
 
-  users.set(user.session, {
+  users.set(user.hash, {
     ...existing,
     clientIds: [...existing.clientIds, clientId],
   });
 };
 
 export const leave = (user: MumbleUser, clientId: string) => {
-  const existing = users.get(user.session);
+  const existing = users.get(user.hash);
 
   if (!existing) return;
 
@@ -48,27 +48,27 @@ export const leave = (user: MumbleUser, clientId: string) => {
       user: { leave: user.hash },
     });
 
-    users.delete(user.session);
+    users.delete(user.hash);
 
     return;
   }
 
-  users.set(user.session, {
+  users.set(user.hash, {
     ...existing,
     clientIds: existing.clientIds.filter((id) => id !== clientId),
   });
 };
 
 export const getTheme = (user: MumbleUser) => {
-  return users.get(user.session)?.user.theme;
+  return users.get(user.hash)?.user.theme;
 };
 
 export const setTheme = (user: MumbleUser, theme: string) => {
-  const existing = users.get(user.session);
+  const existing = users.get(user.hash);
 
   if (!existing) return;
 
-  users.set(user.session, {
+  users.set(user.hash, {
     ...existing,
     user: {
       ...existing.user,
@@ -76,5 +76,5 @@ export const setTheme = (user: MumbleUser, theme: string) => {
     },
   });
 
-  return users.get(user.session)?.user;
+  return users.get(user.hash)?.user;
 };
