@@ -30,10 +30,15 @@ export const userRouter = t.router({
       })
     )
     .mutation(({ input }) => {
+      const sessionId = DateTime.utc().toMillis();
+
       const session = {
-        session: DateTime.utc().toMillis(),
+        session: sessionId,
         name: input.name,
-        hash: crypto.createHash("sha512").digest("hex"),
+        hash: crypto
+          .createHash("sha512")
+          .update(`${input.name}-${sessionId.toString()}`)
+          .digest("hex"),
         isGuest: false,
         isMumbleUser: false,
       };
