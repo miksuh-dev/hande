@@ -60,7 +60,7 @@ const RoomChat: Component<Props> = (props) => {
             <div ref={props.ref} />
           </Show>
         </div>
-        <form class="flex" onSubmit={(e) => e.preventDefault()}>
+        <form class="z-10 flex" onSubmit={(e) => e.preventDefault()}>
           <input
             id="chat"
             type="text"

@@ -1,3 +1,4 @@
+import Tooltip from "components/Tooltip";
 import { Component, Show } from "solid-js";
 import { Song, PlayingSong } from "trpc/types";
 import { htmlDecode } from "utils/parse";
@@ -34,22 +35,27 @@ const PlayingComponent: Component<Props> = (props) => {
                 </div>
               </div>
               <div class="pr-2">
-                <button onClick={() => props.onSkip(song)} class="icon-button">
-                  <svg
-                    class="h-6 w-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
+                <Tooltip text={"Ohita kappale"}>
+                  <button
+                    onClick={() => props.onSkip(song)}
+                    class="icon-button"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 16l7-6-7-6m8 12l7-6-7-6"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      class="h-6 w-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 16l7-6-7-6m8 12l7-6-7-6"
+                      />
+                    </svg>
+                  </button>
+                </Tooltip>
               </div>
             </div>
             <Progress playing={song} />

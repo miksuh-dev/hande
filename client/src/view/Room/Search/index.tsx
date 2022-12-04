@@ -63,7 +63,7 @@ const SearchComponent: Component = () => {
 
   return (
     <div
-      class="relative flex flex-col rounded-md bg-white dark:bg-neutral-900"
+      class="relative z-20 flex flex-col rounded-md bg-white dark:bg-neutral-900"
       classList={{
         "shadow-sm": resultsOpen(),
         "rounded-b-none": resultsOpen(),
