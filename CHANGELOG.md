@@ -1,4 +1,25 @@
 chasd
+## [1.1.0](https://github.com/miksuh-dev/hande/compare/v1.0.1...v1.1.0) (2022-12-04)
+
+
+### Features
+
+* add chat collapse on lower than xl screen breakpoints ([af17305](https://github.com/miksuh-dev/hande/commit/af173054c900993e0f40180f8f4565ed561ec3e2))
+* add fav icon and nav icon ([78c4ad1](https://github.com/miksuh-dev/hande/commit/78c4ad1884917768dbb9d74ab539d8af3ec104a9))
+* add reusable click outside util function ([7a8e01c](https://github.com/miksuh-dev/hande/commit/7a8e01c56ac1c1624576cc04c613e3fba446c82a))
+* add tooltips to site's buttons ([03816bd](https://github.com/miksuh-dev/hande/commit/03816bd8631518027c22145daff3bf0e6de0e9c8))
+* move theme select and darktheme select behind one menu ([8dc283a](https://github.com/miksuh-dev/hande/commit/8dc283ab6f5cd8c9a2173e30bfee64ce2065d6c9))
+* use portals with tooltips to make them appear on top of everything else ([8adf9c3](https://github.com/miksuh-dev/hande/commit/8adf9c36568763a359c5a28dd7b76f60e97bf302))
+
+
+### Bug Fixes
+
+* change search translation as playlist search is yet not supported ([ae8feb8](https://github.com/miksuh-dev/hande/commit/ae8feb853ffadb0c6dcc8a0b2e9b292acf614bb2))
+* chat badge on top search results ([7bcc1b7](https://github.com/miksuh-dev/hande/commit/7bcc1b7527d39a91e54b4a35eced5883135d7808))
+* chrome was unable to login using token ([98d7665](https://github.com/miksuh-dev/hande/commit/98d76657759e8d269c359e800cafe91e24ac18e7))
+* guest users having same hash ([eb80ea1](https://github.com/miksuh-dev/hande/commit/eb80ea12ea8560a2e4ce4da10ac4875116ffd229))
+* use hash everywhere as session changes when mumble restarts ([324e3a6](https://github.com/miksuh-dev/hande/commit/324e3a6c99d5ef8f1773590e58d03623cc10e37f))
+
 ### [1.0.1](https://github.com/miksuh-dev/hande/compare/v1.0.0...v1.0.1) (2022-11-30)
 
 
