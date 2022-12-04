@@ -20,7 +20,7 @@
   }
 
   .input {
-    @apply block w-full rounded-lg border border-neutral-300 bg-white p-2.5 text-sm text-neutral-900 focus:border-custom-primary-500 focus:ring-custom-primary-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white dark:placeholder-neutral-300 dark:focus:border-custom-primary-500 dark:focus:ring-custom-primary-500;
+    @apply block w-full rounded-lg border border-neutral-300 bg-white p-2.5 text-sm text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white dark:placeholder-neutral-300;
   }
 
   .tooltip {

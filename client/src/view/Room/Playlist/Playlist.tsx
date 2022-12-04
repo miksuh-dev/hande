@@ -1,3 +1,4 @@
+import { CrossIcon } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Component, For } from "solid-js";
 import { Song } from "trpc/types";
@@ -30,21 +31,11 @@ const PlaylistComponent: Component<Props> = (props) => {
 
             <div class="pr-2">
               <Tooltip text={"Poista kappale jonosta"}>
-                <button onClick={() => props.onSkip(song)} class="icon-button">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                <button
+                  onClick={() => props.onSkip(song)}
+                  class="icon-button h-11 w-11"
+                >
+                  <CrossIcon />
                 </button>
               </Tooltip>
             </div>
