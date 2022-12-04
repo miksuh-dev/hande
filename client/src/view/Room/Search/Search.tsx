@@ -31,7 +31,7 @@ const Search: Component<Props> = (props) => {
           type="text"
           id="simple-search"
           class="input p-2.5 pl-10"
-          placeholder="Hae kappaletta tai soittolistaa"
+          placeholder="Hae kappaletta"
           required
           onChange={(e) => props.onChange(e.currentTarget.value)}
           onFocus={(e) => props.onFocus(e)}
@@ -48,7 +48,7 @@ const Search: Component<Props> = (props) => {
         <div class="h-5 w-5">
           <SearchIcon />
         </div>
-        <span class="sr-only">Hae kappaletta tai soittolistaa</span>
+        <span class="sr-only">Hae kappaletta</span>
       </button>
     </form>
   );
