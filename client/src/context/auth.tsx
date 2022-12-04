@@ -1,9 +1,11 @@
 import { JSX, createContext, onMount, createSignal, Accessor } from "solid-js";
 import trpcClient from "trpc";
+import { TRPCClientError } from "@trpc/client";
 import { User } from "trpc/types";
 import type { Component } from "solid-js";
 import { UserLoginInput } from "trpc/types";
 import env from "config";
+import useSnackbar from "hooks/useSnackbar";
 
 type AuthStoreProps = {
   user: Accessor<User | null>;
@@ -35,6 +37,7 @@ export const AuthContext = createContext<AuthContextProps>(INITIAL_VALUE);
 export const AuthProvider: Component<{
   children: JSX.Element;
 }> = (props) => {
+  const snackbar = useSnackbar();
   const [authenticated, setAuthenticated] = createSignal<boolean>(false);
   const [user, setUser] = createSignal<User | null>(null);
   const [ready, setReady] = createSignal<boolean>(false);
@@ -81,9 +84,13 @@ export const AuthProvider: Component<{
         await login(token);
       }
     } catch (err) {
-      console.log("err", err);
+      if (err instanceof TRPCClientError && err.data.code === "UNAUTHORIZED") {
+        localStorage.removeItem("token");
+      }
 
-      localStorage.removeItem("token");
+      if (err instanceof Error) {
+        snackbar.error(err.message);
+      }
     } finally {
       setReady(true);
     }
