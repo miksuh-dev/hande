@@ -22,10 +22,7 @@ const Social: Component = () => {
         </Show>
         <button
           class="h-16 w-16 rounded-lg border border-custom-primary-700 bg-custom-primary-900 p-4 text-sm font-medium text-white hover:bg-custom-primary-800 focus:outline-none dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800"
-          onClick={(e) => {
-            e.stopPropagation();
-            setOpen(!open());
-          }}
+          onClick={() => setOpen(!open())}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

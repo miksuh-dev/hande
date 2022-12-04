@@ -1,6 +1,5 @@
 import type { Component } from "solid-js";
 import { Link } from "@solidjs/router";
-import DarkToggle from "components/DarkToggle";
 import ThemeSelect from "components/ThemeSelect";
 import UserMenu from "components/UserMenu";
 
@@ -28,7 +27,6 @@ const Navbar: Component = () => {
         </Link>
         <div class="flex items-center space-x-4 md:order-2">
           <ThemeSelect />
-          <DarkToggle />
           <UserMenu />
         </div>
       </div>
