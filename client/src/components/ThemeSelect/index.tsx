@@ -1,7 +1,8 @@
 import { ThemeName } from "context/theme/themes";
 import useSnackbar from "hooks/useSnackbar";
 import useTheme from "hooks/useTheme";
-import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import { createSignal, For, Show } from "solid-js";
+import trackClickOutside from "utils/trackClickOutside";
 import trpcClient from "trpc";
 
 const ThemeSelect = () => {
@@ -9,30 +10,6 @@ const ThemeSelect = () => {
   const snackbar = useSnackbar();
 
   const [open, setOpen] = createSignal(false);
-  let containerRef: HTMLDivElement | undefined = undefined;
-
-  onMount(() => {
-    const close = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-      }
-    };
-    const onClick = (e: MouseEvent) => {
-      if (e.target instanceof HTMLElement) {
-        if (!containerRef?.contains(e.target)) {
-          setOpen(false);
-        }
-      }
-    };
-
-    window.addEventListener("keydown", close);
-    window.addEventListener("click", onClick);
-
-    onCleanup(() => {
-      window.removeEventListener("keydown", close);
-      window.removeEventListener("click", onClick);
-    });
-  });
 
   const handleThemeChange = async (themeName: ThemeName) => {
     try {
@@ -48,7 +25,14 @@ const ThemeSelect = () => {
   };
 
   return (
-    <div class="relative" ref={containerRef}>
+    <div
+      class="relative"
+      ref={(ref) => {
+        trackClickOutside(ref, (open) => {
+          setOpen(open);
+        });
+      }}
+    >
       <button
         type="button"
         class="flex w-9 rounded-full text-sm text-custom-primary-900"

@@ -1,11 +1,4 @@
-import {
-  Component,
-  createSignal,
-  onCleanup,
-  onMount,
-  Resource,
-  Show,
-} from "solid-js";
+import { Component, createSignal, Resource, Show } from "solid-js";
 import trpcClient from "trpc";
 import Result from "./Result";
 import Search from "./Search";
@@ -14,6 +7,7 @@ import useSnackbar from "hooks/useSnackbar";
 import { htmlDecode } from "utils/parse";
 import { RoomData } from "../data";
 import { useRouteData } from "@solidjs/router";
+import trackClickOutside from "utils/trackClickOutside";
 
 const SearchComponent: Component = () => {
   const snackbar = useSnackbar();
@@ -22,8 +16,6 @@ const SearchComponent: Component = () => {
   const [resultsOpen, setResultsOpen] = createSignal(false);
   const [loading, setLoading] = createSignal(false);
   const roomData = useRouteData<Resource<RoomData>>();
-
-  let containerRef: HTMLDivElement | undefined = undefined;
 
   const onSubmit = async (searchText: string) => {
     if (!searchText) return;
@@ -69,29 +61,6 @@ const SearchComponent: Component = () => {
     }
   };
 
-  onMount(() => {
-    const close = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setResultsOpen(false);
-      }
-    };
-    const onClick = (e: MouseEvent) => {
-      if (e.target instanceof HTMLElement) {
-        if (!containerRef?.contains(e.target)) {
-          setResultsOpen(false);
-        }
-      }
-    };
-
-    window.addEventListener("keydown", close);
-    window.addEventListener("click", onClick);
-
-    onCleanup(() => {
-      window.removeEventListener("keydown", close);
-      window.removeEventListener("click", onClick);
-    });
-  });
-
   return (
     <div
       class="relative flex flex-col rounded-md bg-white dark:bg-neutral-900"
@@ -99,7 +68,11 @@ const SearchComponent: Component = () => {
         "shadow-sm": resultsOpen(),
         "rounded-b-none": resultsOpen(),
       }}
-      ref={containerRef}
+      ref={(ref) => {
+        trackClickOutside(ref, (open) => {
+          setResultsOpen(open);
+        });
+      }}
     >
       <div class="p-2">
         <Search
