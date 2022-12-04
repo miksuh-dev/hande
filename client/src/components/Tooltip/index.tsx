@@ -1,17 +1,39 @@
-import { Component, JSX } from "solid-js";
+import { Component, createSignal, JSX, Show } from "solid-js";
+import { Portal } from "solid-js/web";
 
 type Props = {
   children: JSX.Element;
   text: string;
 };
 
+type Position = {
+  x: number;
+  y: number;
+};
+
 const Tooltip: Component<Props> = (props) => {
+  const [position, setPosition] = createSignal<Position | undefined>();
+
   return (
-    <div class="group relative mt-1 flex cursor-pointer whitespace-nowrap">
+    <div
+      class="relative mt-1 flex cursor-pointer whitespace-nowrap"
+      onMouseOver={({ x, y }) => setPosition({ x, y })}
+      onMouseOut={() => setPosition(undefined)}
+    >
       {props.children}
-      <div class="tooltip pointer-events-none absolute top-full -left-1/2 z-50 mt-2 hidden p-2 text-center text-xs opacity-0 group-hover:block group-hover:opacity-100">
-        {props.text}
-      </div>
+
+      <Show when={position()} keyed>
+        {(pos) => (
+          <Portal>
+            <div
+              class="tooltip pointer-events-none absolute mt-2 p-2 text-center text-xs"
+              style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
+            >
+              {props.text}
+            </div>
+          </Portal>
+        )}
+      </Show>
     </div>
   );
 };

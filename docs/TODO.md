@@ -28,4 +28,4 @@ To website:
 - [ ] NoodleJS can't get channel states if channel has lengthy comment (can't send messages to these channels)
 - [ ] User drawer in nav bar doesn't close when clicking outside of it
 - [ ] Chat badges come through search results if chat overlaps with search results
-- [ ] Tooltips overflow and are sometimes cut off
+- [x] Tooltips overflow and are sometimes cut off
