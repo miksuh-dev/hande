@@ -16,7 +16,11 @@ const PlaylistComponent: Component<Props> = (props) => {
           <div class="flex flex-row items-center justify-between border border-neutral-200 p-4 shadow-md dark:border-neutral-700 dark:bg-neutral-800">
             <div class="flex flex-row space-x-8">
               <div class="flex items-center">
-                <img class="w-42 h-32 " src={song.thumbnail} alt="" />
+                <img
+                  class="w-52 max-w-max md:w-64"
+                  src={song.thumbnail}
+                  alt=""
+                />
               </div>
               <div class="flex flex-col">
                 <h1>{htmlDecode(song.title)}</h1>

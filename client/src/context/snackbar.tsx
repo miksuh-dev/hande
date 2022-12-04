@@ -45,10 +45,10 @@ export const SnackbarProvider: Component<{
     <SnackbarContext.Provider value={{ show, hide }}>
       {props.children}
       <Show when={snackbar()}>
-        <div class="absolute bottom-2 z-50 flex w-full justify-center">
+        <div class="absolute bottom-2 left-1/2 z-50 flex -translate-x-1/2 justify-center">
           <div
             id="alert-1"
-            class="mb-4 flex space-x-4 rounded-lg border-2 bg-neutral-100 p-4 dark:border-neutral-500 dark:bg-neutral-900"
+            class="flex space-x-4 rounded-lg border-2 bg-neutral-100 p-4 dark:border-neutral-500 dark:bg-neutral-900"
             role="alert"
           >
             <Show when={snackbar()?.type === "error"}>
@@ -66,27 +66,29 @@ export const SnackbarProvider: Component<{
             <div class="ml-3 self-center text-sm font-medium text-neutral-700 dark:text-neutral-100">
               {snackbar()?.message}
             </div>
-            <button
-              type="button"
-              class="icon-button"
-              data-dismiss-target="#alert-1"
-              aria-label="Close"
-              onClick={() => hide()}
-            >
-              <svg
-                aria-hidden="true"
-                class="h-5 w-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
+            <div class="flex items-center">
+              <button
+                type="button"
+                class="icon-button"
+                data-dismiss-target="#alert-1"
+                aria-label="Close"
+                onClick={() => hide()}
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
+                <svg
+                  aria-hidden="true"
+                  class="h-5 w-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </Show>

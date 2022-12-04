@@ -5,6 +5,9 @@
 @layer components {
   body,
   #root {
+    overflow: hidden;
+    max-height: 100vh;
+
     @apply h-screen bg-neutral-900 dark:bg-neutral-750;
   }
 
