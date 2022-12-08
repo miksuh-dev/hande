@@ -1,11 +1,19 @@
 import { onMount, createResource, onCleanup, Signal } from "solid-js";
-import { Room, RoomUpdateEvent } from "trpc/types";
+import { Room, RoomUpdateEvent, Song } from "trpc/types";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
 import useSnackbar from "hooks/useSnackbar";
 import useAuth from "hooks/useAuth";
 import { generateId } from "utils/auth";
 import useTheme from "hooks/useTheme";
+
+const playListCompare = (a: Song, b: Song) => {
+  if (a.position !== b.position) {
+    return a.position - b.position;
+  }
+
+  return a.createdAt > b.createdAt ? 1 : -1;
+};
 
 const handleUpdateEvent = (
   existingRoom: Room,
@@ -75,6 +83,21 @@ const handleUpdateEvent = (
       return {
         ...existingRoom,
         songs: existingRoom.songs.filter((s) => s.id !== songId),
+      };
+    }
+
+    if (event.song.update) {
+      const updatedSong = event.song.update;
+
+      if (!updatedSong) {
+        return existingRoom;
+      }
+
+      return {
+        ...existingRoom,
+        songs: existingRoom.songs
+          .map((s) => (s.id === updatedSong.id ? updatedSong : s))
+          .sort(playListCompare),
       };
     }
 

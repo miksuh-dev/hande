@@ -99,3 +99,27 @@ export const removeSong = async (id: number, user: MumbleUser) => {
 
   return song;
 };
+
+export const playNext = async (id: number, user: MumbleUser) => {
+  const nextSong = await getNextSong();
+
+  const position = (nextSong?.position ?? 0) - 1;
+
+  const song = await prisma.song.update({
+    where: {
+      id: id,
+    },
+    data: {
+      position,
+    },
+  });
+
+  sendMessage(`siirsi kappaleen "${song.title}" jonon kärkeen.`, {
+    user,
+    type: MessageType.ACTION,
+  });
+
+  ee.emit(`onUpdate`, { song: { update: song } });
+
+  return song;
+};

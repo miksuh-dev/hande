@@ -17,4 +17,5 @@ model Song {
   skipped   Boolean @default(false)
   createdAt DateTime @default(now())
   requester  String
+  position   Int @default(0)
 }

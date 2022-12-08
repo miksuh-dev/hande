@@ -1,4 +1,4 @@
-import { CrossIcon } from "components/common/icon";
+import { CrossIcon, UpArrowIcon } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Component, For } from "solid-js";
 import { Song } from "trpc/types";
@@ -6,6 +6,7 @@ import { htmlDecode } from "utils/parse";
 
 type Props = {
   onSkip: (song: Song) => void;
+  onPlayNext: (song: Song) => void;
   songs?: Song[];
 };
 
@@ -29,7 +30,15 @@ const PlaylistComponent: Component<Props> = (props) => {
               </div>
             </div>
 
-            <div class="pr-2">
+            <div class="flex flex-row space-x-2 pr-2">
+              <Tooltip text={"Siirrä jonon kärkeen"}>
+                <button
+                  onClick={() => props.onPlayNext(song)}
+                  class="icon-button h-11 w-11"
+                >
+                  <UpArrowIcon />
+                </button>
+              </Tooltip>
               <Tooltip text={"Poista kappale jonosta"}>
                 <button
                   onClick={() => props.onSkip(song)}

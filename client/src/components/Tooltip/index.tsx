@@ -20,6 +20,7 @@ const Tooltip: Component<Props> = (props) => {
       class="relative mt-1 flex cursor-pointer whitespace-nowrap"
       onMouseOver={({ x, y }) => setPosition({ x, y })}
       onMouseOut={() => setPosition(undefined)}
+      onClick={() => setPosition(undefined)}
     >
       {props.children}
       <Show when={props.visible ?? true}>

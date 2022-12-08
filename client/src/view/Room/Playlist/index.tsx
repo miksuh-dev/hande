@@ -26,6 +26,20 @@ const PlaylistComponent: Component = () => {
     }
   };
 
+  const handlePlayNext = async (song: Song) => {
+    try {
+      await trpcClient.room.playNext.mutate({
+        id: song.id,
+      });
+
+      snackbar.success(`Siirrettiin "${htmlDecode(song.title)}" jonon kärkee`);
+    } catch (error) {
+      if (error instanceof Error) {
+        snackbar.error(error.message);
+      }
+    }
+  };
+
   return (
     <div class="flex h-1 flex-1 flex-col overflow-hidden rounded-md bg-white dark:bg-neutral-900 xl:h-full">
       <div class="border-b border-neutral-300 dark:border-neutral-700">
@@ -34,7 +48,11 @@ const PlaylistComponent: Component = () => {
         </div>
       </div>
       <div class="overflow-hidden p-4 pr-0">
-        <Playlist songs={roomData?.().songs} onSkip={handleSkip} />
+        <Playlist
+          songs={roomData?.().songs}
+          onSkip={handleSkip}
+          onPlayNext={handlePlayNext}
+        />
       </div>
     </div>
   );

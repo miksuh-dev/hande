@@ -145,8 +145,13 @@ export const getNextSong = async (): Promise<Song | null> => {
       ended: false,
       skipped: false,
     },
-    orderBy: {
-      createdAt: "asc",
-    },
+    orderBy: [
+      {
+        position: "asc",
+      },
+      {
+        createdAt: "asc",
+      },
+    ],
   });
 };

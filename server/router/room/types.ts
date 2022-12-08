@@ -38,6 +38,7 @@ export interface UpdateEvent {
     add?: Song;
     remove?: Song["id"];
     setPlaying?: PlayingSong;
+    update?: Song;
     skip?: Song["id"];
   };
   message: {

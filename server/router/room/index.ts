@@ -2,7 +2,12 @@ import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import { getCurrentSong } from "../../common/playlist/internal";
-import { addSong, removeSong, startPlay } from "../../common/playlist/user";
+import {
+  addSong,
+  playNext,
+  removeSong,
+  startPlay,
+} from "../../common/playlist/user";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import { authedProcedure } from "../utils";
@@ -20,9 +25,14 @@ export const roomRouter = t.router({
         skipped: false,
         id: { not: getCurrentSong()?.id },
       },
-      orderBy: {
-        createdAt: "asc",
-      },
+      orderBy: [
+        {
+          position: "asc",
+        },
+        {
+          createdAt: "asc",
+        },
+      ],
     });
 
     return {
@@ -67,6 +77,19 @@ export const roomRouter = t.router({
           message: "Song not found",
         });
       }
+    }),
+  playNext: authedProcedure
+    .input(
+      z.object({
+        id: z.number().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { user } = ctx;
+
+      const song = await playNext(input.id, user);
+
+      return { song };
     }),
   skipCurrent: authedProcedure
     .input(

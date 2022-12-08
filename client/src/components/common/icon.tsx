@@ -148,3 +148,17 @@ export const SearchIcon = () => (
     />
   </svg>
 );
+
+// svg turn icon
+export const UpArrowIcon = () => (
+  <svg
+    class="h-full w-full"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    stroke-width="2"
+  >
+    <path d="M5 10l7-7m0 0l7 7m-7-7v18" />
+  </svg>
+);
