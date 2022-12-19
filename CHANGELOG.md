@@ -1,5 +1,16 @@
 # Changelog
+
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.2.0](https://github.com/miksuh-dev/hande/compare/v1.1.0...v1.2.0) (2022-12-19)
+
+
+### Features
+
+* add icon to main menu ([b4ef2ab](https://github.com/miksuh-dev/hande/commit/b4ef2ab5e9ab812b9ccc08d5d42496f5274ee8f5))
+* move to first button to playlist ([9bf1b2c](https://github.com/miksuh-dev/hande/commit/9bf1b2ce772bd72b71faed880803e0c5a58ac0dc))
+* radio support ([e317477](https://github.com/miksuh-dev/hande/commit/e3174770bd8548d17e90015a754ad8756302b1d1))
+
 ## [1.1.0](https://github.com/miksuh-dev/hande/compare/v1.0.1...v1.1.0) (2022-12-04)
 
 
