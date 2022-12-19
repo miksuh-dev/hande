@@ -3,6 +3,7 @@ import Tooltip from "components/Tooltip";
 import { Component, Show } from "solid-js";
 import { Song, PlayingSong } from "trpc/types";
 import { htmlDecode } from "utils/parse";
+import SongImage from "../common/SongImage";
 import Progress from "./Progress";
 
 type Props = {
@@ -27,14 +28,8 @@ const PlayingComponent: Component<Props> = (props) => {
           <div class="w-full space-y-2">
             <div class="flex flex-row items-center justify-between">
               <div class="flex flex-row space-x-8">
-                <div class="flex items-center">
-                  <img
-                    class="w-52 max-w-max md:w-64"
-                    src={song.thumbnail}
-                    alt=""
-                  />
-                </div>
-                <div class="flex flex-col">
+                <SongImage song={song} />
+                <div class="flex flex-col py-4">
                   <h1>{htmlDecode(song.title)}</h1>
                   <p>Toivoja: {song.requester}</p>
                 </div>
@@ -50,7 +45,9 @@ const PlayingComponent: Component<Props> = (props) => {
                 </Tooltip>
               </div>
             </div>
-            <Progress playing={song} />
+            <Show when={song.duration}>
+              <Progress playing={song} />
+            </Show>
           </div>
         )}
       </Show>

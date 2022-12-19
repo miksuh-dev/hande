@@ -50,3 +50,9 @@ export interface UpdateEvent {
     update?: MumbleUser;
   };
 }
+
+export interface Source {
+  id: number;
+  name: string;
+  value: string;
+}

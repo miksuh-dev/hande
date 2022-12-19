@@ -12,6 +12,7 @@ import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import { authedProcedure } from "../utils";
 import { messages, sendMessage } from "./message";
+import { searchFromSource, SOURCES } from "./sources";
 import { MessageType, UpdateEvent } from "./types";
 import * as userState from "./user";
 
@@ -40,22 +41,37 @@ export const roomRouter = t.router({
       songs: playlist,
       messages,
       users: [...userState.users.values()].map((u) => u.user),
+      sources: SOURCES,
     };
   }),
   addSong: authedProcedure
     .input(
       z.object({
-        videoId: z.string().min(1),
+        url: z.string().min(1),
+        contentId: z.string().min(1),
         title: z.string().min(1),
-        thumbnail: z.string().min(1),
+        thumbnail: z.string().nullable(),
+        type: z.string().min(1),
       })
     )
     .mutation(async ({ input, ctx }) => {
       const { user } = ctx;
 
-      const { videoId, title, thumbnail } = input;
+      const { url, title, thumbnail, contentId } = input;
 
-      const song = await addSong({ videoId, title, thumbnail }, user);
+      const selectedType = SOURCES.find((s) => s.value === input.type)?.value;
+
+      if (!selectedType) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid source",
+        });
+      }
+
+      const song = await addSong(
+        { url, contentId, title, thumbnail, type: selectedType },
+        user
+      );
 
       return song;
     }),
@@ -109,6 +125,27 @@ export const roomRouter = t.router({
       const song = await startPlay(user);
 
       return { song };
+    }),
+  search: authedProcedure
+    .input(
+      z.object({
+        text: z.string().min(1),
+        source: z.string().min(1),
+      })
+    )
+    .query(async ({ input }) => {
+      const { text, source } = input;
+
+      const selectedSource = SOURCES.find((s) => s.value === source);
+
+      if (!selectedSource) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid source",
+        });
+      }
+
+      return await searchFromSource(text, selectedSource);
     }),
   ping: authedProcedure.input(z.string().min(10)).mutation(({ input }) => {
     const pingTarget = input;

@@ -8,7 +8,11 @@ import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendErrorMessage, sendMessage } from "../../router/room/message";
 import client from "../mumble";
-import { createStream, getVideoInfo } from "../youtube-dl";
+import { createStream as createRadioStream } from "../radio";
+import {
+  createStream as createYoutubeStream,
+  getVideoInfo,
+} from "../youtube-dl";
 
 let playing: PlayingSong | undefined;
 
@@ -25,7 +29,11 @@ export const onSongEnd = async (song: Song) => {
     },
   });
 
-  sendMessage(`Kappale ${song.title} päättyi.`);
+  if (song.type === "youtube") {
+    sendMessage(`Kappale "${song.title}" päättyi.`);
+  } else if (song.type === "radio") {
+    sendMessage(`Radiokanavan "${song.title}" toisto päättyi.`);
+  }
 
   stopCurrentSong();
 
@@ -55,11 +63,22 @@ const onPlayError = (song: Song, error: string) => {
   }, 5000);
 };
 
-export const playSong = async (song: Song) => {
+const createStream = async (song: Song) => {
+  if (song.type === "youtube") {
+    return createYoutubeStream(song);
+  }
+
+  if (song.type === "radio") {
+    return await createRadioStream(song);
+  }
+
+  throw new Error("Unknown song type");
+};
+
+const playYoutubeSong = async (song: Song): Promise<PlayingSong> => {
   const videoInfo = await getVideoInfo(song);
   if (!videoInfo) {
-    onPlayError(song, "Videon tiedot eivät ole saatavilla");
-    return;
+    throw new Error("Video info not available");
   }
 
   const currentSong = setCurrentSong({
@@ -68,19 +87,7 @@ export const playSong = async (song: Song) => {
     duration: videoInfo.duration,
   });
 
-  ee.emit(`onUpdate`, {
-    song: { setPlaying: currentSong },
-  });
-
-  sendMessage(`Soitetaan kappale ${currentSong.title}.`, {});
-
-  if (stream) {
-    stream.destroy();
-  }
-
-  if (endTimeout) {
-    clearTimeout(endTimeout);
-  }
+  sendMessage(`Soitetaan kappale "${currentSong.title}".`, {});
 
   const secondsLeft = currentSong.startedAt
     .plus({ seconds: videoInfo.duration + 3 })
@@ -95,7 +102,48 @@ export const playSong = async (song: Song) => {
     });
   }, secondsLeft * 1000);
 
-  stream = createStream(song);
+  return currentSong;
+};
+
+const playRadioSong = (song: Song): PlayingSong => {
+  const currentSong = setCurrentSong({
+    ...song,
+    startedAt: DateTime.now(),
+  });
+
+  sendMessage(`Toistetaan radiokanavaa "${currentSong.title}".`, {});
+
+  return currentSong;
+};
+
+const getNewCurrentSong = async (song: Song): Promise<PlayingSong> => {
+  if (song.type === "youtube") {
+    return playYoutubeSong(song);
+  }
+
+  if (song.type === "radio") {
+    return playRadioSong(song);
+  }
+
+  throw new Error("Unknown song type");
+};
+
+export const playSong = async (song: Song) => {
+  const currentSong = await getNewCurrentSong(song);
+
+  if (stream) {
+    stream.destroy();
+  }
+
+  if (endTimeout) {
+    clearTimeout(endTimeout);
+  }
+
+  ee.emit(`onUpdate`, {
+    song: { setPlaying: currentSong },
+  });
+
+  stream = await createStream(song);
 
   stream.on("error", (e) => {
     if (e instanceof Error) {

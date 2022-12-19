@@ -152,6 +152,7 @@ function RoomData() {
         messages: [],
         songs: [],
         playing: undefined,
+        sources: [],
       },
     }
   );
@@ -212,5 +213,13 @@ function RoomData() {
   return room;
 }
 
+interface Ready<T> {
+  state: "ready";
+  loading: false;
+  error: undefined;
+  latest: T;
+  (): T;
+}
+
 export default RoomData;
-export type RoomData = ReturnType<typeof RoomData>;
+export type RoomData = Ready<ReturnType<typeof RoomData>>;

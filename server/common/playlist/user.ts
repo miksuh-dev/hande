@@ -12,18 +12,22 @@ import {
 
 export const addSong = async (
   song: {
-    videoId: string;
+    url: string;
+    contentId: string;
     title: string;
-    thumbnail: string;
+    thumbnail: string | null;
+    type: string;
   },
   requester: MumbleUser
 ) => {
   const addedSong = await prisma.song.create({
     data: {
-      videoId: song.videoId,
+      url: song.url,
+      contentId: song.contentId,
       title: song.title,
       thumbnail: song.thumbnail,
       requester: requester.name,
+      type: song.type,
     },
   });
 
@@ -55,7 +59,7 @@ export const startPlay = async (user: MumbleUser) => {
   if (nextSong) {
     await playSong(nextSong);
 
-    sendMessage(`aloitti kappaleen ${nextSong.title}.`, {
+    sendMessage(`aloitti kappaleen "${nextSong.title}".`, {
       user,
       type: MessageType.ACTION,
     });

@@ -64,7 +64,7 @@ const RoomChat: Component<Props> = (props) => {
         <form class="z-10 flex" onSubmit={(e) => e.preventDefault()}>
           <input
             id="chat"
-            type="text"
+            type="text focus:outline-none"
             class="input"
             placeholder="Kirjoita viestisi tähän..."
             onChange={(e) => props.onChange(e.currentTarget.value)}

@@ -1,5 +1,5 @@
 import useAuth from "hooks/useAuth";
-import { createSignal /* , onCleanup, onMount, */, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import trackClickOutside from "utils/trackClickOutside";
 
 const UserMenu = () => {

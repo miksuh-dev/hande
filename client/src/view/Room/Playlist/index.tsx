@@ -1,6 +1,6 @@
 import { useRouteData } from "@solidjs/router";
 import useSnackbar from "hooks/useSnackbar";
-import { Component, Resource } from "solid-js";
+import { Component } from "solid-js";
 import trpcClient from "trpc";
 import { Song } from "trpc/types";
 import { htmlDecode } from "utils/parse";
@@ -8,7 +8,7 @@ import type { RoomData } from "../data";
 import Playlist from "./Playlist";
 
 const PlaylistComponent: Component = () => {
-  const roomData = useRouteData<Resource<RoomData>>();
+  const roomData = useRouteData<RoomData>();
 
   const snackbar = useSnackbar();
 
@@ -49,7 +49,7 @@ const PlaylistComponent: Component = () => {
       </div>
       <div class="overflow-hidden p-4 pr-0">
         <Playlist
-          songs={roomData?.().songs}
+          songs={roomData().songs}
           onSkip={handleSkip}
           onPlayNext={handlePlayNext}
         />

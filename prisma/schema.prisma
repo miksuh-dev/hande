@@ -9,13 +9,15 @@ generator client {
 
 model Song {
   id        Int    @id @default(autoincrement())
-  videoId   String
+  url   String
+  contentId String
   title     String
-  thumbnail String
+  thumbnail String?
   started Boolean @default(false)
   ended   Boolean @default(false)
   skipped   Boolean @default(false)
   createdAt DateTime @default(now())
   requester  String
   position   Int @default(0)
+  type       String
 }
