@@ -1,4 +1,4 @@
-import { SearchIcon } from "components/common/icon";
+import { CircularLoadingSpinner, SearchIcon } from "components/common/icon";
 import { Component, createSignal, For, Show } from "solid-js";
 import { Accessor, Setter } from "solid-js";
 import { Source } from "../../../../../server/router/room/types";
@@ -42,7 +42,7 @@ const Search: Component<Props> = (props) => {
           <Show when={sourceOpen()}>
             <div
               id="dropdown"
-              class="absolute z-10 w-28 translate-y-full divide-y divide-gray-100 rounded bg-white shadow dark:bg-neutral-700"
+              class="absolute z-10 w-28 translate-y-12 divide-y divide-gray-100 rounded bg-white shadow dark:bg-neutral-700"
               ref={(ref) => {
                 trackClickOutside(ref, (open) => {
                   setSourceOpen(open);
@@ -59,7 +59,7 @@ const Search: Component<Props> = (props) => {
                       <li>
                         <button
                           type="button"
-                          class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-600 dark:hover:text-white"
+                          class="inline-flex h-full w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-600 dark:hover:text-white"
                           onClick={() => {
                             setSourceOpen(false);
                             props.onSourceChange(source);
@@ -75,14 +75,25 @@ const Search: Component<Props> = (props) => {
             </div>
           </Show>
           <button
-            class="z-10 inline-flex w-28 flex-shrink-0 items-center justify-between rounded-l-lg border border-neutral-300 bg-neutral-100 py-2.5 px-4 text-center text-sm font-medium text-neutral-900 hover:bg-neutral-200 focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white dark:hover:bg-neutral-600"
+            class="z-10 inline-flex h-full w-28 flex-shrink-0 items-center justify-between rounded-l-lg border border-neutral-300 bg-neutral-100 py-2.5 px-4 text-center text-sm font-medium text-neutral-900 hover:bg-neutral-200 focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white dark:hover:bg-neutral-600"
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               setSourceOpen((open) => !open);
             }}
           >
-            {props.selectedSource()?.name}
+            <Show
+              when={props.selectedSource()?.name}
+              fallback={
+                <div class="flex w-full justify-center">
+                  <div class="h-5 w-5">
+                    <CircularLoadingSpinner />
+                  </div>
+                </div>
+              }
+            >
+              {props.selectedSource()?.name}
+            </Show>
             <svg
               aria-hidden="true"
               class="ml-1 h-4 w-4"

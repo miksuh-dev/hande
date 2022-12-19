@@ -1,4 +1,4 @@
-import { Component, createSignal, Show } from "solid-js";
+import { Component, createEffect, createSignal, Show } from "solid-js";
 import trpcClient from "trpc";
 import Result from "./Result";
 import Search from "./Search";
@@ -17,10 +17,14 @@ const SearchComponent: Component = () => {
   const [text, setText] = createSignal("");
   const [results, setResults] = createSignal<SearchResult[]>([]);
   const [resultsOpen, setResultsOpen] = createSignal(false);
-  const [source, setSource] = createSignal<Source | undefined>(
-    roomData().sources[0]
-  );
+  const [source, setSource] = createSignal<Source>();
   const [loading, setLoading] = createSignal(false);
+
+  createEffect(() => {
+    if (!source() && roomData().sources.length > 0) {
+      setSource(roomData().sources[0]);
+    }
+  });
 
   const onSubmit = async (
     searchText: string,
