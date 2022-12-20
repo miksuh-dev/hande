@@ -6,8 +6,11 @@ import trpcClient from "trpc";
 import { RoomData } from "../data";
 import Playing from "./Playing";
 import { htmlDecode } from "utils/parse";
+import { useI18n } from "@solid-primitives/i18n";
 
 const PlayingComponent: Component = () => {
+  const [t] = useI18n();
+
   const roomData = useRouteData<RoomData>();
   const snackbar = useSnackbar();
 
@@ -17,16 +20,14 @@ const PlayingComponent: Component = () => {
         id: song.id,
       });
 
-      if (song.type === "youtube") {
-        snackbar.success(`Ohitettiin kappale "${htmlDecode(song.title)}"`);
-      }
-
-      if (song.type === "radio") {
-        snackbar.success(`Ohitettiin radiokanava "${htmlDecode(song.title)}"`);
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        snackbar.error(error.message);
+      snackbar.success(
+        t(`snackbar.source.${song.type}.skipped`, {
+          item: htmlDecode(song.title),
+        })
+      );
+    } catch (err) {
+      if (err instanceof Error) {
+        snackbar.error(t("error.common", { error: err.message }));
       }
     }
   };
@@ -35,7 +36,7 @@ const PlayingComponent: Component = () => {
     <div class="flex-0 flex  flex-col overflow-hidden rounded-md bg-white dark:bg-neutral-900">
       <div class="border-b border-neutral-300 dark:border-neutral-700">
         <div class="inline-block rounded-t-lg p-4 font-bold">
-          Soi tällä hetkellä:
+          {t("player.title")}:
         </div>
       </div>
       <div class="overflow-hidden p-4 dark:bg-neutral-800">

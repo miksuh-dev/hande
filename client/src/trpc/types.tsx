@@ -23,3 +23,5 @@ export type SearchResult = inferProcedureOutput<
 export type RoomUpdateEvent = inferObservableValue<
   inferProcedureOutput<AppRouter["room"]["onUpdate"]>
 >;
+
+export type Language = inferProcedureOutput<AppRouter["common"]["language"]>;

@@ -1,15 +1,17 @@
+import { serverLanguage } from "../../../../languages";
 import commands from "./commands";
 import { Message } from "./types";
 
+const t = serverLanguage.commands.help;
+
 const handleGenerateToken = async (message: Message) => {
-  let content = "<br /><b>Käytössä olevat komennot:</b><br /><br />";
+  let content = `<br /><b>${t.header}:</b><br /><br />`;
 
   commands.forEach((command) => {
     content += `<i>${command.command}</i> - ${command.description}<br />`;
   });
 
-  content +=
-    "<br />Huom! Handen yksityisviestit toimivat vain jos käyttäjällä ei ole (liian pitkää) kommenttia ";
+  content += `<br />${t.wipCaution}`;
 
   if (message.sender) {
     await message.reply(content);

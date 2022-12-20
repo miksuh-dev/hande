@@ -1,6 +1,9 @@
 import { DateTime } from "luxon";
+import { serverLanguage } from "../../../../languages";
 import { createSession } from "../../../../utils/auth";
 import { Message } from "./types";
+
+const t = serverLanguage.commands.www;
 
 const handleGenerateToken = async (message: Message) => {
   const { sender } = message;
@@ -38,15 +41,12 @@ const handleGenerateToken = async (message: Message) => {
 
   const formattedToken = token.replace(/\./g, "%2E");
 
-  const url = `<a href="${tokenUrl}?login=${formattedToken}">tästä<a/>`;
+  const url = `<a href="${tokenUrl}?login=${formattedToken}">${t.here}<a/>`;
 
   if (hasSender) {
-    await message.reply(`Siirry hallintapaneeliin ${url}.`);
+    await message.reply(t.reply(url));
   } else {
-    await message.client?.user?.channel?.sendMessage(
-      `Siirry hallintapaneeliin vieraana ${url}.`,
-      false
-    );
+    await message.client?.user?.channel?.sendMessage(t.replyGuest(url), false);
   }
 };
 

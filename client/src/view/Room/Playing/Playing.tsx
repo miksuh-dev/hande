@@ -1,3 +1,4 @@
+import { useI18n } from "@solid-primitives/i18n";
 import { SkipSongIcon } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Component, Show } from "solid-js";
@@ -12,14 +13,16 @@ type Props = {
 };
 
 const PlayingComponent: Component<Props> = (props) => {
+  const [t] = useI18n();
+
   return (
     <div class="flex max-h-full min-h-[160px] items-center">
       <Show
         when={props.playing}
         fallback={
           <div class="flex-1 flex-col justify-center text-center">
-            <h5 class="text-xl">Tällä hetkellä ei soi mitään</h5>
-            <p>Lisää uusia kappaleita jonoon aloittaaksesi toiston</p>
+            <h5 class="text-xl">{t("player.empty.title")}</h5>
+            <p>{t("player.empty.subtitle")}</p>
           </div>
         }
         keyd
@@ -31,11 +34,13 @@ const PlayingComponent: Component<Props> = (props) => {
                 <SongImage song={song} />
                 <div class="flex flex-col py-4">
                   <h1>{htmlDecode(song.title)}</h1>
-                  <p>Toivoja: {song.requester}</p>
+                  <p>
+                    {t("common.requester")}: {song.requester}
+                  </p>
                 </div>
               </div>
               <div class="pr-2">
-                <Tooltip text={"Ohita kappale"}>
+                <Tooltip text={t(`tooltip.source.${song.type}.skip`)}>
                   <button
                     onClick={() => props.onSkip(song)}
                     class="icon-button h-12 w-12"

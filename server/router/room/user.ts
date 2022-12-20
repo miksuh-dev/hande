@@ -16,7 +16,7 @@ export const join = (user: MumbleUser, clientId: string) => {
 
   if (!existing) {
     users.set(user.hash, { user, clientIds: [clientId] });
-    sendMessage(`liittyi huoneeseen.`, {
+    sendMessage("chat.message.joined", {
       type: MessageType.JOIN,
       user,
     });
@@ -39,7 +39,7 @@ export const leave = (user: MumbleUser, clientId: string) => {
   if (!existing) return;
 
   if (existing.clientIds.length === 1) {
-    sendMessage(`poistui huoneesta.`, {
+    sendMessage("chat.message.left", {
       type: MessageType.LEAVE,
       user,
     });

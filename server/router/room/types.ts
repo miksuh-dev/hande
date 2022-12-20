@@ -13,12 +13,16 @@ export enum MessageType {
 export interface MessageOptions {
   user?: MumbleUser;
   type?: MessageType;
+  item?: string;
+  error?: string;
 }
 
 interface SystemMessage {
   id: string;
   name: string;
   content: string;
+  item?: string;
+  error?: string;
   timestamp: number;
   type: MessageType;
   isSystem: true;
@@ -53,6 +57,5 @@ export interface UpdateEvent {
 
 export interface Source {
   id: number;
-  name: string;
   value: string;
 }

@@ -1,10 +1,11 @@
-import { Component } from "solid-js";
+import { Component, Match, Switch } from "solid-js";
 import { Accessor, Setter, Show, For } from "solid-js";
 import { DateTime } from "luxon";
 import { IncomingMessage } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import Username from "view/Room/common/Username";
 import { SendMessageIcon } from "components/common/icon";
+import { useI18n } from "@solid-primitives/i18n";
 
 type Props = {
   messages: IncomingMessage[];
@@ -15,6 +16,8 @@ type Props = {
 };
 
 const RoomChat: Component<Props> = (props) => {
+  const [t] = useI18n();
+
   return (
     <div class="flex flex-1 flex-col">
       <div class="flex h-full flex-col bg-white dark:bg-neutral-900">
@@ -52,7 +55,31 @@ const RoomChat: Component<Props> = (props) => {
                         "normal-case": message.type === "MESSAGE",
                       }}
                     >
-                      {htmlDecode(message.content)}
+                      <Switch fallback={htmlDecode(message.content)}>
+                        <Match when={message.error && message.item}>
+                          {t(message.content, {
+                            error: message.error ?? "",
+                            item: message.item ?? "",
+                          })}
+                        </Match>
+                        <Match when={message.error}>
+                          {t(message.content, {
+                            error: message.error ?? "",
+                          })}
+                        </Match>
+                        <Match when={message.item}>
+                          {t(message.content, {
+                            item: message.item ?? "",
+                          })}
+                        </Match>
+                        <Match
+                          when={["ACTION", "JOIN", "LEAVE"].includes(
+                            message.type
+                          )}
+                        >
+                          {t(message.content)}
+                        </Match>
+                      </Switch>
                     </div>
                   </div>
                 </div>
@@ -66,7 +93,7 @@ const RoomChat: Component<Props> = (props) => {
             id="chat"
             type="text focus:outline-none"
             class="input"
-            placeholder="Kirjoita viestisi tähän..."
+            placeholder={t("chat.placeholder")}
             onChange={(e) => props.onChange(e.currentTarget.value)}
             value={props.currentMessage()}
           />

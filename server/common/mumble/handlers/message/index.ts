@@ -1,6 +1,9 @@
 import { BASE } from "../../../../constants";
+import { serverLanguage } from "../../../../languages";
 import commands from "./commands";
 import { Message } from "./types";
+
+const t = serverLanguage.commands.common;
 
 const baseHandler = new Map(commands.map((c) => [c.command, c.action]));
 
@@ -16,7 +19,7 @@ const handleMessage = (message: Message) => {
         return;
       }
 
-      const content = `Tuntematon komento ${action}. Lähetä "hande apua" nähdäksesi komennot.`;
+      const content = t.unknownCommand(action);
       if (message.sender) {
         await message.reply(content);
       } else if (message.client?.user?.channel) {

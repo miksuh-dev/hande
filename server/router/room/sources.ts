@@ -11,17 +11,14 @@ export const SOURCES: Source[] = [
   {
     id: 1,
     value: SourceType.YOUTUBE,
-    name: "Youtube",
   },
   {
     id: 2,
     value: SourceType.RADIO,
-    name: "Radio",
   },
 ];
 
 export const searchFromSource = async (text: string, source: Source) => {
-  console.log("searchFromSource", text, source);
   if (source.value === "youtube") {
     const result = await youtube.searchList(text);
 

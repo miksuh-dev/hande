@@ -9,8 +9,11 @@ import { RoomData } from "../data";
 import { useRouteData } from "@solidjs/router";
 import trackClickOutside from "utils/trackClickOutside";
 import { Source } from "trpc/types";
+import { useI18n } from "@solid-primitives/i18n";
 
 const SearchComponent: Component = () => {
+  const [t] = useI18n();
+
   const roomData = useRouteData<RoomData>();
 
   const snackbar = useSnackbar();
@@ -42,9 +45,9 @@ const SearchComponent: Component = () => {
       });
 
       setResults(suggestions);
-    } catch (error) {
-      if (error instanceof Error) {
-        snackbar.error(error.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        snackbar.error(t("error.common", { error: err.message }));
       }
     } finally {
       setLoading(false);
@@ -68,10 +71,14 @@ const SearchComponent: Component = () => {
         type: result.type,
       });
 
-      snackbar.success(`Lisätty jonoon "${htmlDecode(song.title)}"`);
+      snackbar.success(
+        t(`snackbar.source.${song.type}.addedToQueue`, {
+          item: htmlDecode(song.title),
+        })
+      );
     } catch (error) {
       if (error instanceof Error) {
-        snackbar.error(error.message);
+        snackbar.error(t("snackbar.error", { error: error.message }));
       }
     }
   };

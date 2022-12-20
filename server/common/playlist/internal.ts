@@ -29,11 +29,7 @@ export const onSongEnd = async (song: Song) => {
     },
   });
 
-  if (song.type === "youtube") {
-    sendMessage(`Kappale "${song.title}" päättyi.`);
-  } else if (song.type === "radio") {
-    sendMessage(`Radiokanavan "${song.title}" toisto päättyi.`);
-  }
+  sendMessage(`event.source.${song.type}.end`, { item: song.title });
 
   stopCurrentSong();
 
@@ -47,15 +43,13 @@ export const onSongEnd = async (song: Song) => {
 };
 
 const onPlayError = (song: Song, error: string) => {
-  sendErrorMessage(
-    `Virhe kappaleen ${song.title} toistossa. Siirrytään seuraavaan kappaleeseen 5 sekunnin kuluttua. (${error})`
-  );
+  sendErrorMessage(`event.error`, { item: song.title, error });
 
   setTimeout(() => {
     if (playing?.id === song.id || !playing) {
       onSongEnd(song).catch((e) => {
         if (e instanceof Error) {
-          onPlayError(song, `Virhe kappaleen päättämisessä: ${e.message}`);
+          onPlayError(song, e.message);
         }
         console.log("e", e);
       });
@@ -78,7 +72,7 @@ const createStream = async (song: Song) => {
 const playYoutubeSong = async (song: Song): Promise<PlayingSong> => {
   const videoInfo = await getVideoInfo(song);
   if (!videoInfo) {
-    throw new Error("Video info not available");
+    throw new Error("error.videoInfo");
   }
 
   const currentSong = setCurrentSong({
@@ -87,7 +81,7 @@ const playYoutubeSong = async (song: Song): Promise<PlayingSong> => {
     duration: videoInfo.duration,
   });
 
-  sendMessage(`Soitetaan kappale "${currentSong.title}".`, {});
+  sendMessage(`event.source.${song.type}.start`, { item: song.title });
 
   const secondsLeft = currentSong.startedAt
     .plus({ seconds: videoInfo.duration + 3 })
@@ -96,7 +90,7 @@ const playYoutubeSong = async (song: Song): Promise<PlayingSong> => {
   endTimeout = setTimeout(() => {
     onSongEnd(song).catch((e) => {
       if (e instanceof Error) {
-        onPlayError(song, `Virhe kappaleen päättämisessä: ${e.message}`);
+        onPlayError(song, e.message);
       }
       console.log("e", e);
     });
@@ -111,7 +105,7 @@ const playRadioSong = (song: Song): PlayingSong => {
     startedAt: DateTime.now(),
   });
 
-  sendMessage(`Toistetaan radiokanavaa "${currentSong.title}".`, {});
+  sendMessage(`event.source.${song.type}.start`, { item: song.title });
 
   return currentSong;
 };

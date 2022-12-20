@@ -1,3 +1,4 @@
+import { useI18n } from "@solid-primitives/i18n";
 import { CrossIcon, UpArrowIcon } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Component, For } from "solid-js";
@@ -12,6 +13,8 @@ type Props = {
 };
 
 const PlaylistComponent: Component<Props> = (props) => {
+  const [t] = useI18n();
+
   return (
     <div class="max-h-full space-y-4 overflow-y-auto rounded-md pr-4">
       <For each={props.songs}>
@@ -21,12 +24,14 @@ const PlaylistComponent: Component<Props> = (props) => {
               <SongImage song={song} />
               <div class="flex flex-col py-4">
                 <h1>{htmlDecode(song.title)}</h1>
-                <p>Toivoja: {song.requester}</p>
+                <p>
+                  {t("common.requester")}: {song.requester}
+                </p>
               </div>
             </div>
 
             <div class="flex flex-row space-x-2 pr-2">
-              <Tooltip text={"Siirrä jonon kärkeen"}>
+              <Tooltip text={t(`tooltip.source.${song.type}.playNext`)}>
                 <button
                   onClick={() => props.onPlayNext(song)}
                   class="icon-button h-11 w-11"
@@ -34,7 +39,7 @@ const PlaylistComponent: Component<Props> = (props) => {
                   <UpArrowIcon />
                 </button>
               </Tooltip>
-              <Tooltip text={"Poista kappale jonosta"}>
+              <Tooltip text={t(`tooltip.source.${song.type}.skipInPlaylist`)}>
                 <button
                   onClick={() => props.onSkip(song)}
                   class="icon-button h-11 w-11"

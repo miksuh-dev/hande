@@ -6,6 +6,7 @@ import type { Component } from "solid-js";
 import { UserLoginInput } from "trpc/types";
 import env from "config";
 import useSnackbar from "hooks/useSnackbar";
+import { useI18n } from "@solid-primitives/i18n";
 
 type AuthStoreProps = {
   user: Accessor<User | null>;
@@ -37,6 +38,8 @@ export const AuthContext = createContext<AuthContextProps>(INITIAL_VALUE);
 export const AuthProvider: Component<{
   children: JSX.Element;
 }> = (props) => {
+  const [t] = useI18n();
+
   const snackbar = useSnackbar();
   const [authenticated, setAuthenticated] = createSignal<boolean>(false);
   const [user, setUser] = createSignal<User | null>(null);
@@ -89,7 +92,7 @@ export const AuthProvider: Component<{
       }
 
       if (err instanceof Error) {
-        snackbar.error(err.message);
+        snackbar.error(t("error.common", { error: err.message }));
       }
     } finally {
       setReady(true);

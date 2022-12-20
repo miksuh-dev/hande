@@ -1,3 +1,4 @@
+import { useI18n } from "@solid-primitives/i18n";
 import env from "config";
 import useAuth from "hooks/useAuth";
 import useSnackbar from "hooks/useSnackbar";
@@ -6,6 +7,8 @@ import { UserRegisterInput } from "trpc/types";
 import { handleError } from "utils/error";
 
 const GuestLoginView: Component = () => {
+  const [t] = useI18n();
+
   const auth = useAuth();
   const snackbar = useSnackbar();
   const [username, setUsername] = createSignal<string>("");
@@ -25,7 +28,7 @@ const GuestLoginView: Component = () => {
       }
 
       if (err instanceof Error) {
-        snackbar.error(err.message);
+        snackbar.error(t("error.common", { error: err.message }));
       }
     }
   };
@@ -34,10 +37,10 @@ const GuestLoginView: Component = () => {
     <div class="flex h-full flex-col items-center justify-center p-4">
       <div class="w-full max-w-[400px] space-y-8">
         <h1 class="text-center text-5xl font-extrabold tracking-tight text-custom-primary-900 backdrop-blur backdrop-filter dark:text-white sm:text-6xl">
-          Syötä nimimerkki:
+          {t("guestLogin.title")}:
         </h1>
         <form
-          class="flex  flex-col space-y-4"
+          class="flex flex-col space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit(username());
@@ -61,7 +64,7 @@ const GuestLoginView: Component = () => {
             type="submit"
             class="mt-2 rounded-md bg-custom-primary-900 p-2 text-white dark:bg-white dark:text-custom-primary-900"
           >
-            Jatka
+            {t("actions.continue")}
           </button>
         </form>
       </div>

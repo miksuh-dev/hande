@@ -3,6 +3,7 @@ import { Song, SearchResult } from "trpc/types";
 import { Accessor } from "solid-js";
 import { htmlDecode } from "utils/parse";
 import { CircularLoadingSpinner, RadioIcon } from "components/common/icon";
+import { useI18n } from "@solid-primitives/i18n";
 
 type Props = {
   results: Accessor<SearchResult[]>;
@@ -13,6 +14,8 @@ type Props = {
 };
 
 const Result: Component<Props> = (props) => {
+  const [t] = useI18n();
+
   return (
     <div class="absolute top-full left-0 right-0 max-h-[500px]  space-y-2 overflow-auto rounded-sm rounded-t-none bg-neutral-400 p-2 dark:bg-neutral-900">
       <Show
@@ -71,7 +74,7 @@ const Result: Component<Props> = (props) => {
                           class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
                           disabled
                         >
-                          Jonossa
+                          {t("common.inQueue")}
                         </button>
                       }
                     >
@@ -80,7 +83,7 @@ const Result: Component<Props> = (props) => {
                         class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
                         onClick={() => props.onAdd(result)}
                       >
-                        Lisää jonoon
+                        {t("actions.addToQueue")}
                       </button>
                     </Show>
                   </div>

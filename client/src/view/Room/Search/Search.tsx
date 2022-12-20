@@ -3,6 +3,7 @@ import { Component, createSignal, For, Show } from "solid-js";
 import { Accessor, Setter } from "solid-js";
 import { Source } from "../../../../../server/router/room/types";
 import trackClickOutside from "utils/trackClickOutside";
+import { useI18n } from "@solid-primitives/i18n";
 
 type Props = {
   text: Accessor<string>;
@@ -15,19 +16,21 @@ type Props = {
   loading: Accessor<boolean>;
 };
 
-const getSourcePlaceHolder = (source: Source | undefined) => {
-  switch (source?.value) {
-    case "youtube":
-      return "Etsi videota Youtubesta ";
-    case "radio":
-      return "Etsi radiokanavaa";
-    default:
-      return "Haku";
-  }
-};
-
 const Search: Component<Props> = (props) => {
+  const [t] = useI18n();
+
   const [sourceOpen, setSourceOpen] = createSignal(false);
+
+  const getSourcePlaceHolder = (source: Source | undefined) => {
+    switch (source?.value) {
+      case "youtube":
+        return t("search.youtube.placeholder");
+      case "radio":
+        return t("search.radio.placeholder");
+      default:
+        return t("search.placeholder");
+    }
+  };
 
   return (
     <form
@@ -65,7 +68,7 @@ const Search: Component<Props> = (props) => {
                             props.onSourceChange(source);
                           }}
                         >
-                          {source.name}
+                          {t(`search.${source.value}.name`)}
                         </button>
                       </li>
                     </Show>
@@ -83,7 +86,7 @@ const Search: Component<Props> = (props) => {
             }}
           >
             <Show
-              when={props.selectedSource()?.name}
+              when={props.selectedSource()?.value}
               fallback={
                 <div class="flex w-full justify-center">
                   <div class="h-5 w-5">
@@ -92,7 +95,7 @@ const Search: Component<Props> = (props) => {
                 </div>
               }
             >
-              {props.selectedSource()?.name}
+              {t(`search.${props.selectedSource()?.value}.name`)}
             </Show>
             <svg
               aria-hidden="true"

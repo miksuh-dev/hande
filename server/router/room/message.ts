@@ -19,6 +19,8 @@ const createMessage = (content: string, options?: MessageOptions): Message => {
       isSystem: false,
       isMumbleUser: options.user.isMumbleUser,
       theme: theme ?? "default",
+      ...(options.item && { item: options.item }),
+      ...(options.error && { error: options.error }),
     };
   }
 
@@ -29,6 +31,8 @@ const createMessage = (content: string, options?: MessageOptions): Message => {
     timestamp: Date.now(),
     type: options?.type ?? MessageType.MESSAGE,
     isSystem: true,
+    ...(options?.item && { item: options.item }),
+    ...(options?.error && { error: options.error }),
   };
 };
 
@@ -43,6 +47,9 @@ export const sendMessage = (content: string, options?: MessageOptions) => {
   return message;
 };
 
-export const sendErrorMessage = (content: string) => {
-  sendMessage(content, { type: MessageType.ERROR });
+export const sendErrorMessage = (
+  content: string,
+  options: MessageOptions = {}
+) => {
+  sendMessage(content, { type: MessageType.ERROR, ...options });
 };

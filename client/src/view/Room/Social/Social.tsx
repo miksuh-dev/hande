@@ -4,8 +4,11 @@ import Chat from "./Chat";
 import { RoomData } from "../data";
 import Tabs, { Tab } from "components/Tabs";
 import { useRouteData } from "@solidjs/router";
+import { useI18n } from "@solid-primitives/i18n";
 
 const SocialComponent: Component = () => {
+  const [t] = useI18n();
+
   const roomData = useRouteData<RoomData>();
 
   const [selectedTab, setSelectedTab] = createSignal(0);
@@ -17,14 +20,14 @@ const SocialComponent: Component = () => {
           <Tab
             selected={selectedTab() === 0}
             onClick={() => setSelectedTab(0)}
-            text="Chat"
+            text={t("chat.title")}
           />
           <Tab
             selected={selectedTab() === 1}
             onClick={() => setSelectedTab(1)}
             text={
               <span class="flex items-center">
-                <span class="mr-2">Käyttäjät</span>
+                <span class="mr-2">{t("users.title")}</span>
                 <span>{roomData().users.length}</span>
               </span>
             }

@@ -31,9 +31,10 @@ export const addSong = async (
     },
   });
 
-  sendMessage(`lisäsi kappaleen "${song.title}" jonoon.`, {
+  sendMessage(`event.source.${song.type}.added`, {
     user: requester,
     type: MessageType.ACTION,
+    item: song.title,
   });
 
   ee.emit(`onUpdate`, { song: { add: addedSong } });
@@ -59,7 +60,7 @@ export const startPlay = async (user: MumbleUser) => {
   if (nextSong) {
     await playSong(nextSong);
 
-    sendMessage(`aloitti kappaleen "${nextSong.title}".`, {
+    sendMessage(`event.source.${nextSong.type}.started`, {
       user,
       type: MessageType.ACTION,
     });
@@ -81,15 +82,17 @@ export const removeSong = async (id: number, user: MumbleUser) => {
   });
 
   if (song.id === getCurrentSong()?.id) {
-    sendMessage(`ohitti kappaleen "${song.title}".`, {
+    sendMessage(`event.source.${song.type}.skipped`, {
       user,
       type: MessageType.ACTION,
+      item: song.title,
     });
     stopCurrentSong();
   } else {
-    sendMessage(`poisti "${song.title}" kappaleen jonosta.`, {
+    sendMessage(`event.source.${song.type}.skippedQueue`, {
       user,
       type: MessageType.ACTION,
+      item: song.title,
     });
     ee.emit(`onUpdate`, { song: { remove: song.id } });
   }
@@ -118,9 +121,10 @@ export const playNext = async (id: number, user: MumbleUser) => {
     },
   });
 
-  sendMessage(`siirsi kappaleen "${song.title}" jonon kärkeen.`, {
+  sendMessage(`event.source.${song.type}.setAsNext`, {
     user,
     type: MessageType.ACTION,
+    item: song.title,
   });
 
   ee.emit(`onUpdate`, { song: { update: song } });

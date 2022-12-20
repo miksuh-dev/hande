@@ -6,6 +6,7 @@ import useSnackbar from "hooks/useSnackbar";
 import useAuth from "hooks/useAuth";
 import { generateId } from "utils/auth";
 import useTheme from "hooks/useTheme";
+import { useI18n } from "@solid-primitives/i18n";
 
 const playListCompare = (a: Song, b: Song) => {
   if (a.position !== b.position) {
@@ -138,13 +139,14 @@ function createDeepSignal<T>(value: T): Signal<T> {
 }
 
 function RoomData() {
+  const [t] = useI18n();
+
   const snackbar = useSnackbar();
   const auth = useAuth();
   const theme = useTheme();
 
   const [room, { mutate }] = createResource<Room>(
     () => trpcClient.room.get.query(),
-
     {
       storage: createDeepSignal,
       initialValue: {
@@ -179,7 +181,7 @@ function RoomData() {
 
     trpcClient.room.ping.mutate(clientId).catch((err) => {
       console.error(err);
-      snackbar.error("Virhe yhdistettäessä huoneeseen");
+      snackbar.error(t("error.common", { error: err.message }));
     });
 
     const lobbyUpdate = trpcClient.room.onUpdate.subscribe(
@@ -195,10 +197,10 @@ function RoomData() {
           });
         },
         onError(err) {
-          snackbar.error(err.message);
+          snackbar.error(t("error.common", { error: err.message }));
         },
         onComplete() {
-          snackbar.success("Yhteys huoneeseen päätettiin");
+          snackbar.success(t("common.connectionClosed"));
         },
       }
     );

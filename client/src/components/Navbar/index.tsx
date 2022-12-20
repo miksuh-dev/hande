@@ -3,6 +3,7 @@ import { Link } from "@solidjs/router";
 import ThemeSelect from "components/ThemeSelect";
 import UserMenu from "components/UserMenu";
 import { CrownIcon } from "components/common/icon";
+import LanguageSelect from "components/LanguageSelect";
 
 const Navbar: Component = () => {
   return (
@@ -19,6 +20,7 @@ const Navbar: Component = () => {
         </Link>
         <div class="flex items-center space-x-4 md:order-2">
           <ThemeSelect />
+          <LanguageSelect />
           <UserMenu />
         </div>
       </div>
