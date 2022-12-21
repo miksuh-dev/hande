@@ -30,6 +30,7 @@
     "vitest-tsconfig-paths": "^3.4.1"
   },
   "dependencies": {
+    "@solid-primitives/i18n": "^1.1.2",
     "@solidjs/router": "^0.5.0",
     "@trpc/client": "^10.0.0-proxy-beta.7",
     "luxon": "^3.0.4",

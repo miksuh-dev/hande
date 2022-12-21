@@ -32,10 +32,10 @@ const LanguageSelect: Component = () => {
         <div class="relative">
           <div class="tooltip absolute right-0 top-0 z-50 my-4 w-[150px] list-none divide-y divide-neutral-200 text-base">
             <Show
-              when={language?.data()?.available}
+              when={language?.available()}
               fallback={<CircularLoadingSpinner />}
             >
-              <For each={[...language.data().available].sort()}>
+              <For each={[...(language?.available() ?? [])].sort()}>
                 {(lng: string) => (
                   <ul class="py-1">
                     <li>

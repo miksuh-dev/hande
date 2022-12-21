@@ -1,12 +1,12 @@
 import {
+  Accessor,
   Component,
   createContext,
   createEffect,
   createResource,
+  createSignal,
   JSX,
-  Resource,
-  Show,
-  Signal,
+  on,
 } from "solid-js";
 import {
   I18nContext,
@@ -14,57 +14,47 @@ import {
   useI18n,
 } from "@solid-primitives/i18n";
 import trpcClient from "trpc";
-import { createStore, reconcile, unwrap } from "solid-js/store";
 import { Language } from "trpc/types";
 
-function createDeepSignal<T>(value: T): Signal<T> {
-  const [store, setStore] = createStore({
-    value,
-  });
-
-  return [
-    // eslint-disable-next-line solid/reactivity
-    () => store.value,
-    // eslint-disable-next-line solid/reactivity
-    (v: T) => {
-      const unwrapped = unwrap(store.value);
-      typeof v === "function" && (v = v(unwrapped));
-      setStore("value", reconcile(v));
-      return store.value;
-    },
-  ] as Signal<T>;
-}
-
 type LanguageContext = {
+  current: Accessor<Language["current"] | undefined>;
+  available: Accessor<string[]>;
   change: (language: string) => Promise<void>;
-  data: Resource<Language>;
 };
 
 // TODO: Set initial data
 export const I18nSetterContext = createContext<LanguageContext>();
 
-const I18nSetterProvider: Component<{ children: JSX.Element }> = (props) => {
+export const I18nSetterProvider: Component<{ children: JSX.Element }> = (
+  props
+) => {
   const [, { add, locale, dict }] = useI18n();
+  const [currentLanguage, setCurrentLanguage] =
+    createSignal<Language["current"]>();
 
-  const [language] = createResource<Language>(
-    () =>
-      trpcClient.common.language.query({
-        language: localStorage.getItem("language") ?? undefined,
-      }),
-    {
-      storage: createDeepSignal,
-    }
+  const [available, setAvailable] = createSignal<string[]>([]);
+
+  const [language] = createResource<Language>(() =>
+    trpcClient.common.language.query({
+      language: localStorage.getItem("language") ?? undefined,
+    })
   );
 
-  createEffect(() => {
-    const selectedLanguage = language();
+  createEffect(
+    on(language, (selectedLanguage) => {
+      if (selectedLanguage?.current) {
+        const { name, data } = selectedLanguage.current;
+        add(name, data);
 
-    if (selectedLanguage?.current) {
-      const { name, data } = selectedLanguage.current;
-      add(name, data);
-      locale(name);
-    }
-  });
+        locale(name);
+        setCurrentLanguage(selectedLanguage.current);
+      }
+
+      if (selectedLanguage?.available) {
+        setAvailable(selectedLanguage.available);
+      }
+    })
+  );
 
   const handleLanguageChange = async (language: string) => {
     if (!dict(language)) {
@@ -83,16 +73,15 @@ const I18nSetterProvider: Component<{ children: JSX.Element }> = (props) => {
   };
 
   return (
-    <Show when={language()?.current}>
-      <I18nSetterContext.Provider
-        value={{
-          data: language,
-          change: handleLanguageChange,
-        }}
-      >
-        {props.children}
-      </I18nSetterContext.Provider>
-    </Show>
+    <I18nSetterContext.Provider
+      value={{
+        current: currentLanguage,
+        available: available,
+        change: handleLanguageChange,
+      }}
+    >
+      {props.children}
+    </I18nSetterContext.Provider>
   );
 };
 
