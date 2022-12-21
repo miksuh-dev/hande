@@ -4,38 +4,55 @@ import {
   createEffect,
   createResource,
   JSX,
-  Show,
+  Resource,
+  Signal,
 } from "solid-js";
 import {
   I18nContext,
   createI18nContext,
   useI18n,
 } from "@solid-primitives/i18n";
-import { Language } from "trpc/types";
 import trpcClient from "trpc";
+import { createStore, reconcile, unwrap } from "solid-js/store";
+import { Language } from "trpc/types";
 
-interface I18nSetterContextProps {
-  current: Language["current"] | undefined;
-  available: string[];
-  change: (language: string) => void;
+function createDeepSignal<T>(value: T): Signal<T> {
+  const [store, setStore] = createStore({
+    value,
+  });
+
+  return [
+    // eslint-disable-next-line solid/reactivity
+    () => store.value,
+    // eslint-disable-next-line solid/reactivity
+    (v: T) => {
+      const unwrapped = unwrap(store.value);
+      typeof v === "function" && (v = v(unwrapped));
+      setStore("value", reconcile(v));
+      return store.value;
+    },
+  ] as Signal<T>;
 }
 
-const INITIAL_STATE: I18nSetterContextProps = {
-  current: undefined,
-  available: [],
-  change: (_: string) => {},
+type LanguageContext = {
+  change: (language: string) => Promise<void>;
+  data: Resource<Language>;
 };
 
-export const I18nSetterContext =
-  createContext<I18nSetterContextProps>(INITIAL_STATE);
+// TODO: Set initial data
+export const I18nSetterContext = createContext<LanguageContext>();
 
 const I18nSetterProvider: Component<{ children: JSX.Element }> = (props) => {
   const [, { add, locale, dict }] = useI18n();
 
-  const [language] = createResource<Language>(() =>
-    trpcClient.common.language.query({
-      language: localStorage.getItem("language") ?? undefined,
-    })
+  const [language] = createResource<Language>(
+    () =>
+      trpcClient.common.language.query({
+        language: localStorage.getItem("language") ?? undefined,
+      }),
+    {
+      storage: createDeepSignal,
+    }
   );
 
   createEffect(() => {
@@ -65,17 +82,14 @@ const I18nSetterProvider: Component<{ children: JSX.Element }> = (props) => {
   };
 
   return (
-    <Show when={language.state === "ready"}>
-      <I18nSetterContext.Provider
-        value={{
-          current: language()?.current,
-          available: language()?.available ?? [],
-          change: handleLanguageChange,
-        }}
-      >
-        {props.children}
-      </I18nSetterContext.Provider>
-    </Show>
+    <I18nSetterContext.Provider
+      value={{
+        data: language,
+        change: handleLanguageChange,
+      }}
+    >
+      {props.children}
+    </I18nSetterContext.Provider>
   );
 };
 
