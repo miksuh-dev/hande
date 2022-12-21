@@ -123,14 +123,14 @@ const getNewCurrentSong = async (song: Song): Promise<PlayingSong> => {
 };
 
 export const playSong = async (song: Song) => {
+  if (endTimeout) {
+    clearTimeout(endTimeout);
+  }
+
   const currentSong = await getNewCurrentSong(song);
 
   if (stream) {
     stream.destroy();
-  }
-
-  if (endTimeout) {
-    clearTimeout(endTimeout);
   }
 
   ee.emit(`onUpdate`, {
