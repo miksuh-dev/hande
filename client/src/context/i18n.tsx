@@ -5,6 +5,7 @@ import {
   createResource,
   JSX,
   Resource,
+  Show,
   Signal,
 } from "solid-js";
 import {
@@ -82,14 +83,16 @@ const I18nSetterProvider: Component<{ children: JSX.Element }> = (props) => {
   };
 
   return (
-    <I18nSetterContext.Provider
-      value={{
-        data: language,
-        change: handleLanguageChange,
-      }}
-    >
-      {props.children}
-    </I18nSetterContext.Provider>
+    <Show when={language()?.current}>
+      <I18nSetterContext.Provider
+        value={{
+          data: language,
+          change: handleLanguageChange,
+        }}
+      >
+        {props.children}
+      </I18nSetterContext.Provider>
+    </Show>
   );
 };
 
