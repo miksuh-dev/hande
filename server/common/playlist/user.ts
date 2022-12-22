@@ -63,6 +63,7 @@ export const startPlay = async (user: MumbleUser) => {
     sendMessage(`event.source.${nextSong.type}.started`, {
       user,
       type: MessageType.ACTION,
+      item: nextSong.title,
     });
 
     return nextSong;
