@@ -1,5 +1,4 @@
-import * as english from "./en";
-import * as finnish from "./fi";
+import { english, finnish } from "./language";
 import { ClientLanguage, ServerLanguage } from "./types";
 
 export const serverLanguage = ((): ServerLanguage => {

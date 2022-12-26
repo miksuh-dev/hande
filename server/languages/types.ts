@@ -1,5 +1,5 @@
-import * as english from "./en";
-import * as finnish from "./fi";
+import * as english from "./language/en";
+import * as finnish from "./language/fi";
 
 export type ServerLanguage = typeof finnish.server | typeof english.server;
 export type ClientLanguage = typeof finnish.client | typeof english.client;
