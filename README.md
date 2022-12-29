@@ -6,6 +6,9 @@
 
 This project is still under development and has some major missing features. See [TODO](docs/TODO.md) for more information about missing and planned features and known bugs. If you find any new bugs or have new feature ideas feel free to open an issue!
 
+## Screenshots
+![hande](https://user-images.githubusercontent.com/11806132/209993003-504a4202-6bae-4417-9259-53631b05bd1d.png)
+
 ## Available commands
 
 The following commands are currently available and can be used through the Mumble client:
@@ -62,5 +65,5 @@ Copy `.env.example` to `.env` and fill in the values. The following variables ar
 | TOKEN_URL | Target URL that bot will be using when generating web-interface auth URL |
 | YOUTUBE_API_KEY | Bot uses youtube data API to fetch search results, obtain your api key [here](https://developers.google.com/youtube/registering_an_application) |
 | YOUTUBE_DL_LOCATION | Bot uses youtube-dl to stream videos on youtube. |
-| RADIO_SEARCH_URL | Bot searches radio stations from radio-browser.info. Insert desired API endpoint URL here |
+| RADIO_SEARCH_URL | Bot searches radio stations from [radio-browser.info](https://radio-browser.info). Insert desired API endpoint URL here |
 | SERVER_LANGUAGE | Currently supported languages are: "en" (English) and "fi" (Finnish) |
