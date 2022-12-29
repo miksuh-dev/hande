@@ -69,7 +69,7 @@ app.get("*", (_, res) => {
   });
 });
 
-const port = 2021;
+const port = process.env.PORT ?? 2021;
 server.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
 });
