@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/miksuh-dev/hande/compare/v1.2.0...v1.3.0) (2022-12-29)
+
+
+### Features
+
+* language support and english translations ([469b378](https://github.com/miksuh-dev/hande/commit/469b37853ac1bc294c582272eaef576244d5a608))
+
+
+### Bug Fixes
+
+* chat too narrow on small screens ([fd68027](https://github.com/miksuh-dev/hande/commit/fd680271cb78e8ebb41e6d4db74939b8d6ae0b03))
+* empty source on first page load ([fb4fdf1](https://github.com/miksuh-dev/hande/commit/fb4fdf10a01565aec825b61f3006125518636a87))
+* language fetch stops page from loading ([f1ee982](https://github.com/miksuh-dev/hande/commit/f1ee982425461c40dda12cb84bcc6802b7d84053))
+* missing song title on song started ([5330ccc](https://github.com/miksuh-dev/hande/commit/5330ccc630f64be136b1335335fbf008d7b5d655))
+* next song is not automatically played when the current song is finished ([4185710](https://github.com/miksuh-dev/hande/commit/4185710dea73c872e2120252f76bfdac63a31c3e))
+* translations not working on build ([893186f](https://github.com/miksuh-dev/hande/commit/893186f49ec3d6ce0f6b5e31c8e8885819e64b60))
+* wait for language to load before render page ([8905ccf](https://github.com/miksuh-dev/hande/commit/8905ccfa0c5cd9536fd158e44835b81f1b0e53ef))
+
 ## [1.2.0](https://github.com/miksuh-dev/hande/compare/v1.1.0...v1.2.0) (2022-12-19)
 
 
