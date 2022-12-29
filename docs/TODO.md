@@ -6,7 +6,7 @@ Common:
 
 - [x] Language select support
 - [x] English translation
-- [ ] Validation of languages, so that there are no missing translations keys
+- [x] Validation of languages, so that there are no missing translations keys
 
 To Mumble:
 
