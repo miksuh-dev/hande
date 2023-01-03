@@ -8,21 +8,21 @@ This project is still under development and has some major missing features. See
 
 ## Screenshots
 
-| ![youtube2](https://user-images.githubusercontent.com/11806132/210383776-650c5ac9-5d50-43a1-a35a-5a1c28dd7874.gif)|
-|:--:|
-| <b>Youtube search support with playlist actions</b>|
+| ![youtube](https://user-images.githubusercontent.com/11806132/210383776-650c5ac9-5d50-43a1-a35a-5a1c28dd7874.gif) |
+| :---------------------------------------------------------------------------------------------------------------: |
+|                                <b>Youtube search support with playlist actions</b>                                |
 
-| ![themes and languages](https://user-images.githubusercontent.com/11806132/210380520-3689fc16-7ac3-45c8-8035-5e609f3b6d9a.gif)|
-|:--:|
-| <b>Multiple color themes and languages</b>|
+| ![themes and languages](https://user-images.githubusercontent.com/11806132/210380520-3689fc16-7ac3-45c8-8035-5e609f3b6d9a.gif) |
+| :----------------------------------------------------------------------------------------------------------------------------: |
+|                                           <b>Multiple color themes and languages</b>                                           |
 
 ## Available commands
 
 The following commands are currently available and can be used through the Mumble client:
 | Command | Description |
 |--------------- | --------------- |
-| hande www | Generates a link to the web interface |
-| hande help | Shows a list of available commands |
+| `hande www` | Generates a link to the web interface |
+| `hande help` | Shows a list of available commands |
 
 ## Dependencies
 
@@ -33,12 +33,11 @@ Before running the bot, you need to have the following dependencies met:
 
 ## Installation
 
-After installing the dependencies, run the following commands:
+After the dependencies, run the following commands:
 
 ```bash
-git clone github.com/miksuh-dev/hande
-cd hande
-npm install
+git clone https://github.com/miksuh-dev/hande
+cd hande && npm install
 cd client && npm install
 ```
 
@@ -46,8 +45,11 @@ cd client && npm install
 
 ### Development
 
+Run the following commands in seperate terminals:
+
 ```bash
-npm run client && npm run server
+npm run client
+npm run server
 ```
 
 ### Production
