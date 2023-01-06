@@ -98,7 +98,7 @@ const createStream = async (song: Song) => {
 const playYoutubeSong = async (song: Song): Promise<PlayingSong> => {
   const videoInfo = await getVideoInfo(song);
   if (!videoInfo) {
-    throw new Error("error.videoInfo");
+    throw new Error("Failed to get video info");
   }
 
   const currentSong = setCurrentSong({
