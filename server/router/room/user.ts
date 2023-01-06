@@ -33,12 +33,11 @@ export const join = (user: MumbleUser, clientId: string) => {
   });
 };
 
-export const leave = (user: MumbleUser, clientId: string) => {
+const handleLeaveTimeout = (user: MumbleUser) => {
   const existing = users.get(user.hash);
+  const clientIds = existing?.clientIds ?? [];
 
-  if (!existing) return;
-
-  if (existing.clientIds.length === 1) {
+  if (clientIds.length === 0) {
     sendMessage("chat.message.left", {
       type: MessageType.LEAVE,
       user,
@@ -49,13 +48,24 @@ export const leave = (user: MumbleUser, clientId: string) => {
     });
 
     users.delete(user.hash);
+  }
+};
 
-    return;
+export const leave = (user: MumbleUser, clientId: string) => {
+  const existing = users.get(user.hash);
+  if (!existing) return;
+
+  const clientIds = existing.clientIds.filter((id) => id !== clientId);
+
+  if (clientIds.length === 0) {
+    setTimeout(() => {
+      handleLeaveTimeout(user);
+    }, 5000);
   }
 
   users.set(user.hash, {
     ...existing,
-    clientIds: existing.clientIds.filter((id) => id !== clientId),
+    clientIds,
   });
 };
 

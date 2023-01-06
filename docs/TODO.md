@@ -21,7 +21,7 @@ To website:
 - [ ] Playlist support
 - [ ] Statistics
 - [ ] View changelog
-- [ ] Disconnect timeout so refreshing page doesn't instantly send leave message
+- [x] Disconnect timeout so refreshing page doesn't instantly send leave message
 
 ### Bugs:
 
