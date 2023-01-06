@@ -89,6 +89,8 @@ export default {
     placeholder: "Type a message...",
   },
   event: {
+    retry:
+      'Error playing song "{{ item }}". Retrying in 5 seconds. ({{ error }})',
     error:
       'Error playing song "{{ item }}". Skipping to next song in 5 seconds. ({{ error }})',
     source: {

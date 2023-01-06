@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { Component, createSignal, onCleanup, onMount } from "solid-js";
+import { Component, createEffect, createSignal, onCleanup } from "solid-js";
 import { PlayingSong } from "trpc/types";
 import { secondsToTime } from "./utils";
 
@@ -23,16 +23,18 @@ const ProgressComponent: Component<Props> = (props) => {
     return diff;
   };
 
-  const [progress, setProgress] = createSignal(getInitialProgress());
+  const [progress, setProgress] = createSignal<number>(getInitialProgress());
 
-  onMount(() => {
+  createEffect(() => {
+    setProgress(getInitialProgress());
+
     let interval = setInterval(() => {
-      setProgress((progress) => {
-        if (progress >= props.playing.duration) {
+      setProgress((currentProgress) => {
+        if (currentProgress >= props.playing.duration) {
           return props.playing.duration;
         }
 
-        return progress + 1;
+        return currentProgress + 1;
       });
     }, 1000);
 

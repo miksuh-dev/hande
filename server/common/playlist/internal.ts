@@ -13,11 +13,14 @@ import {
   createStream as createYoutubeStream,
   getVideoInfo,
 } from "../youtube-dl";
+import { PlayError } from "./types";
+
+const MAX_RETRIES = 3;
 
 let playing: PlayingSong | undefined;
-
 let stream: Readable | undefined;
 let endTimeout: NodeJS.Timeout | undefined;
+let playError: PlayError | undefined;
 
 export const onSongEnd = async (song: Song) => {
   await prisma.song.update({
@@ -42,18 +45,41 @@ export const onSongEnd = async (song: Song) => {
   }
 };
 
+const handleSongErrorTimeout = async (song: Song) => {
+  // Ignore as error is no longer relevant
+  if (!playError || playError.id !== song.id) {
+    return;
+  }
+
+  if (playError.retryCount > MAX_RETRIES) {
+    return onSongEnd(song);
+  }
+
+  return playSong(song);
+};
+
 const onPlayError = (song: Song, error: string) => {
-  sendErrorMessage(`event.error`, { item: song.title, error });
+  if (!playError || playError.id !== song.id) {
+    playError = {
+      id: song.id,
+      retryCount: 0,
+    };
+  }
+
+  playError.retryCount += 1;
+
+  sendErrorMessage(
+    playError.retryCount > MAX_RETRIES ? "event.error" : "event.retry",
+    { item: song.title, error }
+  );
 
   setTimeout(() => {
-    if (playing?.id === song.id || !playing) {
-      onSongEnd(song).catch((e) => {
-        if (e instanceof Error) {
-          onPlayError(song, e.message);
-        }
-        console.log("e", e);
-      });
-    }
+    handleSongErrorTimeout(song).catch((e) => {
+      if (e instanceof Error) {
+        onPlayError(song, e.message);
+      }
+      console.log("e", e);
+    });
   }, 5000);
 };
 
@@ -123,43 +149,49 @@ const getNewCurrentSong = async (song: Song): Promise<PlayingSong> => {
 };
 
 export const playSong = async (song: Song) => {
-  if (endTimeout) {
-    clearTimeout(endTimeout);
-  }
-
-  const currentSong = await getNewCurrentSong(song);
-
-  if (stream) {
-    stream.destroy();
-  }
-
-  ee.emit(`onUpdate`, {
-    song: { setPlaying: currentSong },
-  });
-
-  stream = await createStream(song);
-
-  stream.on("error", (e) => {
-    if (e instanceof Error) {
-      onPlayError(currentSong, e.message);
+  try {
+    if (endTimeout) {
+      clearTimeout(endTimeout);
     }
-  });
 
-  client.voiceConnection
-    .playStream(stream, "0")
-    .on("start", async () => {
-      await prisma.song.update({
-        where: {
-          id: currentSong.id,
-        },
-        data: {
-          started: true,
-        },
-      });
-    })
-    .on("error", (message: string) => {
-      onPlayError(currentSong, message);
+    const currentSong = await getNewCurrentSong(song);
+
+    if (stream) {
+      stream.destroy();
+    }
+
+    ee.emit(`onUpdate`, {
+      song: { setPlaying: currentSong },
     });
+
+    stream = await createStream(song);
+
+    stream.on("error", (e) => {
+      if (e instanceof Error) {
+        onPlayError(currentSong, e.message);
+      }
+    });
+
+    client.voiceConnection
+      .playStream(stream, "0")
+      .on("start", async () => {
+        await prisma.song.update({
+          where: {
+            id: currentSong.id,
+          },
+          data: {
+            started: true,
+          },
+        });
+      })
+      .on("error", (message: string) => {
+        onPlayError(currentSong, message);
+      });
+  } catch (e) {
+    if (e instanceof Error) {
+      onPlayError(song, e.message);
+    }
+  }
 };
 
 export const getCurrentSong = (): PlayingSong | undefined => {

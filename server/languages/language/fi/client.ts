@@ -89,6 +89,8 @@ export default {
     placeholder: "Kirjoita viestisi tähän...",
   },
   event: {
+    retry:
+      'Virhe kappaleen "{{ item }}" toistossa. Yritetään toistoa uudelleen 5 sekunnin kuluttua. ({{ error }})',
     error:
       'Virhe kappaleen "{{ item }}" toistossa. Siirrytään seuraavaan kappaleeseen 5 sekunnin kuluttua. ({{ error }})',
     source: {
