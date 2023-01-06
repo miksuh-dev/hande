@@ -117,6 +117,7 @@ const SearchComponent: Component = () => {
         <Result
           results={results}
           songs={roomData().songs}
+          playing={roomData().playing}
           onAdd={handleAdd}
           onClose={() => setResultsOpen(false)}
           loading={loading}

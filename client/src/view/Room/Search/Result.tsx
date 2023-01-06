@@ -1,5 +1,5 @@
 import { Component, For, Match, Show, Switch } from "solid-js";
-import { Song, SearchResult } from "trpc/types";
+import { PlayingSong, SearchResult, Song } from "trpc/types";
 import { Accessor } from "solid-js";
 import { htmlDecode } from "utils/parse";
 import { CircularLoadingSpinner, RadioIcon } from "components/common/icon";
@@ -8,6 +8,7 @@ import { useI18n } from "@solid-primitives/i18n";
 type Props = {
   results: Accessor<SearchResult[]>;
   songs: Song[];
+  playing: PlayingSong;
   onAdd: (data: SearchResult) => void;
   loading: Accessor<boolean>;
   onClose: () => void;
@@ -66,7 +67,7 @@ const Result: Component<Props> = (props) => {
                       when={
                         !props.songs.some(
                           (s) => s.contentId === result.contentId
-                        )
+                        ) && props.playing?.contentId !== result.contentId
                       }
                       fallback={
                         <button
