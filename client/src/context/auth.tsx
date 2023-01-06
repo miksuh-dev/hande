@@ -87,7 +87,7 @@ export const AuthProvider: Component<{
         await login(token);
       }
     } catch (err) {
-      if (err instanceof TRPCClientError && err.data.code === "UNAUTHORIZED") {
+      if (err instanceof TRPCClientError && err.data?.code === "UNAUTHORIZED") {
         localStorage.removeItem("token");
       }
 
