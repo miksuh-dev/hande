@@ -30,4 +30,4 @@ To website:
 - [x] User drawer in nav bar doesn't close when clicking outside of it
 - [x] Chat badges come through search results if chat overlaps with search results
 - [x] Tooltips overflow and are sometimes cut off
-- [ ] Chat scrolls to bottom when changing tabs
+- [x] Chat scrolls to bottom when changing tabs

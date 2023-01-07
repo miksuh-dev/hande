@@ -31,7 +31,7 @@ const RoomChat: Component<Props> = (props) => {
 
   createEffect(() => {
     if (props.messages.length && ref) {
-      ref.scrollIntoView({ behavior: "smooth" });
+      ref.scrollIntoView({ behavior: "auto" });
     }
   });
 
