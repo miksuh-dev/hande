@@ -70,6 +70,10 @@ export default {
     inQueue: "In queue",
     connectionClosed: "Connection closed",
   },
+  datetime: {
+    today: "Today",
+    yesterday: "Yesterday",
+  },
   player: {
     title: "Playing currently",
     empty: {

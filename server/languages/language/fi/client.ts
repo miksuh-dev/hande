@@ -70,6 +70,10 @@ export default {
     inQueue: "Jonossa",
     connectionClosed: "Yhteys huoneeseen päätettiin",
   },
+  datetime: {
+    today: "Tänään",
+    yesterday: "Eilen",
+  },
   player: {
     title: "Soi tällä hetkellä",
     empty: {
