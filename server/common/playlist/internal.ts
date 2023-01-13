@@ -7,6 +7,7 @@ import { PlayingSong } from "types/app";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendErrorMessage, sendMessage } from "../../router/room/message";
+import { SourceType } from "../../router/room/sources";
 import client from "../mumble";
 import { createStream as createRadioStream } from "../radio";
 import {
@@ -36,7 +37,7 @@ export const onSongEnd = async (song: Song) => {
 
   stopCurrentSong();
 
-  ee.emit(`onUpdate`, { song: { remove: song.id } });
+  ee.emit(`onUpdate`, { song: { remove: [song.id] } });
 
   client.voiceConnection.stopStream();
   const nextSong = await getNextSong();
@@ -84,11 +85,11 @@ const onPlayError = (song: Song, error: string) => {
 };
 
 const createStream = async (song: Song) => {
-  if (song.type === "youtube") {
+  if (song.type === SourceType.SONG) {
     return createYoutubeStream(song);
   }
 
-  if (song.type === "radio") {
+  if (song.type === SourceType.RADIO) {
     return await createRadioStream(song);
   }
 
@@ -113,6 +114,9 @@ const playYoutubeSong = async (song: Song): Promise<PlayingSong> => {
     .plus({ seconds: videoInfo.duration + 3 })
     .diffNow("seconds").seconds;
 
+  if (endTimeout) {
+    clearTimeout(endTimeout);
+  }
   endTimeout = setTimeout(() => {
     onSongEnd(song).catch((e) => {
       if (e instanceof Error) {
@@ -137,11 +141,11 @@ const playRadioSong = (song: Song): PlayingSong => {
 };
 
 const getNewCurrentSong = async (song: Song): Promise<PlayingSong> => {
-  if (song.type === "youtube") {
+  if (song.type === SourceType.SONG) {
     return playYoutubeSong(song);
   }
 
-  if (song.type === "radio") {
+  if (song.type === SourceType.RADIO) {
     return playRadioSong(song);
   }
 

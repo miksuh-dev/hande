@@ -10,34 +10,52 @@ import {
   stopCurrentSong,
 } from "./internal";
 
-export const addSong = async (
-  song: {
+export const addSongs = async (
+  songs: {
     url: string;
     contentId: string;
     title: string;
     thumbnail: string | null;
     type: string;
-  },
+  }[],
   requester: MumbleUser
 ) => {
-  const addedSong = await prisma.song.create({
-    data: {
-      url: song.url,
-      contentId: song.contentId,
-      title: song.title,
-      thumbnail: song.thumbnail,
-      requester: requester.name,
-      type: song.type,
-    },
-  });
+  const addedSongs = await Promise.all(
+    songs.map(async (song) => {
+      return prisma.song.create({
+        data: {
+          url: song.url,
+          contentId: song.contentId,
+          title: song.title,
+          thumbnail: song.thumbnail,
+          requester: requester.name,
+          type: song.type,
+        },
+      });
+    })
+  );
 
-  sendMessage(`event.source.${song.type}.added`, {
-    user: requester,
-    type: MessageType.ACTION,
-    item: song.title,
-  });
+  const firstSong = addedSongs[0];
 
-  ee.emit(`onUpdate`, { song: { add: addedSong } });
+  if (!firstSong) {
+    throw new Error("No songs added");
+  }
+
+  ee.emit(`onUpdate`, { song: { add: addedSongs } });
+
+  if (addedSongs.length > 1) {
+    sendMessage(`event.source.${firstSong.type}.addedMany`, {
+      user: requester,
+      type: MessageType.ACTION,
+      count: addedSongs.length,
+    });
+  } else {
+    sendMessage(`event.source.${firstSong.type}.added`, {
+      user: requester,
+      type: MessageType.ACTION,
+      item: firstSong.title,
+    });
+  }
 
   if (!getCurrentSong()) {
     const nextSong = await getNextSong();
@@ -46,7 +64,7 @@ export const addSong = async (
     }
   }
 
-  return addedSong;
+  return addedSongs;
 };
 
 export const startPlay = async (user: MumbleUser) => {
@@ -95,7 +113,7 @@ export const removeSong = async (id: number, user: MumbleUser) => {
       type: MessageType.ACTION,
       item: song.title,
     });
-    ee.emit(`onUpdate`, { song: { remove: song.id } });
+    ee.emit(`onUpdate`, { song: { remove: [song.id] } });
   }
 
   if (!getCurrentSong()) {
@@ -106,6 +124,34 @@ export const removeSong = async (id: number, user: MumbleUser) => {
   }
 
   return song;
+};
+
+export const clearPlaylist = async (requester: MumbleUser) => {
+  const songs = await prisma.song.findMany({
+    where: {
+      ended: false,
+      skipped: false,
+    },
+  });
+
+  await prisma.song.updateMany({
+    where: {
+      ended: false,
+      skipped: false,
+    },
+    data: {
+      skipped: true,
+    },
+  });
+
+  sendMessage(`event.common.clearedPlaylist`, {
+    user: requester,
+    type: MessageType.ACTION,
+  });
+
+  ee.emit(`onUpdate`, { song: { remove: songs.map((s) => s.id) } });
+
+  return songs;
 };
 
 export const playNext = async (id: number, user: MumbleUser) => {

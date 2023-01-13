@@ -2,7 +2,12 @@ import { Component, createEffect, createSignal, Show } from "solid-js";
 import trpcClient from "trpc";
 import Result from "./Result";
 import Search from "./Search";
-import { SearchResult } from "trpc/types";
+import {
+  SearchResult,
+  SearchResultPlaylist,
+  SearchResultRadio,
+  SearchResultSong,
+} from "trpc/types";
 import useSnackbar from "hooks/useSnackbar";
 import { htmlDecode } from "utils/parse";
 import { RoomData } from "../data";
@@ -10,6 +15,7 @@ import { useRouteData } from "@solidjs/router";
 import trackClickOutside from "utils/trackClickOutside";
 import { Source } from "trpc/types";
 import { useI18n } from "@solid-primitives/i18n";
+import PlaylistViewDialog from "components/PlaylistViewDialog";
 
 const SearchComponent: Component = () => {
   const [t] = useI18n();
@@ -20,6 +26,11 @@ const SearchComponent: Component = () => {
   const [text, setText] = createSignal("");
   const [results, setResults] = createSignal<SearchResult[]>([]);
   const [resultsOpen, setResultsOpen] = createSignal(false);
+
+  const [selectedPlaylist, setSelectedPlaylist] = createSignal<
+    SearchResultPlaylist | undefined
+  >();
+
   const [source, setSource] = createSignal<Source>();
   const [loading, setLoading] = createSignal(false);
 
@@ -29,7 +40,7 @@ const SearchComponent: Component = () => {
     }
   });
 
-  const onSubmit = async (
+  const onSearch = async (
     searchText: string,
     selectedSource: Source | undefined
   ) => {
@@ -61,21 +72,35 @@ const SearchComponent: Component = () => {
     }
   };
 
-  const handleAdd = async (result: SearchResult) => {
+  const handleAdd = async (
+    result: SearchResultSong[] | SearchResultRadio[]
+  ) => {
     try {
-      const song = await trpcClient.room.addSong.mutate({
-        contentId: result.contentId,
-        url: result.url,
-        title: result.title,
-        thumbnail: result.thumbnail?.url ?? null,
-        type: result.type,
-      });
-
-      snackbar.success(
-        t(`snackbar.source.${song.type}.addedToQueue`, {
-          item: htmlDecode(song.title),
-        })
+      const songs = await trpcClient.room.addSong.mutate(
+        result.map((r) => ({
+          contentId: r.contentId,
+          url: r.url,
+          title: r.title,
+          thumbnail: r.thumbnail?.url ?? null,
+          type: r.type,
+        }))
       );
+
+      if (songs.length > 1) {
+        snackbar.success(
+          t(`snackbar.source.song.addedManyToQueue`, {
+            count: songs.length.toString(),
+          })
+        );
+      } else if (songs[0]) {
+        const song = songs[0];
+
+        snackbar.success(
+          t(`snackbar.source.${song.type}.addedToQueue`, {
+            item: htmlDecode(song.title),
+          })
+        );
+      }
     } catch (error) {
       if (error instanceof Error) {
         snackbar.error(t("snackbar.error", { error: error.message }));
@@ -106,7 +131,7 @@ const SearchComponent: Component = () => {
           text={text}
           selectedSource={source}
           sources={roomData().sources}
-          onSubmit={onSubmit}
+          onSearch={onSearch}
           onSourceChange={handleSourceChange}
           onTextChange={setText}
           onFocus={handleSearchFocus}
@@ -119,9 +144,21 @@ const SearchComponent: Component = () => {
           songs={roomData().songs}
           playing={roomData().playing}
           onAdd={handleAdd}
+          onPlaylistView={(playlistId) => setSelectedPlaylist(playlistId)}
           onClose={() => setResultsOpen(false)}
           loading={loading}
         />
+      </Show>
+      <Show when={selectedPlaylist()}>
+        {(playlist) => (
+          <PlaylistViewDialog
+            playlist={playlist}
+            playing={roomData().playing}
+            songs={roomData().songs}
+            onSongAdd={handleAdd}
+            onClose={() => setSelectedPlaylist(undefined)}
+          />
+        )}
       </Show>
     </div>
   );

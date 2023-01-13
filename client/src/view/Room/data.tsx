@@ -70,20 +70,20 @@ const handleUpdateEvent = (
 
   if (event.song) {
     if (event.song.add) {
-      const song = event.song.add;
+      const songs = event.song.add;
 
       return {
         ...existingRoom,
-        songs: [...existingRoom.songs, song],
+        songs: [...existingRoom.songs, ...songs],
       };
     }
 
     if (event.song.remove) {
-      const songId = event.song.remove;
+      const songIds = event.song.remove;
 
       return {
         ...existingRoom,
-        songs: existingRoom.songs.filter((s) => s.id !== songId),
+        songs: existingRoom.songs.filter((s) => !songIds.includes(s.id)),
       };
     }
 

@@ -20,6 +20,10 @@ export type SearchResult = inferProcedureOutput<
   AppRouter["room"]["search"]
 >[number];
 
+export type SearchResultSong = SearchResult & { type: "song" };
+export type SearchResultPlaylist = SearchResult & { type: "playlist" };
+export type SearchResultRadio = SearchResult & { type: "radio" };
+
 export type RoomUpdateEvent = inferObservableValue<
   inferProcedureOutput<AppRouter["room"]["onUpdate"]>
 >;

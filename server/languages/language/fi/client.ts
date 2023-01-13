@@ -14,13 +14,17 @@ export default {
   },
   search: {
     placeholder: "Hae...",
-    youtube: {
-      name: "YouTube",
-      placeholder: "Hae kappaletta",
+    song: {
+      name: "Kappale",
+      placeholder: "Hae kappaletta Youtubesta...",
+    },
+    playlist: {
+      name: "Soittolista",
+      placeholder: "Hae soittolistaa Youtubesta...",
     },
     radio: {
       name: "Radio",
-      placeholder: "Hae radiokanavaa",
+      placeholder: "Hae radiokanavaa...",
     },
   },
   guestLogin: {
@@ -28,11 +32,19 @@ export default {
   },
   actions: {
     addToQueue: "Lisää jonoon",
+    viewPlaylist: "Näytä soittolista",
+    addSelected: "Lisää valitut",
+    selectAll: "Valitse kaikki",
+    clearSelections: "Tyhjennä valinnat",
     continue: "Jatka",
+    cancel: "Peruuta",
   },
   tooltip: {
+    common: {
+      clearPlaylist: "Tyhjenä soittolista",
+    },
     source: {
-      youtube: {
+      song: {
         playNext: "Soita seuraavaksi",
         skip: "Ohita kappale",
         skipInPlaylist: "Poista kappale jonosta",
@@ -49,11 +61,17 @@ export default {
     notLoggedIn: "Et ole kirjautunut sisään",
     endingSong: "Virhe kappaletta lopetettaessa",
     videoInfo: "Virhe haettaessa videon tietoja",
+    playlistTooLong:
+      "Soittolista on liian pitkä (max 50 kappaletta on sallittu)",
   },
   snackbar: {
+    common: {
+      clearedPlaylist: "Soittolista tyhjennetty",
+    },
     source: {
-      youtube: {
+      song: {
         addedToQueue: 'Lisättiin kappale "{{ item }}" jonoon',
+        addedManyToQueue: "Lisättiin {{ count }} kappaletta jonoon",
         skipped: 'Ohitettiin kappale "{{ item }}"',
         skippedInPlaylist: 'Poistettiin kappale "{{ item }}" jonosta',
         setAsNext: 'Siirrettiin kappale "{{ item }}" seuraavaksi',
@@ -84,6 +102,14 @@ export default {
   playlist: {
     title: "Seuraavana vuorossa",
   },
+  playlistDialog: {
+    title: "Soittolista: {{ name }}",
+  },
+  playlistClearDialog: {
+    title: "Tyhjennä soittolista",
+    description:
+      "Haluatko varmasti poistaa {{ count }} kappaletta soittolistasta?",
+  },
   chat: {
     title: "Chat",
     message: {
@@ -97,12 +123,16 @@ export default {
       'Virhe kappaleen "{{ item }}" toistossa. Yritetään toistoa uudelleen 5 sekunnin kuluttua. ({{ error }})',
     error:
       'Virhe kappaleen "{{ item }}" toistossa. Siirrytään seuraavaan kappaleeseen 5 sekunnin kuluttua. ({{ error }})',
+    common: {
+      clearedPlaylist: "tyhjensi soittolistan.",
+    },
     source: {
-      youtube: {
+      song: {
         start: 'Soitetaan kappale "{{ item }}"',
         end: 'Kappale "{{ item }}" päättyi.',
 
         added: 'lisäsi kappaleen "{{ item }}" jonoon.',
+        addedMany: "lisäsi {{ count }} kappaletta jonoon.",
         started: 'aloitti kappaleen "{{ item }}".',
         skipped: 'ohitti kappaleen "{{ item }}".',
         skippedQueue: 'poisti kappaleen "{{ item }}" jonosta.',
