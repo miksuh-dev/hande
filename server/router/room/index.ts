@@ -7,6 +7,7 @@ import {
   clearPlaylist,
   playNext,
   removeSong,
+  shufflePlaylist,
   startPlay,
 } from "../../common/playlist/user";
 import ee from "../../eventEmitter";
@@ -125,7 +126,12 @@ export const roomRouter = t.router({
   clearPlaylist: authedProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx;
 
-    return await clearPlaylist(user);
+    return clearPlaylist(user);
+  }),
+  shufflePlaylist: authedProcedure.mutation(async ({ ctx }) => {
+    const { user } = ctx;
+
+    return shufflePlaylist(user);
   }),
   search: authedProcedure
     .input(

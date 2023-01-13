@@ -154,6 +154,41 @@ export const clearPlaylist = async (requester: MumbleUser) => {
   return songs;
 };
 
+export const shufflePlaylist = async (requester: MumbleUser) => {
+  const songs = await prisma.song.findMany({
+    where: {
+      ended: false,
+      skipped: false,
+    },
+  });
+
+  const positions = songs
+    .map((_, index) => index)
+    .sort(() => Math.random() - 0.5);
+
+  const updatedSongs = await prisma.$transaction(
+    songs.map((song, index) => {
+      return prisma.song.update({
+        where: {
+          id: song.id,
+        },
+        data: {
+          position: positions[index],
+        },
+      });
+    })
+  );
+
+  sendMessage(`event.common.shuffledPlaylist`, {
+    user: requester,
+    type: MessageType.ACTION,
+  });
+
+  ee.emit(`onUpdate`, { song: { update: updatedSongs } });
+
+  return updatedSongs;
+};
+
 export const playNext = async (id: number, user: MumbleUser) => {
   const nextSong = await getNextSong();
 
@@ -174,7 +209,7 @@ export const playNext = async (id: number, user: MumbleUser) => {
     item: song.title,
   });
 
-  ee.emit(`onUpdate`, { song: { update: song } });
+  ee.emit(`onUpdate`, { song: { update: [song] } });
 
   return song;
 };

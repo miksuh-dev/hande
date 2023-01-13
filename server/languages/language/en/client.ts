@@ -41,6 +41,7 @@ export default {
   },
   tooltip: {
     common: {
+      shufflePlaylist: "Shuffle playlist",
       clearPlaylist: "Clear playlist",
     },
     source: {
@@ -66,6 +67,7 @@ export default {
   snackbar: {
     common: {
       clearedPlaylist: "Playlist cleared",
+      shuffledPlaylist: "Playlist shuffled",
     },
     source: {
       song: {
@@ -124,6 +126,7 @@ export default {
       'Error playing song "{{ item }}". Skipping to next song in 5 seconds. ({{ error }})',
     common: {
       clearedPlaylist: "cleared playlist.",
+      shuffledPlaylist: "shuffled playlist.",
     },
     source: {
       song: {

@@ -88,16 +88,20 @@ const handleUpdateEvent = (
     }
 
     if (event.song.update) {
-      const updatedSong = event.song.update;
+      const updatedSongs = event.song.update;
 
-      if (!updatedSong) {
+      if (!updatedSongs?.length) {
         return existingRoom;
       }
 
       return {
         ...existingRoom,
         songs: existingRoom.songs
-          .map((s) => (s.id === updatedSong.id ? updatedSong : s))
+          .map((s) => {
+            const existing = updatedSongs.find((us) => us.id === s.id);
+
+            return existing ? existing : s;
+          })
           .sort(playListCompare),
       };
     }

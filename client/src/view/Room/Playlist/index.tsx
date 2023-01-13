@@ -1,6 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { useRouteData } from "@solidjs/router";
-import { TrashIcon } from "components/common/icon";
+import { ShuffleIcon, TrashIcon } from "components/common/icon";
 import ConfirmDialog from "components/ConfirmDialog";
 import Tooltip from "components/Tooltip";
 import useSnackbar from "hooks/useSnackbar";
@@ -55,6 +55,18 @@ const PlaylistComponent: Component = () => {
     }
   };
 
+  const handleShufflePlaylist = async () => {
+    try {
+      await trpcClient.room.shufflePlaylist.mutate();
+
+      snackbar.success(t(`snackbar.common.shuffledPlaylist`));
+    } catch (err) {
+      if (err instanceof Error) {
+        snackbar.error(t("error.common", { error: err.message }));
+      }
+    }
+  };
+
   const handleClearPlaylist = async () => {
     try {
       await trpcClient.room.clearPlaylist.mutate();
@@ -73,7 +85,16 @@ const PlaylistComponent: Component = () => {
         <span class="inline-block flex-1 rounded-t-lg p-4 font-bold">
           {t("playlist.title")}:
         </span>
-        <div class="flex items-center px-2">
+        <div class="flex items-center space-x-2 pr-4">
+          <Tooltip text={t("tooltip.common.shufflePlaylist")}>
+            <button
+              class="icon-button h-10 w-10"
+              onClick={() => handleShufflePlaylist()}
+              disabled={roomData().songs.length === 0}
+            >
+              <ShuffleIcon />
+            </button>
+          </Tooltip>
           <Tooltip text={t("tooltip.common.clearPlaylist")}>
             <button
               class="icon-button h-10 w-10"

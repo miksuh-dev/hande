@@ -41,6 +41,7 @@ export default {
   },
   tooltip: {
     common: {
+      shufflePlaylist: "Sekoita soittolista",
       clearPlaylist: "Tyhjennä soittolista",
     },
     source: {
@@ -67,6 +68,7 @@ export default {
   snackbar: {
     common: {
       clearedPlaylist: "Soittolista tyhjennetty",
+      shuffledPlaylist: "Soittolista sekoitettu",
     },
     source: {
       song: {
@@ -125,6 +127,7 @@ export default {
       'Virhe kappaleen "{{ item }}" toistossa. Siirrytään seuraavaan kappaleeseen 5 sekunnin kuluttua. ({{ error }})',
     common: {
       clearedPlaylist: "tyhjensi soittolistan.",
+      shuffledPlaylist: "sekoitti soittolistan.",
     },
     source: {
       song: {
