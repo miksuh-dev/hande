@@ -103,6 +103,11 @@ const RoomChat: Component<Props> = (props) => {
                               item: message.item ?? "",
                             })}
                           </Match>
+                          <Match when={message.count}>
+                            {t(message.content, {
+                              count: message?.count.toString() ?? "0",
+                            })}
+                          </Match>
                           <Match
                             when={["ACTION", "JOIN", "LEAVE"].includes(
                               message.type

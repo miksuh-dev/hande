@@ -14,13 +14,17 @@ export default {
   },
   search: {
     placeholder: "Search...",
-    youtube: {
+    song: {
+      name: "Song",
+      placeholder: "Search for a song from Youtube...",
+    },
+    playlist: {
       name: "YouTube",
-      placeholder: "Search for a song",
+      placeholder: "Search for a playlist from Youtube...",
     },
     radio: {
       name: "Radio",
-      placeholder: "Search for a radio station",
+      placeholder: "Search for a radio station...",
     },
   },
   guestLogin: {
@@ -28,11 +32,19 @@ export default {
   },
   actions: {
     addToQueue: "Add to queue",
+    viewPlaylist: "View playlist",
+    addSelected: "Add selected",
+    selectAll: "Select all",
+    clearSelections: "Clear selections",
     continue: "Continue",
+    cancel: "Cancel",
   },
   tooltip: {
+    common: {
+      clearPlaylist: "Clear playlist",
+    },
     source: {
-      youtube: {
+      song: {
         playNext: "Play next",
         skip: "Skip song",
         skipInPlaylist: "Remove song from queue",
@@ -49,11 +61,16 @@ export default {
     notLoggedIn: "You are not logged in",
     endingSong: "Error ending song",
     videoInfo: "Error getting video info",
+    playlistTooLong: "Playlist is too long (max 50 songs allowed)",
   },
   snackbar: {
+    common: {
+      clearedPlaylist: "Playlist cleared",
+    },
     source: {
-      youtube: {
+      song: {
         addedToQueue: 'Added song "{{ item }}" to queue',
+        addedManyToQueue: "Added {{ count }} songs to queue",
         skipped: 'Skipped song "{{ item }}"',
         skippedInPlaylist: 'Removed song "{{ item }}" from queue',
         setAsNext: 'Moved song "{{ item }}" to next',
@@ -84,6 +101,14 @@ export default {
   playlist: {
     title: "Next in queue",
   },
+  playlistDialog: {
+    title: "Playlist: {{ name }}",
+  },
+  playlistClearDialog: {
+    title: "Clear playlist",
+    description:
+      "Are you sure you want to remove {{ count }} songs from playlist?",
+  },
   chat: {
     title: "Chat",
     message: {
@@ -97,12 +122,16 @@ export default {
       'Error playing song "{{ item }}". Retrying in 5 seconds. ({{ error }})',
     error:
       'Error playing song "{{ item }}". Skipping to next song in 5 seconds. ({{ error }})',
+    common: {
+      clearedPlaylist: "cleared playlist.",
+    },
     source: {
-      youtube: {
+      song: {
         start: 'Playing song "{{ item }}".',
         end: 'Finished playing song "{{ item }}".',
 
         added: 'added song "{{ item }}" to queue.',
+        addedMany: "added {{ count }} songs to queue.",
         started: 'started playing song "{{ item }}".',
         skipped: 'skipped song "{{ item }}".',
         skippedQueue: 'skipped song "{{ item }}" from queue.',

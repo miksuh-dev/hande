@@ -3,7 +3,8 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import { getCurrentSong } from "../../common/playlist/internal";
 import {
-  addSong,
+  addSongs,
+  clearPlaylist,
   playNext,
   removeSong,
   startPlay,
@@ -12,7 +13,12 @@ import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import { authedProcedure } from "../utils";
 import { messages, sendMessage } from "./message";
-import { searchFromSource, SOURCES } from "./sources";
+import {
+  searchFromPlaylist,
+  searchFromSource,
+  SOURCES,
+  SourceType,
+} from "./sources";
 import { MessageType, UpdateEvent } from "./types";
 import * as userState from "./user";
 
@@ -46,34 +52,24 @@ export const roomRouter = t.router({
   }),
   addSong: authedProcedure
     .input(
-      z.object({
-        url: z.string().min(1),
-        contentId: z.string().min(1),
-        title: z.string().min(1),
-        thumbnail: z.string().nullable(),
-        type: z.string().min(1),
-      })
+      z.array(
+        z.object({
+          url: z.string().min(1),
+          contentId: z.string().min(1),
+          title: z.string().min(1),
+          thumbnail: z.string().nullable(),
+          type: z.enum(["song", "radio"]),
+        })
+      )
     )
     .mutation(async ({ input, ctx }) => {
       const { user } = ctx;
 
-      const { url, title, thumbnail, contentId } = input;
+      return addSongs(input, user);
 
-      const selectedType = SOURCES.find((s) => s.value === input.type)?.value;
-
-      if (!selectedType) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invalid source",
-        });
-      }
-
-      const song = await addSong(
-        { url, contentId, title, thumbnail, type: selectedType },
-        user
-      );
-
-      return song;
+      // return await Promise.all(
+      //   input.map(async (item) => await addSong(item, user))
+      // );
     }),
   removeSong: authedProcedure
     .input(
@@ -126,26 +122,37 @@ export const roomRouter = t.router({
 
       return { song };
     }),
+  clearPlaylist: authedProcedure.mutation(async ({ ctx }) => {
+    const { user } = ctx;
+
+    return await clearPlaylist(user);
+  }),
   search: authedProcedure
     .input(
       z.object({
         text: z.string().min(1),
-        source: z.string().min(1),
+        source: z.enum([
+          SourceType.SONG,
+          SourceType.PLAYLIST,
+          SourceType.RADIO,
+        ]),
       })
     )
     .query(async ({ input }) => {
       const { text, source } = input;
 
-      const selectedSource = SOURCES.find((s) => s.value === source);
+      return await searchFromSource(text, source);
+    }),
+  listPlaylist: authedProcedure
+    .input(
+      z.object({
+        playlistId: z.string().min(1),
+      })
+    )
+    .query(({ input }) => {
+      const { playlistId } = input;
 
-      if (!selectedSource) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invalid source",
-        });
-      }
-
-      return await searchFromSource(text, selectedSource);
+      return searchFromPlaylist(playlistId);
     }),
   ping: authedProcedure.input(z.string().min(10)).mutation(({ input }) => {
     const pingTarget = input;

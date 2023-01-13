@@ -1,5 +1,12 @@
 import { Component, For, Match, Show, Switch } from "solid-js";
-import { PlayingSong, SearchResult, Song } from "trpc/types";
+import {
+  PlayingSong,
+  SearchResult,
+  SearchResultPlaylist,
+  SearchResultRadio,
+  SearchResultSong,
+  Song,
+} from "trpc/types";
 import { Accessor } from "solid-js";
 import { htmlDecode } from "utils/parse";
 import { CircularLoadingSpinner, RadioIcon } from "components/common/icon";
@@ -9,7 +16,8 @@ type Props = {
   results: Accessor<SearchResult[]>;
   songs: Song[];
   playing: PlayingSong;
-  onAdd: (data: SearchResult) => void;
+  onAdd: (data: SearchResultSong[] | SearchResultRadio[]) => void;
+  onPlaylistView: (data: SearchResultPlaylist) => void;
   loading: Accessor<boolean>;
   onClose: () => void;
 };
@@ -58,18 +66,19 @@ const Result: Component<Props> = (props) => {
                         </div>
                       </Match>
                     </Switch>
-                    <div class="ml-2 w-full">
+                    <div class="ml-2 flex w-full flex-col space-y-2">
                       <h5 class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
                         {htmlDecode(result.title)}
                       </h5>
                     </div>
-                    <Show
-                      when={
-                        !props.songs.some(
-                          (s) => s.contentId === result.contentId
-                        ) && props.playing?.contentId !== result.contentId
-                      }
-                      fallback={
+                    <Switch>
+                      <Match
+                        when={
+                          props.songs.some(
+                            (s) => s.contentId === result.contentId
+                          ) || props.playing?.contentId === result.contentId
+                        }
+                      >
                         <button
                           type="button"
                           class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
@@ -77,16 +86,31 @@ const Result: Component<Props> = (props) => {
                         >
                           {t("common.inQueue")}
                         </button>
-                      }
-                    >
-                      <button
-                        type="button"
-                        class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
-                        onClick={() => props.onAdd(result)}
+                      </Match>
+                      <Match
+                        when={result.type === "song" || result.type === "radio"}
                       >
-                        {t("actions.addToQueue")}
-                      </button>
-                    </Show>
+                        <button
+                          type="button"
+                          class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
+                          onClick={() => props.onAdd([result])}
+                        >
+                          {t("actions.addToQueue")}
+                        </button>
+                      </Match>
+                      <Match when={result.type === "playlist"}>
+                        <button
+                          type="button"
+                          class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
+                          onClick={() => {
+                            props.onPlaylistView(result);
+                            props.onClose();
+                          }}
+                        >
+                          {t("actions.viewPlaylist")}
+                        </button>
+                      </Match>
+                    </Switch>
                   </div>
                 </div>
               );

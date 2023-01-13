@@ -1,6 +1,8 @@
 import { Song } from "@prisma/client";
+import { SearchResultThumbnail } from "common/youtube";
 import { PlayingSong } from "types/app";
 import { MumbleUser } from "types/auth";
+import { SOURCES } from "./sources";
 
 export enum MessageType {
   MESSAGE = "MESSAGE",
@@ -15,6 +17,7 @@ export interface MessageOptions {
   type?: MessageType;
   item?: string;
   error?: string;
+  count?: number;
 }
 
 interface SystemMessage {
@@ -22,6 +25,7 @@ interface SystemMessage {
   name: string;
   content: string;
   item?: string;
+  count?: number;
   error?: string;
   timestamp: number;
   type: MessageType;
@@ -39,8 +43,8 @@ export type Message = SystemMessage | UserMessage;
 
 export interface UpdateEvent {
   song: {
-    add?: Song;
-    remove?: Song["id"];
+    add?: Song[];
+    remove?: Song["id"][];
     setPlaying?: PlayingSong;
     update?: Song;
     skip?: Song["id"];
@@ -55,7 +59,27 @@ export interface UpdateEvent {
   };
 }
 
-export interface Source {
-  id: number;
-  value: string;
+export type Source = typeof SOURCES[number];
+
+interface SourceResult {
+  contentId: string;
+  title: string;
+  description: string;
+  thumbnail: SearchResultThumbnail | null;
+  url: string;
+}
+
+export interface SourceResultSong extends SourceResult {
+  thumbnail: SearchResultThumbnail;
+  type: "song";
+}
+
+export interface SourceResultPlaylist extends SourceResult {
+  thumbnail: SearchResultThumbnail;
+  type: "playlist";
+}
+
+export interface SourceResultRadio extends SourceResult {
+  thumbnail: null;
+  type: "radio";
 }

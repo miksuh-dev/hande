@@ -12,7 +12,7 @@ type Props = {
   onSourceChange: (newSource: Source) => void;
   onTextChange: Setter<string>;
   onFocus: (event: FocusEvent) => void;
-  onSubmit: (text: string, source: Source | undefined) => void;
+  onSearch: (text: string, source: Source | undefined) => void;
   loading: Accessor<boolean>;
 };
 
@@ -22,14 +22,7 @@ const Search: Component<Props> = (props) => {
   const [sourceOpen, setSourceOpen] = createSignal(false);
 
   const getSourcePlaceHolder = (source: Source | undefined) => {
-    switch (source?.value) {
-      case "youtube":
-        return t("search.youtube.placeholder");
-      case "radio":
-        return t("search.radio.placeholder");
-      default:
-        return t("search.placeholder");
-    }
+    return t(`search.${source?.value}.placeholder`) || t("search.placeholder");
   };
 
   return (
@@ -37,7 +30,7 @@ const Search: Component<Props> = (props) => {
       class="item-center flex"
       onSubmit={(e) => {
         e.preventDefault();
-        props.onSubmit(props.text(), props.selectedSource());
+        props.onSearch(props.text(), props.selectedSource());
       }}
     >
       <div class="relative flex w-full flex-row">
@@ -135,7 +128,7 @@ const Search: Component<Props> = (props) => {
       <button
         type="submit"
         class="ml-2 rounded-lg border border-custom-primary-700 bg-custom-primary-900 p-2.5 text-sm font-medium text-white hover:bg-custom-primary-800 focus:outline-none dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800"
-        onClick={() => props.onSubmit(props.text(), props.selectedSource())}
+        onClick={() => props.onSearch(props.text(), props.selectedSource())}
         disabled={props.loading()}
       >
         <div class="h-5 w-5">

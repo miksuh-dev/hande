@@ -10,9 +10,9 @@ const SongImage: Component<Props> = (props) => {
   return (
     <div class="flex h-48 w-80 justify-center border-2 border-neutral-300 bg-neutral-100 object-scale-down dark:border-neutral-700 dark:bg-neutral-700">
       <Switch>
-        <Match when={props.song.type === "youtube"}>
-          <Show when={props.song.thumbnail} keyd>
-            {(thumbnail) => <img src={thumbnail} alt="" />}
+        <Match when={props.song.type === "song"}>
+          <Show when={props.song.thumbnail}>
+            {(thumbnail) => <img src={thumbnail} alt="thumbnail" />}
           </Show>
         </Match>
         <Match when={props.song.type === "radio"}>

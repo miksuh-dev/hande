@@ -20,6 +20,7 @@ const createMessage = (content: string, options?: MessageOptions): Message => {
       isMumbleUser: options.user.isMumbleUser,
       theme: theme ?? "default",
       ...(options.item && { item: options.item }),
+      ...(options.count && { count: options.count }),
       ...(options.error && { error: options.error }),
     };
   }

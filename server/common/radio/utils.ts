@@ -1,6 +1,7 @@
 import { Readable } from "stream";
 import { Song } from "@prisma/client";
 import m3u8stream from "m3u8stream";
+import { SourceResultRadio } from "router/room/types";
 import { addRadioClickCount } from "./mutation";
 import { SearchResultItem } from "./types";
 
@@ -14,17 +15,6 @@ export const createStream = async (song: Song) => {
   return m3u8stream(song.url) as Readable;
 };
 
-export const parseSearchListItem = (item: SearchResultItem) => {
-  return {
-    url: item.url,
-    contentId: item.stationuuid,
-    title: item.name,
-    description: "",
-    thumbnail: null,
-    type: "radio",
-  };
-};
-
 export const generateUserAgentString = () => {
   const version = process.env.npm_package_version;
 
@@ -33,4 +23,17 @@ export const generateUserAgentString = () => {
   }
 
   return `Hande/${version} miksuh-dev/hande`;
+};
+
+export const parseSearchListItem = (
+  item: SearchResultItem
+): SourceResultRadio => {
+  return {
+    url: item.url,
+    contentId: item.stationuuid,
+    title: item.name,
+    description: "",
+    thumbnail: null,
+    type: "radio",
+  };
 };
