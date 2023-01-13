@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/miksuh-dev/hande/compare/v1.4.0...v1.5.0) (2023-01-13)
+
+
+### Features
+
+* show date change dividers in the chat ([3eb880e](https://github.com/miksuh-dev/hande/commit/3eb880eb955c83839661953d5302ba0935ccbc3a))
+* youtube playlist support ([cab2520](https://github.com/miksuh-dev/hande/commit/cab2520963344b48fbf9b91801b0e45137c9915b))
+
+
+### Bug Fixes
+
+* prevent add current track to playlist ([932750d](https://github.com/miksuh-dev/hande/commit/932750da08eb88ca8e5a1a0de249e979d74495ed))
+* remove smooth scroll to hide visible scroll ([9c20829](https://github.com/miksuh-dev/hande/commit/9c208294becc2432a320b721ba906b7165c31272))
+
 ## [1.4.0](https://github.com/miksuh-dev/hande/compare/v1.2.0...v1.4.0) (2023-01-06)
 
 
