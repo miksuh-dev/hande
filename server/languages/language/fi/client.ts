@@ -41,7 +41,7 @@ export default {
   },
   tooltip: {
     common: {
-      clearPlaylist: "Tyhjenä soittolista",
+      clearPlaylist: "Tyhjennä soittolista",
     },
     source: {
       song: {
