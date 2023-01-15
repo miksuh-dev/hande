@@ -18,7 +18,7 @@ To Mumble:
 
 To website:
 
-- [ ] Playlist support
+- [x] Playlist support
 - [ ] Statistics
 - [ ] View changelog
 - [x] Disconnect timeout so refreshing page doesn't instantly send leave message
