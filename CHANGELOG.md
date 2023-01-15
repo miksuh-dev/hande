@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/miksuh-dev/hande/compare/v1.4.0...v1.6.0) (2023-01-15)
+
+
+### Features
+
+* add playlist shuffle ([31f0779](https://github.com/miksuh-dev/hande/commit/31f077923a998951689d7453fc33a293ffe6875c))
+* allow view youtube video in embedding ([22f9aa4](https://github.com/miksuh-dev/hande/commit/22f9aa4205ed811a6ebe972cd358294c4144a8bb))
+* show date change dividers in the chat ([3eb880e](https://github.com/miksuh-dev/hande/commit/3eb880eb955c83839661953d5302ba0935ccbc3a))
+* youtube playlist support ([df6c2ad](https://github.com/miksuh-dev/hande/commit/df6c2adc9ba38d7b04c4a0ac01128b8f6de2ef97))
+
+
+### Bug Fixes
+
+* htmldecode all chat items ([c3ca63b](https://github.com/miksuh-dev/hande/commit/c3ca63ba70b39c7e64713a42d5c2d4718b4ff7f5))
+* inconsistent suffle ([4d29dd0](https://github.com/miksuh-dev/hande/commit/4d29dd031bc8a8f6237e2a975837ffa9c0be5954))
+* playlist song add incorrect song ordering ([cea932f](https://github.com/miksuh-dev/hande/commit/cea932f439516271b16b6e1fcfdbe11a4ec3ca6a))
+* prevent add current track to playlist ([932750d](https://github.com/miksuh-dev/hande/commit/932750da08eb88ca8e5a1a0de249e979d74495ed))
+* remove smooth scroll to hide visible scroll ([9c20829](https://github.com/miksuh-dev/hande/commit/9c208294becc2432a320b721ba906b7165c31272))
+
 ## [1.5.0](https://github.com/miksuh-dev/hande/compare/v1.4.0...v1.5.0) (2023-01-13)
 
 
