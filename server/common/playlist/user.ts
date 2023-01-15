@@ -20,8 +20,24 @@ export const addSongs = async (
   }[],
   requester: MumbleUser
 ) => {
-  const addedSongs = await Promise.all(
-    songs.map(async (song) => {
+  const lastSong = await prisma.song.findFirst({
+    where: {
+      ended: false,
+      skipped: false,
+    },
+    orderBy: [
+      {
+        position: "desc",
+      },
+      {
+        createdAt: "desc",
+      },
+    ],
+  });
+
+  const position = lastSong ? lastSong.position + 1 : 0;
+  const addedSongs = await prisma.$transaction(
+    songs.map((song, index) => {
       return prisma.song.create({
         data: {
           url: song.url,
@@ -30,6 +46,7 @@ export const addSongs = async (
           thumbnail: song.thumbnail,
           requester: requester.name,
           type: song.type,
+          position: position + index,
         },
       });
     })
