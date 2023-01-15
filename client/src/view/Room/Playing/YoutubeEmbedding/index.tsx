@@ -57,7 +57,7 @@ const PlayingComponent: Component<Props> = (props) => {
       "seconds"
     ).seconds;
 
-    event.target.seekTo(Math.round(startTime));
+    event.target.seekTo(Math.ceil(startTime + 1));
   };
 
   return (
