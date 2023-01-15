@@ -6,9 +6,11 @@ import { Song, PlayingSong } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongImage from "../common/SongImage";
 import Progress from "./Progress";
+import YoutubeEmbedding from "./YoutubeEmbedding";
 
 type Props = {
   playing: PlayingSong | undefined;
+  showVideo: boolean;
   onSkip: (song: Song) => void;
 };
 
@@ -25,14 +27,18 @@ const PlayingComponent: Component<Props> = (props) => {
             <p>{t("player.empty.subtitle")}</p>
           </div>
         }
-        keyd
       >
-        {(song) => (
+        {(song: PlayingSong) => (
           <div class="w-full space-y-2">
             <div class="flex flex-row items-center justify-between">
               <div class="flex flex-row space-x-8">
-                <SongImage song={song} />
-                <div class="flex flex-col py-4">
+                <Show
+                  when={props.showVideo && song.type === "song"}
+                  fallback={<SongImage song={song} />}
+                >
+                  <YoutubeEmbedding song={song} />
+                </Show>
+                <div class="flex flex-col justify-center py-4">
                   <h1>{htmlDecode(song.title)}</h1>
                   <p>
                     {t("common.requester")}: {song.requester}

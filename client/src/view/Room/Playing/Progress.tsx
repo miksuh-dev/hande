@@ -8,7 +8,7 @@ type Props = {
 };
 
 const ProgressComponent: Component<Props> = (props) => {
-  const getInitialProgress = () => {
+  const getProgressStatus = () => {
     if (!props.playing?.startedAt) return 0;
 
     const diff = DateTime.utc().diff(
@@ -23,10 +23,10 @@ const ProgressComponent: Component<Props> = (props) => {
     return diff;
   };
 
-  const [progress, setProgress] = createSignal<number>(getInitialProgress());
+  const [progress, setProgress] = createSignal<number>(getProgressStatus());
 
   createEffect(() => {
-    setProgress(getInitialProgress());
+    setProgress(getProgressStatus());
 
     let interval = setInterval(() => {
       setProgress((currentProgress) => {
@@ -34,7 +34,7 @@ const ProgressComponent: Component<Props> = (props) => {
           return props.playing.duration;
         }
 
-        return currentProgress + 1;
+        return getProgressStatus();
       });
     }, 1000);
 

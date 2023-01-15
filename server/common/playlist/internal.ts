@@ -48,7 +48,7 @@ export const onSongEnd = async (song: Song) => {
 
 const handleSongErrorTimeout = async (song: Song) => {
   // Ignore as error is no longer relevant
-  if (!playError || playError.id !== song.id) {
+  if (!playError || playing) {
     return;
   }
 
@@ -60,11 +60,20 @@ const handleSongErrorTimeout = async (song: Song) => {
 };
 
 const onPlayError = (song: Song, error: string) => {
+  // No longer relevant
+  if (playing?.id === song.id) {
+    return;
+  }
+
   if (!playError || playError.id !== song.id) {
     playError = {
       id: song.id,
       retryCount: 0,
     };
+  }
+
+  if (stream) {
+    stream.destroy();
   }
 
   playError.retryCount += 1;
@@ -96,60 +105,55 @@ const createStream = async (song: Song) => {
   throw new Error("Unknown song type");
 };
 
-const playYoutubeSong = async (song: Song): Promise<PlayingSong> => {
-  const videoInfo = await getVideoInfo(song);
-  if (!videoInfo) {
-    throw new Error("Failed to get video info");
-  }
+const onPlayStart = async (song: Song) => {
+  let currentSong = undefined;
 
-  const currentSong = setCurrentSong({
-    ...song,
-    startedAt: DateTime.now(),
-    duration: videoInfo.duration,
-  });
-
-  sendMessage(`event.source.${song.type}.start`, { item: song.title });
-
-  const secondsLeft = currentSong.startedAt
-    .plus({ seconds: videoInfo.duration + 3 })
-    .diffNow("seconds").seconds;
-
-  if (endTimeout) {
-    clearTimeout(endTimeout);
-  }
-  endTimeout = setTimeout(() => {
-    onSongEnd(song).catch((e) => {
-      if (e instanceof Error) {
-        onPlayError(song, e.message);
-      }
-      console.log("e", e);
-    });
-  }, secondsLeft * 1000);
-
-  return currentSong;
-};
-
-const playRadioSong = (song: Song): PlayingSong => {
-  const currentSong = setCurrentSong({
-    ...song,
-    startedAt: DateTime.now(),
-  });
-
-  sendMessage(`event.source.${song.type}.start`, { item: song.title });
-
-  return currentSong;
-};
-
-const getNewCurrentSong = async (song: Song): Promise<PlayingSong> => {
   if (song.type === SourceType.SONG) {
-    return playYoutubeSong(song);
+    const videoInfo = await getVideoInfo(song);
+    if (!videoInfo) {
+      throw new Error("Failed to get video info");
+    }
+
+    currentSong = setCurrentSong({
+      ...song,
+      startedAt: DateTime.now(),
+      duration: videoInfo.duration,
+    });
+
+    const secondsLeft = currentSong.startedAt
+      .plus({ seconds: videoInfo.duration })
+      .diffNow("seconds").seconds;
+
+    if (endTimeout) {
+      clearTimeout(endTimeout);
+    }
+    endTimeout = setTimeout(() => {
+      onSongEnd(song).catch((e) => {
+        if (e instanceof Error) {
+          onPlayError(song, e.message);
+        }
+        console.log("e", e);
+      });
+    }, secondsLeft * 1000);
+  } else {
+    currentSong = setCurrentSong({
+      ...song,
+      startedAt: DateTime.now(),
+    });
   }
 
-  if (song.type === SourceType.RADIO) {
-    return playRadioSong(song);
-  }
+  await prisma.song.update({
+    where: {
+      id: currentSong.id,
+    },
+    data: {
+      started: true,
+    },
+  });
 
-  throw new Error("Unknown song type");
+  sendMessage(`event.source.${song.type}.start`, { item: song.title });
+
+  return currentSong;
 };
 
 export const playSong = async (song: Song) => {
@@ -158,38 +162,36 @@ export const playSong = async (song: Song) => {
       clearTimeout(endTimeout);
     }
 
-    const currentSong = await getNewCurrentSong(song);
-
     if (stream) {
       stream.destroy();
     }
 
-    ee.emit(`onUpdate`, {
-      song: { setPlaying: currentSong },
-    });
-
     stream = await createStream(song);
+
+    let started = false;
+    stream.on("data", () => {
+      if (!started) {
+        started = true;
+
+        onPlayStart(song).catch((e) => {
+          if (e instanceof Error) {
+            onPlayError(song, e.message);
+          }
+          console.log("e", e);
+        });
+      }
+    });
 
     stream.on("error", (e) => {
       if (e instanceof Error) {
-        onPlayError(currentSong, e.message);
+        onPlayError(song, e.message);
       }
     });
 
     client.voiceConnection
       .playStream(stream, "0")
-      .on("start", async () => {
-        await prisma.song.update({
-          where: {
-            id: currentSong.id,
-          },
-          data: {
-            started: true,
-          },
-        });
-      })
       .on("error", (message: string) => {
-        onPlayError(currentSong, message);
+        onPlayError(song, message);
       });
   } catch (e) {
     if (e instanceof Error) {
@@ -203,7 +205,13 @@ export const getCurrentSong = (): PlayingSong | undefined => {
 };
 
 export const setCurrentSong = (song: PlayingSong) => {
-  return (playing = song);
+  playing = song;
+
+  ee.emit(`onUpdate`, {
+    song: { setPlaying: playing },
+  });
+
+  return playing;
 };
 
 export const stopCurrentSong = () => {

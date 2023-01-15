@@ -43,6 +43,8 @@ export default {
     common: {
       shufflePlaylist: "Shuffle playlist",
       clearPlaylist: "Clear playlist",
+      showVideo: "Show video",
+      hideVideo: "Hide video",
     },
     source: {
       song: {
@@ -63,6 +65,7 @@ export default {
     endingSong: "Error ending song",
     videoInfo: "Error getting video info",
     playlistTooLong: "Playlist is too long (max 50 songs allowed)",
+    youtubeEmbeddingScript: "Error loading Youtube embedding script",
   },
   snackbar: {
     common: {

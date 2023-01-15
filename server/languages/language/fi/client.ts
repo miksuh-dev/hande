@@ -43,6 +43,8 @@ export default {
     common: {
       shufflePlaylist: "Sekoita soittolista",
       clearPlaylist: "Tyhjennä soittolista",
+      showVideo: "Näytä video",
+      hideVideo: "Piilota video",
     },
     source: {
       song: {
@@ -64,6 +66,7 @@ export default {
     videoInfo: "Virhe haettaessa videon tietoja",
     playlistTooLong:
       "Soittolista on liian pitkä (max 50 kappaletta on sallittu)",
+    youtubeEmbeddingScript: "Virhe haettaessa Youtube-embed-koodia",
   },
   snackbar: {
     common: {
