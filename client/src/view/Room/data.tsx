@@ -94,15 +94,14 @@ const handleUpdateEvent = (
         return existingRoom;
       }
 
+      const songs = existingRoom.songs
+        .filter((s) => !updatedSongs.some((us) => us.id === s.id))
+        .concat(updatedSongs)
+        .sort(playListCompare);
+
       return {
         ...existingRoom,
-        songs: existingRoom.songs
-          .map((s) => {
-            const existing = updatedSongs.find((us) => us.id === s.id);
-
-            return existing ? existing : s;
-          })
-          .sort(playListCompare),
+        songs,
       };
     }
 
