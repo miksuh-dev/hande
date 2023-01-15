@@ -67,10 +67,6 @@ export const roomRouter = t.router({
       const { user } = ctx;
 
       return addSongs(input, user);
-
-      // return await Promise.all(
-      //   input.map(async (item) => await addSong(item, user))
-      // );
     }),
   removeSong: authedProcedure
     .input(
@@ -83,7 +79,7 @@ export const roomRouter = t.router({
       try {
         const song = await removeSong(input.id, user);
 
-        return { song };
+        return song;
       } catch (e) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -114,24 +110,24 @@ export const roomRouter = t.router({
       const { user } = ctx;
 
       if (input.id) {
-        const song = await removeSong(input.id, user);
-
-        return { song };
+        return removeSong(input.id, user);
       }
 
-      const song = await startPlay(user);
-
-      return { song };
+      return startPlay(user);
     }),
   clearPlaylist: authedProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx;
 
-    return clearPlaylist(user);
+    await clearPlaylist(user);
+
+    return true;
   }),
   shufflePlaylist: authedProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx;
 
-    return shufflePlaylist(user);
+    await shufflePlaylist(user);
+
+    return true;
   }),
   search: authedProcedure
     .input(

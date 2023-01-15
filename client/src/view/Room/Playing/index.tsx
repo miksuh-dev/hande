@@ -19,13 +19,13 @@ const PlayingComponent: Component = () => {
 
   const handleSkip = async (song: Song) => {
     try {
-      await trpcClient.room.skipCurrent.mutate({
+      const skippedSong = await trpcClient.room.skipCurrent.mutate({
         id: song.id,
       });
 
       snackbar.success(
-        t(`snackbar.source.${song.type}.skipped`, {
-          item: htmlDecode(song.title),
+        t(`snackbar.source.${skippedSong.type}.skipped`, {
+          item: htmlDecode(skippedSong.title),
         })
       );
     } catch (err) {
