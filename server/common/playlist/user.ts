@@ -176,6 +176,7 @@ export const shufflePlaylist = async (requester: OnlineUser) => {
     where: {
       ended: false,
       skipped: false,
+      id: { not: getCurrentSong()?.id },
     },
   });
 
