@@ -1,7 +1,7 @@
 import type { Component } from "solid-js";
 import { Show, For } from "solid-js";
 import { User } from "trpc/types";
-import Username from "view/Room/common/Username";
+import Username from "components/Username";
 
 type Props = {
   users: User[];
@@ -27,8 +27,8 @@ const RoomUsers: Component<Props> = (props) => {
                     <td class="py-2 px-2">
                       <Username
                         name={user.name}
-                        isMumbleUser={user.isMumbleUser}
-                        theme={user.theme}
+                        property={user.property}
+                        state={user.state}
                       />
                     </td>
                   </tr>

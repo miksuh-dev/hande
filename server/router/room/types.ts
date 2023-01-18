@@ -1,7 +1,7 @@
 import { Song } from "@prisma/client";
 import { SearchResultThumbnail } from "common/youtube";
 import { PlayingSong } from "types/app";
-import { MumbleUser } from "types/auth";
+import { OnlineUser } from "types/auth";
 import { SOURCES } from "./sources";
 
 export enum MessageType {
@@ -13,7 +13,7 @@ export enum MessageType {
 }
 
 export interface MessageOptions {
-  user?: MumbleUser;
+  user?: OnlineUser;
   type?: MessageType;
   item?: string;
   error?: string;
@@ -29,14 +29,15 @@ interface SystemMessage {
   error?: string;
   timestamp: number;
   type: MessageType;
-  isSystem: true;
+  property: {
+    isSystem: true;
+  };
 }
 
-export type UserMessage = Omit<SystemMessage, "isSystem"> & {
+export type UserMessage = Omit<SystemMessage, "property"> & {
   userHash: string;
-  isSystem: false;
-  isMumbleUser: boolean;
-  theme: string;
+  property: OnlineUser["property"];
+  state: OnlineUser["state"];
 };
 
 export type Message = SystemMessage | UserMessage;
@@ -53,9 +54,9 @@ export interface UpdateEvent {
     add?: Message;
   };
   user: {
-    join?: MumbleUser;
-    leave?: MumbleUser["hash"];
-    update?: MumbleUser;
+    join?: OnlineUser;
+    leave?: OnlineUser["hash"];
+    update?: OnlineUser;
   };
 }
 

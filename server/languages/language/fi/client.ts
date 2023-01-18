@@ -61,12 +61,15 @@ export default {
   },
   error: {
     common: "Virhe: {{ error }}",
+    unknown: "Tuntematon virhe",
     notLoggedIn: "Et ole kirjautunut sisään",
     endingSong: "Virhe kappaletta lopetettaessa",
     videoInfo: "Virhe haettaessa videon tietoja",
     playlistTooLong:
       "Soittolista on liian pitkä (max 50 kappaletta on sallittu)",
     youtubeEmbeddingScript: "Virhe haettaessa Youtube-embed-koodia",
+    tokenExpired: "Kirjautumisesi on vanhentunut",
+    oldVersion: "Istuntosi versio on vanhentunut",
   },
   snackbar: {
     common: {

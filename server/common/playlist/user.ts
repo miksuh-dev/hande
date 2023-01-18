@@ -1,4 +1,4 @@
-import { MumbleUser } from "types/auth";
+import { OnlineUser } from "types/auth";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendMessage } from "../../router/room/message";
@@ -18,7 +18,7 @@ export const addSongs = async (
     thumbnail: string | null;
     type: string;
   }[],
-  requester: MumbleUser
+  requester: OnlineUser
 ) => {
   const lastSong = await prisma.song.findFirst({
     where: {
@@ -84,7 +84,7 @@ export const addSongs = async (
   return addedSongs;
 };
 
-export const startPlay = async (user: MumbleUser) => {
+export const startPlay = async (user: OnlineUser) => {
   const currentSong = getCurrentSong();
 
   if (currentSong) {
@@ -107,7 +107,7 @@ export const startPlay = async (user: MumbleUser) => {
   throw new Error("Ei kappaleita jonossa");
 };
 
-export const removeSong = async (id: number, user: MumbleUser) => {
+export const removeSong = async (id: number, user: OnlineUser) => {
   const song = await prisma.song.update({
     where: {
       id,
@@ -143,7 +143,7 @@ export const removeSong = async (id: number, user: MumbleUser) => {
   return song;
 };
 
-export const clearPlaylist = async (requester: MumbleUser) => {
+export const clearPlaylist = async (requester: OnlineUser) => {
   const songs = await prisma.song.findMany({
     where: {
       ended: false,
@@ -171,7 +171,7 @@ export const clearPlaylist = async (requester: MumbleUser) => {
   return songs;
 };
 
-export const shufflePlaylist = async (requester: MumbleUser) => {
+export const shufflePlaylist = async (requester: OnlineUser) => {
   const songs = await prisma.song.findMany({
     where: {
       ended: false,
@@ -206,7 +206,7 @@ export const shufflePlaylist = async (requester: MumbleUser) => {
   return updatedSongs;
 };
 
-export const playNext = async (id: number, user: MumbleUser) => {
+export const playNext = async (id: number, user: OnlineUser) => {
   const nextSong = await getNextSong();
 
   const position = (nextSong?.position ?? 0) - 1;

@@ -2,7 +2,7 @@ import { Component, Match, Switch } from "solid-js";
 import { Accessor, Setter, Show, For } from "solid-js";
 import { DateTime } from "luxon";
 import { htmlDecode } from "utils/parse";
-import Username from "view/Room/common/Username";
+import Username from "components/Username";
 import { SendMessageIcon } from "components/common/icon";
 import { useI18n } from "@solid-primitives/i18n";
 import { MessageOrDivider } from ".";
@@ -70,13 +70,16 @@ const RoomChat: Component<Props> = (props) => {
                       )}
                     </div>
                     <div class="flex space-x-1">
-                      {message.isSystem ? (
-                        <Username name={message.name} isSystem />
+                      {message.property.isSystem ? (
+                        <Username
+                          name={message.name}
+                          property={message.property}
+                        />
                       ) : (
                         <Username
                           name={message.name}
-                          theme={message.theme}
-                          isMumbleUser={message.isMumbleUser}
+                          property={message.property}
+                          state={message.state}
                         />
                       )}
                       <Show when={message.type === "MESSAGE"}>:</Show>

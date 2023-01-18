@@ -61,11 +61,14 @@ export default {
   },
   error: {
     common: "Error: {{ error }}",
+    unknown: "Unknown error",
     notLoggedIn: "You are not logged in",
     endingSong: "Error ending song",
     videoInfo: "Error getting video info",
     playlistTooLong: "Playlist is too long (max 50 songs allowed)",
     youtubeEmbeddingScript: "Error loading Youtube embedding script",
+    tokenExpired: "Token expired",
+    oldVersion: "Your session is outdated",
   },
   snackbar: {
     common: {

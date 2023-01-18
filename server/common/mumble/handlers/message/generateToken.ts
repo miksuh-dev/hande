@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { serverLanguage } from "../../../../languages";
-import { createSession } from "../../../../utils/auth";
+import { createSession, getSessionVersion } from "../../../../utils/auth";
 import { Message } from "./types";
 
 const t = serverLanguage.commands.www;
@@ -21,15 +21,21 @@ const handleGenerateToken = async (message: Message) => {
         session: sender.session,
         name: sender.name,
         hash: sender.hash,
-        isGuest: false,
-        isMumbleUser: true,
+        version: getSessionVersion().major,
+        property: {
+          isGuest: false,
+          isMumbleUser: true,
+        },
       }
     : {
         session: DateTime.utc().toMillis(),
         name: "Guest",
         hash: "",
-        isGuest: true,
-        isMumbleUser: false,
+        version: getSessionVersion().major,
+        property: {
+          isGuest: true,
+          isMumbleUser: false,
+        },
       };
 
   const token = createSession(session);

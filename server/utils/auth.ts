@@ -84,3 +84,16 @@ export const hashPassword = async (plaintextPassword: string) => {
 export const comparePassword = (plaintextPassword: string, hash: string) => {
   return bcrypt.compare(plaintextPassword, hash);
 };
+
+export const getSessionVersion = () => {
+  const version = process.env.npm_package_version ?? "0.0.0";
+
+  const [major = 0, minor = 0, patch = 0] = version.split(".").map(Number);
+
+  return {
+    version,
+    major,
+    minor,
+    patch,
+  };
+};

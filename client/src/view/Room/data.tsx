@@ -188,7 +188,7 @@ function RoomData() {
     });
 
     const lobbyUpdate = trpcClient.room.onUpdate.subscribe(
-      { clientId, theme: theme.current() },
+      { clientId, state: { theme: theme.current() } },
       {
         onData(event) {
           mutate((existingRoom) => {

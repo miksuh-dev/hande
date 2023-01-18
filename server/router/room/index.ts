@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod";
+import { OnlineUser } from "types/auth";
+import { schemaForType } from "utils/trpc";
 import { getCurrentSong } from "../../common/playlist/internal";
 import {
   addSongs,
@@ -12,7 +14,8 @@ import {
 } from "../../common/playlist/user";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
-import { authedProcedure } from "../utils";
+import * as userState from "../user/state";
+import { authedProcedure, onlineUserProcedure } from "../utils";
 import { messages, sendMessage } from "./message";
 import {
   searchFromPlaylist,
@@ -21,7 +24,6 @@ import {
   SourceType,
 } from "./sources";
 import { MessageType, UpdateEvent } from "./types";
-import * as userState from "./user";
 
 export const roomRouter = t.router({
   get: authedProcedure.query(async ({ ctx }) => {
@@ -51,7 +53,7 @@ export const roomRouter = t.router({
       sources: SOURCES,
     };
   }),
-  addSong: authedProcedure
+  addSong: onlineUserProcedure
     .input(
       z.array(
         z.object({
@@ -64,20 +66,20 @@ export const roomRouter = t.router({
       )
     )
     .mutation(async ({ input, ctx }) => {
-      const { user } = ctx;
+      const { onlineUser } = ctx;
 
-      return addSongs(input, user);
+      return addSongs(input, onlineUser);
     }),
-  removeSong: authedProcedure
+  removeSong: onlineUserProcedure
     .input(
       z.object({
         id: z.number().min(1),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { user } = ctx;
+      const { onlineUser } = ctx;
       try {
-        const song = await removeSong(input.id, user);
+        const song = await removeSong(input.id, onlineUser);
 
         return song;
       } catch (e) {
@@ -87,45 +89,45 @@ export const roomRouter = t.router({
         });
       }
     }),
-  playNext: authedProcedure
+  playNext: onlineUserProcedure
     .input(
       z.object({
         id: z.number().min(1),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { user } = ctx;
+      const { onlineUser } = ctx;
 
-      const song = await playNext(input.id, user);
+      const song = await playNext(input.id, onlineUser);
 
       return { song };
     }),
-  skipCurrent: authedProcedure
+  skipCurrent: onlineUserProcedure
     .input(
       z.object({
         id: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { user } = ctx;
+      const { onlineUser } = ctx;
 
       if (input.id) {
-        return removeSong(input.id, user);
+        return removeSong(input.id, onlineUser);
       }
 
-      return startPlay(user);
+      return startPlay(onlineUser);
     }),
-  clearPlaylist: authedProcedure.mutation(async ({ ctx }) => {
-    const { user } = ctx;
+  clearPlaylist: onlineUserProcedure.mutation(async ({ ctx }) => {
+    const { onlineUser } = ctx;
 
-    await clearPlaylist(user);
+    await clearPlaylist(onlineUser);
 
     return true;
   }),
-  shufflePlaylist: authedProcedure.mutation(async ({ ctx }) => {
-    const { user } = ctx;
+  shufflePlaylist: onlineUserProcedure.mutation(async ({ ctx }) => {
+    const { onlineUser } = ctx;
 
-    await shufflePlaylist(user);
+    await shufflePlaylist(onlineUser);
 
     return true;
   }),
@@ -163,50 +165,37 @@ export const roomRouter = t.router({
 
     return "pong";
   }),
-  message: authedProcedure
+  message: onlineUserProcedure
     .input(
       z.object({
         content: z.string().min(1),
       })
     )
     .mutation(({ ctx, input }) => {
-      const { user } = ctx;
+      const { onlineUser } = ctx;
 
       const message = sendMessage(input.content, {
-        user,
+        user: onlineUser,
         type: MessageType.MESSAGE,
       });
 
       return message;
     }),
-  theme: authedProcedure
-    .input(
-      z.object({
-        theme: z.string().min(1),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      const { user } = ctx;
-      const { theme } = input;
-
-      const updatedUser = userState.setTheme(user, theme);
-
-      ee.emit(`onUpdate`, {
-        user: { update: updatedUser },
-      });
-
-      return theme;
-    }),
   onUpdate: authedProcedure
     .input(
       z.object({
         clientId: z.string().min(1),
-        theme: z.string().min(1),
+        state: schemaForType<OnlineUser["state"]>()(
+          z.object({
+            isVideoOn: z.boolean().optional(),
+            theme: z.string().optional(),
+          })
+        ),
       })
     )
     .subscription(({ ctx, input }) => {
       const { user } = ctx;
-      const { clientId, theme } = input;
+      const { clientId, state } = input;
 
       return observable<Partial<UpdateEvent>>((emit) => {
         const onUpdate = (updatedLobby: Partial<UpdateEvent>) => {
@@ -215,8 +204,8 @@ export const roomRouter = t.router({
 
         ee.on(`onUpdate`, onUpdate);
 
-        const userWithTheme = { ...user, theme };
-        userState.join(userWithTheme, clientId);
+        const userWithState = { ...user, state };
+        userState.join(userWithState, clientId);
 
         return () => {
           userState.leave(user, clientId);

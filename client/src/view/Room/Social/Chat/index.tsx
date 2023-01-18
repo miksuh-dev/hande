@@ -11,7 +11,9 @@ type Props = {
 
 type Divider = Omit<IncomingMessage, "type" | "content" | "name"> & {
   type: string;
-  isSystem: boolean;
+  property: {
+    isSystem: boolean;
+  };
 };
 
 export type MessageOrDivider = IncomingMessage | Divider;
@@ -39,7 +41,9 @@ const RoomChat: Component<Props> = (props) => {
           id: startOfDay.toMillis().toString(),
           timestamp: startOfDay.toMillis(),
           type: "divider",
-          isSystem: true,
+          property: {
+            isSystem: true,
+          },
         };
 
         return [...acc, divider, message];

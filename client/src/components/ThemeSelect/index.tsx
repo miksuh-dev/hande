@@ -43,7 +43,7 @@ const ThemeSelect = () => {
 
   const handleColorThemeChange = async (themeName: ThemeName) => {
     try {
-      await trpcClient.room.theme.mutate({ theme: themeName });
+      await trpcClient.user.updateState.mutate({ theme: themeName });
     } catch (e) {
       if (e instanceof Error) {
         snackbar.error(t("error.common", { error: e.message }));

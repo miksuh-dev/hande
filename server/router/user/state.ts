@@ -1,17 +1,17 @@
-import { MumbleUser } from "types/auth";
+import { MumbleUser, OnlineUser } from "types/auth";
 import ee from "../../eventEmitter";
-import { sendMessage } from "./message";
-import { MessageType } from "./types";
+import { sendMessage } from "../room/message";
+import { MessageType } from "../room/types";
 
-interface UserOnline {
+interface OnlineUserState {
   clientIds: string[];
-  user: MumbleUser;
+  user: OnlineUser;
 }
 
 // session id -> clientIds
-export const users = new Map<string, UserOnline>();
+export const users = new Map<string, OnlineUserState>();
 
-export const join = (user: MumbleUser, clientId: string) => {
+export const join = (user: OnlineUser, clientId: string) => {
   const existing = users.get(user.hash);
 
   if (!existing) {
@@ -33,7 +33,7 @@ export const join = (user: MumbleUser, clientId: string) => {
   });
 };
 
-const handleLeaveTimeout = (user: MumbleUser) => {
+const handleLeaveTimeout = (user: OnlineUser) => {
   const existing = users.get(user.hash);
   const clientIds = existing?.clientIds ?? [];
 
@@ -59,7 +59,7 @@ export const leave = (user: MumbleUser, clientId: string) => {
 
   if (clientIds.length === 0) {
     setTimeout(() => {
-      handleLeaveTimeout(user);
+      handleLeaveTimeout(existing.user);
     }, 5000);
   }
 
@@ -69,11 +69,11 @@ export const leave = (user: MumbleUser, clientId: string) => {
   });
 };
 
-export const getTheme = (user: MumbleUser) => {
-  return users.get(user.hash)?.user.theme;
-};
-
-export const setTheme = (user: MumbleUser, theme: string) => {
+export function setState<T extends keyof OnlineUser["state"]>(
+  user: OnlineUser,
+  state: T,
+  value: OnlineUser["state"][T]
+) {
   const existing = users.get(user.hash);
 
   if (!existing) return;
@@ -82,9 +82,12 @@ export const setTheme = (user: MumbleUser, theme: string) => {
     ...existing,
     user: {
       ...existing.user,
-      theme,
+      state: {
+        ...existing.user.state,
+        [state]: value,
+      },
     },
   });
 
   return users.get(user.hash)?.user;
-};
+}

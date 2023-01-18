@@ -19,7 +19,7 @@ const AuthGate: Component = () => {
         return navigate("/main");
       }
 
-      if (auth.user().isGuest) {
+      if (auth.user().property.isGuest) {
         return navigate("/room/guest");
       }
 

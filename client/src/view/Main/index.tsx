@@ -12,7 +12,7 @@ const MainView: Component = () => {
       return;
     }
 
-    if (auth.user().isGuest) {
+    if (auth.user().property.isGuest) {
       return navigate("/room/guest");
     }
 

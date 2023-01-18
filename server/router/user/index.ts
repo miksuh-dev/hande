@@ -2,9 +2,17 @@ import crypto from "crypto";
 import { TRPCError } from "@trpc/server";
 import { DateTime } from "luxon";
 import { z } from "zod";
+import { OnlineUser } from "types/auth";
+import { schemaForType } from "utils/trpc";
+import ee from "../../eventEmitter";
 import { t } from "../../trpc";
-import { createSession, verifyJWTToken } from "../../utils/auth";
-import { userProcedure, guestProcedure } from "../utils";
+import {
+  createSession,
+  getSessionVersion,
+  verifyJWTToken,
+} from "../../utils/auth";
+import { userProcedure, guestProcedure, onlineUserProcedure } from "../utils";
+import * as userState from "./state";
 
 export const userRouter = t.router({
   me: userProcedure.query(({ ctx }) => {
@@ -16,8 +24,15 @@ export const userRouter = t.router({
 
     if (!user) {
       throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Invalid token",
+        code: "UNAUTHORIZED",
+        message: "error.tokenExpired",
+      });
+    }
+
+    if (!user.version || user.version < getSessionVersion().major) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "error.oldVersion",
       });
     }
 
@@ -39,11 +54,34 @@ export const userRouter = t.router({
           .createHash("sha512")
           .update(`${input.name}-${sessionId.toString()}`)
           .digest("hex"),
-        isGuest: false,
-        isMumbleUser: false,
+        property: {
+          isGuest: false,
+          isMumbleUser: false,
+        },
+        version: getSessionVersion().major,
       };
 
       return createSession(session);
+    }),
+  updateState: onlineUserProcedure
+    .input(
+      schemaForType<OnlineUser["state"]>()(
+        z.object({
+          theme: z.string(),
+        })
+      )
+    )
+    .mutation(({ ctx, input }) => {
+      const { onlineUser } = ctx;
+      const { theme } = input;
+
+      const updatedUser = userState.setState(onlineUser, "theme", theme);
+
+      ee.emit(`onUpdate`, {
+        user: { update: updatedUser },
+      });
+
+      return theme;
     }),
 });
 
