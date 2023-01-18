@@ -1,12 +1,12 @@
 import useTheme from "hooks/useTheme";
 import { Component, createMemo } from "solid-js";
-import { User } from "trpc/types";
+import { IncomingMessage, User } from "trpc/types";
 import Badges from "./Badges";
 
 type Props = {
   name: string;
-  property: User["property"];
-  state: User["state"];
+  property: IncomingMessage["property"];
+  state?: User["state"];
 };
 
 const UserNameComponent: Component<Props> = (props) => {

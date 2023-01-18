@@ -34,11 +34,11 @@ interface SystemMessage {
   };
 }
 
-export type UserMessage = Omit<SystemMessage, "property"> & {
+export interface UserMessage extends Omit<SystemMessage, "property"> {
   userHash: string;
   property: OnlineUser["property"];
   state: OnlineUser["state"];
-};
+}
 
 export type Message = SystemMessage | UserMessage;
 
