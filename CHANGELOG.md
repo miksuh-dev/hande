@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/miksuh-dev/hande/compare/v1.6.0...v2.0.0) (2023-01-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* user jwt session refactor
+
+### Bug Fixes
+
+* current song gets shuffled to playlist ([d4e6126](https://github.com/miksuh-dev/hande/commit/d4e61266284da5737e83a2a567df1d766f984544))
+* **snackbar:** translation and responsivity ([65b89f6](https://github.com/miksuh-dev/hande/commit/65b89f6b2383865c2f0194519aab4e49a2b36f83))
+* use rounding on youtube embedding seekto ([9069303](https://github.com/miksuh-dev/hande/commit/906930388c7ebb7cc52a36ad2366ba62660ea7f4))
+
+
+* user jwt session refactor ([0270c19](https://github.com/miksuh-dev/hande/commit/0270c1963ba7eabf56af113b2ca5598d4a2574d2))
+
 ## [1.6.0](https://github.com/miksuh-dev/hande/compare/v1.4.0...v1.6.0) (2023-01-15)
 
 
