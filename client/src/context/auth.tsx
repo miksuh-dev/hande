@@ -92,7 +92,7 @@ export const AuthProvider: Component<{
       }
 
       if (err instanceof Error) {
-        snackbar.error(t("error.common", { error: err.message }));
+        snackbar.error(t("error.common", { error: t(err.message) }));
       }
     } finally {
       setReady(true);
