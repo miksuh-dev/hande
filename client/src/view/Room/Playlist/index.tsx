@@ -14,7 +14,7 @@ import Playlist from "./Playlist";
 const PlaylistComponent: Component = () => {
   const [t] = useI18n();
 
-  const roomData = useRouteData<RoomData>();
+  const { room } = useRouteData<RoomData>();
   const [clearDialogOpen, setClearDialogOpen] = createSignal(false);
 
   const snackbar = useSnackbar();
@@ -90,7 +90,7 @@ const PlaylistComponent: Component = () => {
             <button
               class="icon-button h-10 w-10"
               onClick={() => handleShufflePlaylist()}
-              disabled={roomData().songs.length === 0}
+              disabled={room().songs.length === 0}
             >
               <ShuffleIcon />
             </button>
@@ -102,7 +102,7 @@ const PlaylistComponent: Component = () => {
                 e.stopPropagation();
                 setClearDialogOpen(true);
               }}
-              disabled={roomData().songs.length === 0}
+              disabled={room().songs.length === 0}
             >
               <TrashIcon />
             </button>
@@ -111,16 +111,16 @@ const PlaylistComponent: Component = () => {
       </div>
       <div class="overflow-hidden p-4 pr-0">
         <Playlist
-          songs={roomData().songs}
+          songs={room().songs}
           onSkip={handleSkip}
           onPlayNext={handlePlayNext}
         />
       </div>
-      <Show when={clearDialogOpen() && roomData().songs.length > 0}>
+      <Show when={clearDialogOpen() && room().songs.length > 0}>
         <ConfirmDialog
           title={t("playlistClearDialog.title")}
           description={t("playlistClearDialog.description", {
-            count: roomData().songs.length.toString(),
+            count: room().songs.length.toString(),
           })}
           onSubmit={() => {
             handleClearPlaylist();

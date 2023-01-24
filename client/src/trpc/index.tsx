@@ -17,7 +17,7 @@ const getWsUrl = () => {
   return `${env.WEBSOCKET_URL}?token=${token}`;
 };
 
-export const wsClient = createWSClient({
+const wsClient = createWSClient({
   url: getWsUrl(),
 });
 

@@ -14,7 +14,7 @@ const PlayingComponent: Component = () => {
   const [t] = useI18n();
   const [showVideo, setShowVideo] = createSignal(false);
 
-  const roomData = useRouteData<RoomData>();
+  const { room } = useRouteData<RoomData>();
   const snackbar = useSnackbar();
 
   const handleSkip = async (song: Song) => {
@@ -60,7 +60,7 @@ const PlayingComponent: Component = () => {
       </div>
       <div class="overflow-hidden p-4 dark:bg-neutral-800">
         <Playing
-          playing={roomData().playing}
+          playing={room().playing}
           showVideo={showVideo()}
           onSkip={handleSkip}
         />

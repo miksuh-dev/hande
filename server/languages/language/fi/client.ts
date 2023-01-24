@@ -70,6 +70,7 @@ export default {
     youtubeEmbeddingScript: "Virhe haettaessa Youtube-embed-koodia",
     tokenExpired: "Kirjautumisesi on vanhentunut",
     oldVersion: "Istuntosi versio on vanhentunut",
+    socketReconnecting: "Yhteys palvelimeen katkesi. Yhdistetään uudelleen...",
   },
   snackbar: {
     common: {

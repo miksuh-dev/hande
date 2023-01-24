@@ -69,6 +69,7 @@ export default {
     youtubeEmbeddingScript: "Error loading Youtube embedding script",
     tokenExpired: "Token expired",
     oldVersion: "Your session is outdated",
+    socketReconnecting: "Socket connection lost. Reconnecting...",
   },
   snackbar: {
     common: {

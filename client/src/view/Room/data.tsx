@@ -1,4 +1,10 @@
-import { onMount, createResource, onCleanup, Signal } from "solid-js";
+import {
+  onMount,
+  createResource,
+  onCleanup,
+  Signal,
+  createSignal,
+} from "solid-js";
 import { Room, RoomUpdateEvent, Song } from "trpc/types";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
@@ -26,6 +32,12 @@ const handleUpdateEvent = (
 
   if (event.user) {
     if (event.user.join) {
+      const user = event.user.join;
+
+      if (existingRoom.users.some((u) => u.hash === user.hash)) {
+        return existingRoom;
+      }
+
       return {
         ...existingRoom,
         users: [...existingRoom.users, event.user.join],
@@ -147,6 +159,7 @@ function RoomData() {
   const snackbar = useSnackbar();
   const auth = useAuth();
   const theme = useTheme();
+  const [reconnecting, setReconnecting] = createSignal(false);
 
   const [room, { mutate }] = createResource<Room>(
     () => trpcClient.room.get.query(),
@@ -163,21 +176,32 @@ function RoomData() {
   );
 
   onMount(() => {
-    if (!auth.user()) {
-      return;
+    if (auth.user()) {
+      initRoomSocket();
     }
+  });
 
+  const initRoomSocket = () => {
     const clientId = generateId(auth.user());
     let timeout: NodeJS.Timeout;
 
     const pongListen = trpcClient.room.onPong.subscribe(
       { clientId },
       {
+        onStarted: () => {
+          setReconnecting(false);
+        },
         onData: (message) => {
           console.log(message);
           timeout = setTimeout(async () => {
             trpcClient.room.ping.mutate(clientId);
           }, 1000 * 30);
+        },
+        onError: () => {
+          setReconnecting(true);
+
+          // Retry connection
+          initRoomSocket();
         },
       }
     );
@@ -199,12 +223,6 @@ function RoomData() {
             return handleUpdateEvent(existingRoom, event);
           });
         },
-        onError(err) {
-          snackbar.error(t("error.common", { error: err.message }));
-        },
-        onComplete() {
-          snackbar.success(t("common.connectionClosed"));
-        },
       }
     );
 
@@ -213,9 +231,9 @@ function RoomData() {
       pongListen.unsubscribe();
       clearTimeout(timeout);
     });
-  });
+  };
 
-  return room;
+  return { room, reconnecting };
 }
 
 interface Ready<T> {

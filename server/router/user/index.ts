@@ -3,7 +3,6 @@ import { TRPCError } from "@trpc/server";
 import { DateTime } from "luxon";
 import { z } from "zod";
 import { OnlineUser } from "types/auth";
-import { schemaForType } from "utils/trpc";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import {
@@ -11,6 +10,7 @@ import {
   getSessionVersion,
   verifyJWTToken,
 } from "../../utils/auth";
+import { schemaForType } from "../../utils/trpc";
 import { userProcedure, guestProcedure, onlineUserProcedure } from "../utils";
 import * as userState from "./state";
 

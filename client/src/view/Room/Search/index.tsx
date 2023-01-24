@@ -20,7 +20,7 @@ import PlaylistViewDialog from "components/PlaylistViewDialog";
 const SearchComponent: Component = () => {
   const [t] = useI18n();
 
-  const roomData = useRouteData<RoomData>();
+  const { room } = useRouteData<RoomData>();
 
   const snackbar = useSnackbar();
   const [text, setText] = createSignal("");
@@ -35,8 +35,8 @@ const SearchComponent: Component = () => {
   const [loading, setLoading] = createSignal(false);
 
   createEffect(() => {
-    if (!source() && roomData().sources.length > 0) {
-      setSource(roomData().sources[0]);
+    if (!source() && room().sources.length > 0) {
+      setSource(room().sources[0]);
     }
   });
 
@@ -130,7 +130,7 @@ const SearchComponent: Component = () => {
         <Search
           text={text}
           selectedSource={source}
-          sources={roomData().sources}
+          sources={room().sources}
           onSearch={onSearch}
           onSourceChange={handleSourceChange}
           onTextChange={setText}
@@ -141,8 +141,8 @@ const SearchComponent: Component = () => {
       <Show when={resultsOpen()}>
         <Result
           results={results}
-          songs={roomData().songs}
-          playing={roomData().playing}
+          songs={room().songs}
+          playing={room().playing}
           onAdd={handleAdd}
           onPlaylistView={(playlistId) => setSelectedPlaylist(playlistId)}
           onClose={() => setResultsOpen(false)}
@@ -153,8 +153,8 @@ const SearchComponent: Component = () => {
         {(playlist) => (
           <PlaylistViewDialog
             playlist={playlist}
-            playing={roomData().playing}
-            songs={roomData().songs}
+            playing={room().playing}
+            songs={room().songs}
             onSongAdd={handleAdd}
             onClose={() => setSelectedPlaylist(undefined)}
           />

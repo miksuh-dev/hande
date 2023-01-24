@@ -9,7 +9,7 @@ import { useI18n } from "@solid-primitives/i18n";
 const SocialComponent: Component = () => {
   const [t] = useI18n();
 
-  const roomData = useRouteData<RoomData>();
+  const { room } = useRouteData<RoomData>();
 
   const [selectedTab, setSelectedTab] = createSignal(0);
 
@@ -28,7 +28,7 @@ const SocialComponent: Component = () => {
             text={
               <span class="flex items-center">
                 <span class="mr-2">{t("users.title")}</span>
-                <span>{roomData().users.length}</span>
+                <span>{room().users.length}</span>
               </span>
             }
           />
@@ -37,10 +37,10 @@ const SocialComponent: Component = () => {
       <div class="flex h-full w-full overflow-hidden p-3">
         <Switch>
           <Match when={selectedTab() === 0}>
-            <Chat messages={roomData().messages} />
+            <Chat messages={room().messages} />
           </Match>
           <Match when={selectedTab() === 1}>
-            <Users users={roomData().users} />
+            <Users users={room().users} />
           </Match>
         </Switch>
       </div>

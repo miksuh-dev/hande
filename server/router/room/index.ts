@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import { OnlineUser } from "types/auth";
-import { schemaForType } from "utils/trpc";
 import { getCurrentSong } from "../../common/playlist/internal";
 import {
   addSongs,
@@ -14,6 +13,7 @@ import {
 } from "../../common/playlist/user";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
+import { schemaForType } from "../../utils/trpc";
 import * as userState from "../user/state";
 import { authedProcedure, onlineUserProcedure } from "../utils";
 import { messages, sendMessage } from "./message";
