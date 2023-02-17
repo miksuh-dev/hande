@@ -16,7 +16,7 @@ export const searchListSong = async (
   }
 
   try {
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&safeSearch=none&type=video&maxResults=25&key=${process.env.YOUTUBE_API_KEY}&q=${content}`;
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&safeSearch=none&type=video&maxResults=10&key=${process.env.YOUTUBE_API_KEY}&q=${content}`;
 
     const { data }: YoutubeSongResult = await axios({
       method: "get",
