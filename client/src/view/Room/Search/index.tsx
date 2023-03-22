@@ -16,6 +16,12 @@ import trackClickOutside from "utils/trackClickOutside";
 import { Source } from "trpc/types";
 import { useI18n } from "@solid-primitives/i18n";
 import PlaylistViewDialog from "components/PlaylistViewDialog";
+import { hasSearchChanged } from "./utils";
+
+export interface SearchTerms {
+  text: string;
+  source: string;
+}
 
 const SearchComponent: Component = () => {
   const [t] = useI18n();
@@ -26,6 +32,7 @@ const SearchComponent: Component = () => {
   const [text, setText] = createSignal("");
   const [results, setResults] = createSignal<SearchResult[]>([]);
   const [resultsOpen, setResultsOpen] = createSignal(false);
+  const [lastSearch, setLastSearch] = createSignal<SearchTerms>();
 
   const [selectedPlaylist, setSelectedPlaylist] = createSignal<
     SearchResultPlaylist | undefined
@@ -46,14 +53,23 @@ const SearchComponent: Component = () => {
   ) => {
     if (!searchText || !selectedSource) return;
 
+    const searchTerms = {
+      text: searchText,
+      source: selectedSource.value,
+    };
+
+    if (!hasSearchChanged(lastSearch(), searchTerms)) {
+      setResultsOpen(true);
+      return;
+    }
+
     try {
       setLoading(true);
       setResultsOpen(true);
 
-      const suggestions = await trpcClient.room.search.query({
-        text: searchText,
-        source: selectedSource.value,
-      });
+      const suggestions = await trpcClient.room.search.query(searchTerms);
+
+      setLastSearch(searchTerms);
 
       setResults(suggestions);
     } catch (err) {
