@@ -47,6 +47,10 @@ class Connection extends EventEmitter {
         this.emit("error", error);
       });
       this.socket.on("data", this._onReceiveData.bind(this));
+
+      this.socket.on("close", () => {
+        this.emit("close");
+      });
     });
   }
 

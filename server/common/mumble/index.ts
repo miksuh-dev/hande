@@ -24,6 +24,10 @@ client.on("error", (error: unknown) => {
   ee.emit("onError", error);
 });
 
+client.connection.on("close", () => {
+  throw new Error("Mumble client closed connection");
+});
+
 client.connect().catch((e) => {
   console.log("e", e);
 });
