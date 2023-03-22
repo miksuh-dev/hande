@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/miksuh-dev/hande/compare/v2.0.0...v2.1.0) (2023-03-22)
+
+
+### Features
+
+* emit close when mumble connection is lost ([ae1a690](https://github.com/miksuh-dev/hande/commit/ae1a690b0d4d896f96acd08d13b7ab8da666b491))
+* handle socket disconnect and reconnect ([1fbce19](https://github.com/miksuh-dev/hande/commit/1fbce19c0119bf6a62666969c294e9d4a3d11498))
+* ignore search if query is same as last ([2700cce](https://github.com/miksuh-dev/hande/commit/2700cce4426142f6cbb8b9a379cfba8e69ee8df4))
+
+
+### Bug Fixes
+
+* inconsistent song thumbnails width ([2e77c9e](https://github.com/miksuh-dev/hande/commit/2e77c9e9e8fe31d2144f39f5617528eccb00fcfe))
+* incorrect property type for system messages ([8ebd8b9](https://github.com/miksuh-dev/hande/commit/8ebd8b95aabd04d2adf213a214151daeec8d6db3))
+* prevent multiple songs playing ([8329bcd](https://github.com/miksuh-dev/hande/commit/8329bcd6aef7d45b97f5f48ff57402bee4efbda9))
+* search submit sending requests twice ([ae93af0](https://github.com/miksuh-dev/hande/commit/ae93af046727409a250c241156366183e85e20db))
+
 ## [2.0.0](https://github.com/miksuh-dev/hande/compare/v1.6.0...v2.0.0) (2023-01-18)
 
 
