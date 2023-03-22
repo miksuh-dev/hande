@@ -128,7 +128,6 @@ const Search: Component<Props> = (props) => {
       <button
         type="submit"
         class="ml-2 rounded-lg border border-custom-primary-700 bg-custom-primary-900 p-2.5 text-sm font-medium text-white hover:bg-custom-primary-800 focus:outline-none dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800"
-        onClick={() => props.onSearch(props.text(), props.selectedSource())}
         disabled={props.loading()}
       >
         <div class="h-5 w-5">
