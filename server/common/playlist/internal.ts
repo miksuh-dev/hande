@@ -61,7 +61,8 @@ const handleSongErrorTimeout = async (song: Song) => {
 
 const onPlayError = (song: Song, error: string) => {
   // No longer relevant
-  if (playing?.id === song.id) {
+  if (playing?.id) {
+    playError = undefined;
     return;
   }
 
@@ -158,6 +159,8 @@ const onPlayStart = async (song: Song) => {
 
 export const playSong = async (song: Song) => {
   try {
+    if (playing) return;
+
     if (endTimeout) {
       clearTimeout(endTimeout);
     }
