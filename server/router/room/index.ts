@@ -9,7 +9,6 @@ import {
   playNext,
   removeSong,
   shufflePlaylist,
-  startPlay,
 } from "../../common/playlist/user";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
@@ -111,11 +110,7 @@ export const roomRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const { onlineUser } = ctx;
 
-      if (input.id) {
-        return removeSong(input.id, onlineUser);
-      }
-
-      return startPlay(onlineUser);
+      return removeSong(input.id, onlineUser);
     }),
   clearPlaylist: onlineUserProcedure.mutation(async ({ ctx }) => {
     const { onlineUser } = ctx;

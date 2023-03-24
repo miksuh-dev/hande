@@ -4,9 +4,10 @@ import prisma from "../../prisma";
 import { sendMessage } from "../../router/room/message";
 import { MessageType } from "../../router/room/types";
 import {
+  addSongToQueue,
   getCurrentSong,
   getNextSong,
-  playSong,
+  removeSongFromQueue,
   stopCurrentSong,
 } from "./internal";
 
@@ -77,34 +78,11 @@ export const addSongs = async (
   if (!getCurrentSong()) {
     const nextSong = await getNextSong();
     if (nextSong) {
-      await playSong(nextSong);
+      await addSongToQueue(nextSong);
     }
   }
 
   return addedSongs;
-};
-
-export const startPlay = async (user: OnlineUser) => {
-  const currentSong = getCurrentSong();
-
-  if (currentSong) {
-    throw new Error("Kappale on jo soimassa");
-  }
-
-  const nextSong = await getNextSong();
-  if (nextSong) {
-    await playSong(nextSong);
-
-    sendMessage(`event.source.${nextSong.type}.started`, {
-      user,
-      type: MessageType.ACTION,
-      item: nextSong.title,
-    });
-
-    return nextSong;
-  }
-
-  throw new Error("Ei kappaleita jonossa");
 };
 
 export const removeSong = async (id: number, user: OnlineUser) => {
@@ -133,10 +111,12 @@ export const removeSong = async (id: number, user: OnlineUser) => {
     ee.emit(`onUpdate`, { song: { remove: [song.id] } });
   }
 
+  removeSongFromQueue(song);
+
   if (!getCurrentSong()) {
     const nextSong = await getNextSong();
     if (nextSong) {
-      await playSong(nextSong);
+      await addSongToQueue(nextSong);
     }
   }
 
