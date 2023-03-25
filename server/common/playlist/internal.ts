@@ -178,6 +178,10 @@ async function onPlayStart(this: ProcessQueueItem) {
       },
     });
 
+    ee.emit(`onUpdate`, {
+      song: { setPlaying: this.song },
+    });
+
     return this.song;
   } catch (e) {
     if (e instanceof Error) {
@@ -197,10 +201,6 @@ export async function playSong(this: ProcessQueueItem) {
     }
 
     stream = await createStream(this.song);
-
-    ee.emit(`onUpdate`, {
-      song: { setPlaying: this.song },
-    });
 
     let started = false;
     stream.on("data", () => {
