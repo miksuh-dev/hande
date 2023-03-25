@@ -15,7 +15,7 @@ import { SearchResultPlaylist, SearchResultSong, Song } from "trpc/types";
 
 type Props = {
   playlist: SearchResultPlaylist;
-  playing: Song;
+  playing: Song | undefined;
   songs: Song[];
   onSongAdd: (songs: SearchResultSong[]) => Promise<void>;
   onClose: () => void;
@@ -123,7 +123,7 @@ const PlaylistView: Component<Props> = (props) => {
                             />
                           </Show>
                           <div class="ml-4">
-                            <h3 class="text-md text-left font-medium text-neutral-200">
+                            <h3 class="text-md text-left font-medium text-neutral-900 dark:text-neutral-200">
                               {htmlDecode(song.title)}
                             </h3>
                           </div>
