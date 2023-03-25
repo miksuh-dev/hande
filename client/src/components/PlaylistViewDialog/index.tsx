@@ -10,6 +10,7 @@ import {
 } from "solid-js";
 import { Portal } from "solid-js/web";
 import trpcClient from "trpc";
+import { htmlDecode } from "utils/parse";
 import { SearchResultPlaylist, SearchResultSong, Song } from "trpc/types";
 
 type Props = {
@@ -69,7 +70,9 @@ const PlaylistView: Component<Props> = (props) => {
           <div class="pointer-events-auto relative flex h-full w-full flex-col rounded-md border-none bg-neutral-50 bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-800">
             <div class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b border-neutral-200 p-4 dark:border-neutral-700">
               <h5 class="text-xl font-medium leading-normal ">
-                {t("playlistDialog.title", { name: props.playlist.title })}
+                {t("playlistDialog.title", {
+                  name: htmlDecode(props.playlist.title),
+                })}
               </h5>
               <button
                 onClick={() => props.onClose()}
@@ -121,7 +124,7 @@ const PlaylistView: Component<Props> = (props) => {
                           </Show>
                           <div class="ml-4">
                             <h3 class="text-md text-left font-medium text-neutral-200">
-                              {song.title}
+                              {htmlDecode(song.title)}
                             </h3>
                           </div>
                         </div>
