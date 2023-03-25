@@ -37,20 +37,26 @@ export const addSongs = async (
   });
 
   const position = lastSong ? lastSong.position + 1 : 0;
+
+  const contentIds = songs.map((o) => o.contentId);
   const addedSongs = await prisma.$transaction(
-    songs.map((song, index) => {
-      return prisma.song.create({
-        data: {
-          url: song.url,
-          contentId: song.contentId,
-          title: song.title,
-          thumbnail: song.thumbnail,
-          requester: requester.name,
-          type: song.type,
-          position: position + index,
-        },
-      });
-    })
+    songs
+      .filter(
+        ({ contentId }, index) => !contentIds.includes(contentId, index + 1)
+      )
+      .map((song, index) => {
+        return prisma.song.create({
+          data: {
+            url: song.url,
+            contentId: song.contentId,
+            title: song.title,
+            thumbnail: song.thumbnail,
+            requester: requester.name,
+            type: song.type,
+            position: position + index,
+          },
+        });
+      })
   );
 
   const firstSong = addedSongs[0];
