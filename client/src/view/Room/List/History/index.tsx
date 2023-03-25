@@ -58,6 +58,13 @@ const HistoryComponent: Component = () => {
       });
 
       setResult(result);
+
+      const { total, pageSize } = result;
+
+      const pageCount = Math.ceil(total / pageSize);
+      if (page > pageCount) {
+        setFormData({ ...formData, page: pageCount || 1 });
+      }
     } catch (err) {
       if (err instanceof Error) {
         snackbar.error(t("error.common", { error: err.message }));
