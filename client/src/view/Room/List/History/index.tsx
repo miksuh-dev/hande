@@ -129,13 +129,20 @@ const HistoryComponent: Component = () => {
   const handleSelectAll = () => {
     const { playing, songs } = room();
 
-    const allSelected = (result()?.list ?? []).filter(
+    const newSelected = (result()?.list ?? []).filter(
       (s) =>
         !songs.some((ps) => s.contentId === ps.contentId) &&
         (!playing || playing.contentId !== s.contentId)
     );
 
-    setSelected(allSelected);
+    const updatedSelected = [...selected(), ...newSelected];
+    const contentIds = updatedSelected.map((o) => o.contentId);
+
+    setSelected(
+      updatedSelected.filter(
+        ({ contentId }, index) => !contentIds.includes(contentId, index + 1)
+      )
+    );
   };
 
   return (
