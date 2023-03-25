@@ -84,29 +84,29 @@ const PlaylistComponent: Component = () => {
     <>
       <TabContainer
         actions={
-          <>
-            <Tooltip text={t("tooltip.common.shufflePlaylist")}>
-              <button
-                class="icon-button h-10 w-10"
-                onClick={() => handleShufflePlaylist()}
-                disabled={room().songs.length === 0}
-              >
-                <ShuffleIcon />
-              </button>
-            </Tooltip>
-            <Tooltip text={t("tooltip.common.clearPlaylist")}>
-              <button
-                class="icon-button h-10 w-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setClearDialogOpen(true);
-                }}
-                disabled={room().songs.length === 0}
-              >
-                <TrashIcon />
-              </button>
-            </Tooltip>
-          </>
+          room().songs.length > 0 ? (
+            <>
+              <Tooltip text={t("tooltip.common.shufflePlaylist")}>
+                <button
+                  class="icon-button h-10 w-10"
+                  onClick={() => handleShufflePlaylist()}
+                >
+                  <ShuffleIcon />
+                </button>
+              </Tooltip>
+              <Tooltip text={t("tooltip.common.clearPlaylist")}>
+                <button
+                  class="icon-button h-10 w-10"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setClearDialogOpen(true);
+                  }}
+                >
+                  <TrashIcon />
+                </button>
+              </Tooltip>
+            </>
+          ) : null
         }
       >
         <Playlist
