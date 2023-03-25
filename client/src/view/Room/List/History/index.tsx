@@ -58,13 +58,6 @@ const HistoryComponent: Component = () => {
       });
 
       setResult(result);
-
-      const { total, pageSize } = result;
-
-      const pageCount = Math.ceil(total / pageSize);
-      if (page > pageCount) {
-        setFormData({ ...formData, page: pageCount || 1 });
-      }
     } catch (err) {
       if (err instanceof Error) {
         snackbar.error(t("error.common", { error: err.message }));
@@ -158,7 +151,10 @@ const HistoryComponent: Component = () => {
         <Filter
           formData={formData}
           setFormData={setFormData}
-          onSubmit={handleSubmit}
+          onSubmit={() => {
+            setFormData({ ...formData(), page: 1 });
+            handleSubmit(formData());
+          }}
           loading={loading}
         />
       }
@@ -167,7 +163,7 @@ const HistoryComponent: Component = () => {
           page={formData().page}
           onPageChange={(page) => {
             setFormData({ ...formData(), page });
-            handleSubmit({ ...formData(), page });
+            handleSubmit(formData());
           }}
           pageCount={pageCount()}
           onSelectAll={() => handleSelectAll()}
