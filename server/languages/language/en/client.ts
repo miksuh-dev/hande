@@ -93,6 +93,7 @@ export default {
   },
   common: {
     requester: "Requester",
+    requestedAt: "Requested at",
     inQueue: "In queue",
     connectionClosed: "Connection closed",
   },
@@ -108,7 +109,12 @@ export default {
     },
   },
   playlist: {
-    title: "Next in queue",
+    title: "Playlist",
+  },
+  history: {
+    title: "History",
+    user: "User",
+    text: "Title",
   },
   playlistDialog: {
     title: "Playlist: {{ name }}",

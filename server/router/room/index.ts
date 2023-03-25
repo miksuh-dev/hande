@@ -10,6 +10,7 @@ import {
   removeSong,
   shufflePlaylist,
 } from "../../common/playlist/user";
+import { PAGE_SIZE } from "../../constants";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import { schemaForType } from "../../utils/trpc";
@@ -152,6 +153,51 @@ export const roomRouter = t.router({
       const { playlistId } = input;
 
       return searchFromPlaylist(playlistId);
+    }),
+  listHistory: authedProcedure
+    .input(
+      z.object({
+        text: z.string(),
+        user: z.string(),
+        page: z.number().min(1),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { prisma } = ctx;
+
+      const where = {
+        ended: true,
+
+        requester: {
+          contains: input.user,
+        },
+        title: {
+          contains: input.text,
+        },
+        type: {
+          not: "radio",
+        },
+      };
+
+      const result = await prisma.$transaction([
+        prisma.song.count({ where }),
+        prisma.song.findMany({
+          where,
+          take: PAGE_SIZE,
+          skip: PAGE_SIZE * (input.page - 1),
+          orderBy: [
+            {
+              createdAt: "desc",
+            },
+          ],
+        }),
+      ]);
+
+      return {
+        total: result[0],
+        pageSize: PAGE_SIZE,
+        list: result[1],
+      };
     }),
   ping: authedProcedure.input(z.string().min(10)).mutation(({ input }) => {
     const pingTarget = input;

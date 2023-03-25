@@ -4,7 +4,7 @@ import Tooltip from "components/Tooltip";
 import { Component, For } from "solid-js";
 import { Song } from "trpc/types";
 import { htmlDecode } from "utils/parse";
-import SongImage from "../common/SongImage";
+import SongImage from "../../common/SongImage";
 
 type Props = {
   onSkip: (song: Song) => void;

@@ -36,7 +36,7 @@ const PlayingComponent: Component = () => {
   };
 
   return (
-    <div class="flex-0 flex  flex-col overflow-hidden rounded-md bg-white dark:bg-neutral-900">
+    <div class="flex-0 flex flex-col rounded-md bg-white dark:bg-neutral-900">
       <div class="flex border-b border-neutral-300 dark:border-neutral-700">
         <span class="flex-1 rounded-t-lg p-4 font-bold">
           {t("player.title")}:

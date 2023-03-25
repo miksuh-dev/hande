@@ -15,25 +15,23 @@ const SocialComponent: Component = () => {
 
   return (
     <div class="flex h-full flex-1 flex-col rounded-md bg-white dark:bg-neutral-900">
-      <div class="border-b border-neutral-300 dark:border-neutral-700">
-        <Tabs>
-          <Tab
-            selected={selectedTab() === 0}
-            onClick={() => setSelectedTab(0)}
-            text={t("chat.title")}
-          />
-          <Tab
-            selected={selectedTab() === 1}
-            onClick={() => setSelectedTab(1)}
-            text={
-              <span class="flex items-center">
-                <span class="mr-2">{t("users.title")}</span>
-                <span>{room().users.length}</span>
-              </span>
-            }
-          />
-        </Tabs>
-      </div>
+      <Tabs>
+        <Tab
+          selected={selectedTab() === 0}
+          onClick={() => setSelectedTab(0)}
+          text={t("chat.title")}
+        />
+        <Tab
+          selected={selectedTab() === 1}
+          onClick={() => setSelectedTab(1)}
+          text={
+            <span class="flex items-center">
+              <span class="mr-2">{t("users.title")}</span>
+              <span>{room().users.length}</span>
+            </span>
+          }
+        />
+      </Tabs>
       <div class="flex h-full w-full overflow-hidden p-3">
         <Switch>
           <Match when={selectedTab() === 0}>

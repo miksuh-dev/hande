@@ -94,6 +94,7 @@ export default {
   },
   common: {
     requester: "Toivoja",
+    requestedAt: "Toivottu",
     inQueue: "Jonossa",
     connectionClosed: "Yhteys huoneeseen päätettiin",
   },
@@ -109,7 +110,12 @@ export default {
     },
   },
   playlist: {
-    title: "Seuraavana vuorossa",
+    title: "Soittolista",
+  },
+  history: {
+    title: "Historia",
+    user: "Käyttäjä",
+    text: "Otsikko",
   },
   playlistDialog: {
     title: "Soittolista: {{ name }}",

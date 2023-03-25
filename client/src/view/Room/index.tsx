@@ -1,6 +1,6 @@
 import { Component, Show } from "solid-js";
 import Content from "components/Content";
-import Playlist from "./Playlist";
+import List from "./List";
 import Playing from "./Playing";
 import Social from "./Social";
 import Search from "./Search";
@@ -22,7 +22,7 @@ const RoomView: Component = () => {
             <div class="z-10 flex h-1 flex-1 flex-col space-y-4 xl:h-full">
               <Search />
               <Playing />
-              <Playlist />
+              <List />
             </div>
             <Social />
           </div>

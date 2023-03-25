@@ -2,13 +2,14 @@ import { useI18n } from "@solid-primitives/i18n";
 import { useRouteData } from "@solidjs/router";
 import { ShuffleIcon, TrashIcon } from "components/common/icon";
 import ConfirmDialog from "components/ConfirmDialog";
+import { TabContainer } from "components/Tabs";
 import Tooltip from "components/Tooltip";
 import useSnackbar from "hooks/useSnackbar";
 import { Component, createSignal, Show } from "solid-js";
 import trpcClient from "trpc";
 import { Song } from "trpc/types";
 import { htmlDecode } from "utils/parse";
-import type { RoomData } from "../data";
+import type { RoomData } from "../../data";
 import Playlist from "./Playlist";
 
 const PlaylistComponent: Component = () => {
@@ -80,42 +81,40 @@ const PlaylistComponent: Component = () => {
   };
 
   return (
-    <div class="flex h-1 flex-1 flex-col overflow-hidden rounded-md bg-white dark:bg-neutral-900 xl:h-full">
-      <div class="flex border-b border-neutral-300 dark:border-neutral-700">
-        <span class="inline-block flex-1 rounded-t-lg p-4 font-bold">
-          {t("playlist.title")}:
-        </span>
-        <div class="flex items-center space-x-2 pr-4">
-          <Tooltip text={t("tooltip.common.shufflePlaylist")}>
-            <button
-              class="icon-button h-10 w-10"
-              onClick={() => handleShufflePlaylist()}
-              disabled={room().songs.length === 0}
-            >
-              <ShuffleIcon />
-            </button>
-          </Tooltip>
-          <Tooltip text={t("tooltip.common.clearPlaylist")}>
-            <button
-              class="icon-button h-10 w-10"
-              onClick={(e) => {
-                e.stopPropagation();
-                setClearDialogOpen(true);
-              }}
-              disabled={room().songs.length === 0}
-            >
-              <TrashIcon />
-            </button>
-          </Tooltip>
-        </div>
-      </div>
-      <div class="overflow-hidden p-4 pr-0">
+    <>
+      <TabContainer
+        actions={
+          <>
+            <Tooltip text={t("tooltip.common.shufflePlaylist")}>
+              <button
+                class="icon-button h-10 w-10"
+                onClick={() => handleShufflePlaylist()}
+                disabled={room().songs.length === 0}
+              >
+                <ShuffleIcon />
+              </button>
+            </Tooltip>
+            <Tooltip text={t("tooltip.common.clearPlaylist")}>
+              <button
+                class="icon-button h-10 w-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setClearDialogOpen(true);
+                }}
+                disabled={room().songs.length === 0}
+              >
+                <TrashIcon />
+              </button>
+            </Tooltip>
+          </>
+        }
+      >
         <Playlist
           songs={room().songs}
           onSkip={handleSkip}
           onPlayNext={handlePlayNext}
         />
-      </div>
+      </TabContainer>
       <Show when={clearDialogOpen() && room().songs.length > 0}>
         <ConfirmDialog
           title={t("playlistClearDialog.title")}
@@ -129,7 +128,7 @@ const PlaylistComponent: Component = () => {
           onCancel={() => setClearDialogOpen(false)}
         />
       </Show>
-    </div>
+    </>
   );
 };
 

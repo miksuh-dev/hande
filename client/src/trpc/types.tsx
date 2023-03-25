@@ -29,3 +29,7 @@ export type RoomUpdateEvent = inferObservableValue<
 >;
 
 export type Language = inferProcedureOutput<AppRouter["common"]["language"]>;
+
+export type ListHistory = inferProcedureOutput<
+  AppRouter["room"]["listHistory"]
+>;

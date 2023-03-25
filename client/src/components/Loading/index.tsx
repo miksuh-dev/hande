@@ -3,7 +3,7 @@ import { Component, Show } from "solid-js";
 
 const Loading: Component<{ title?: string }> = (props) => {
   return (
-    <div class="flex h-full flex-col items-center justify-center space-y-8">
+    <div class="flex h-full  flex-col items-center  justify-center space-y-8">
       <span class="h-20 w-20">
         <CircularLoadingSpinner />
       </span>
