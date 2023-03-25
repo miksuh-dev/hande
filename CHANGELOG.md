@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/miksuh-dev/hande/compare/v2.1.0...v2.2.0) (2023-03-25)
+
+
+### Features
+
+* add history tab to room view ([423789a](https://github.com/miksuh-dev/hande/commit/423789ae4d767b13cf941893da50a4b4812fa5fd))
+
+
+### Bug Fixes
+
+* migrate old song types to new song types ([d3b502b](https://github.com/miksuh-dev/hande/commit/d3b502b60ad5d18331ba6dc9c325fa5ee962c616))
+* playlist title and song titles not escaped ([a91129d](https://github.com/miksuh-dev/hande/commit/a91129d1447a0272867058aae478944f45fc2007))
+* prevent adding duplicate songs to playlist ([1822a9c](https://github.com/miksuh-dev/hande/commit/1822a9c6c7a48e13ed51e976b5b6d47458697ab6))
+* prevent going over max pages when new search ([70a0988](https://github.com/miksuh-dev/hande/commit/70a098818742bbfae255d171a3520b44e7c2621c))
+* progress bar not visiblle on song change ([220988c](https://github.com/miksuh-dev/hande/commit/220988cb96b153134b252ee9ecbadd5e97224be7))
+* refactor queue to prevent multiples streams ([0413061](https://github.com/miksuh-dev/hande/commit/041306114344d5b9a5ded3781b03f6f593e16d3c))
+* selected songs reset after page change ([22710a8](https://github.com/miksuh-dev/hande/commit/22710a8de2045443281db38d528b3106d0ecd3c9))
+* snackbar width causing unclickable background ([ac780e4](https://github.com/miksuh-dev/hande/commit/ac780e4f3aa8b97bfd657c2315a4ed68531260a8))
+
 ## [2.1.0](https://github.com/miksuh-dev/hande/compare/v2.0.0...v2.1.0) (2023-03-22)
 
 
