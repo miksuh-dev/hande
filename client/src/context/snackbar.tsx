@@ -48,7 +48,7 @@ export const SnackbarProvider: Component<{
     <SnackbarContext.Provider value={{ show, hide }}>
       {props.children}
       <Show when={snackbar()}>
-        <div class="absolute bottom-2 left-2 right-2 z-50 flex justify-center md:left-1/2 md:-translate-x-1/2">
+        <div class="absolute bottom-2 left-2 right-2 z-50 flex w-fit justify-center md:left-1/2 md:-translate-x-1/2">
           <div
             class="flex space-x-4 rounded-lg border-2 bg-neutral-100 p-4 dark:border-neutral-500 dark:bg-neutral-900"
             role="alert"
