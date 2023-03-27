@@ -85,6 +85,8 @@ const HistoryComponent: Component = () => {
 
       const songs = await trpcClient.room.addSong.mutate(addedSongs);
 
+      setSelected([]);
+
       if (songs.length > 1) {
         snackbar.success(
           t(`snackbar.source.song.addedManyToQueue`, {
