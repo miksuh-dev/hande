@@ -15,14 +15,14 @@ const UserBadges = (props: Props) => {
     <>
       <Show when={props.property.isSystem}>
         <Tooltip text={t("badges.system")}>
-          <span class="mr-1 h-4 w-4">
+          <span class="my-1 mr-1 h-4 w-4">
             <CrownIcon />
           </span>
         </Tooltip>
       </Show>
       <Show when={props.property.isMumbleUser}>
         <Tooltip text={t("badges.verified")}>
-          <span class="mr-1 h-4 w-4">
+          <span class="my-1 mr-1 h-4 w-4">
             <VerifiedIcon />
           </span>
         </Tooltip>
