@@ -12,6 +12,7 @@ import { Portal } from "solid-js/web";
 import trpcClient from "trpc";
 import { htmlDecode } from "utils/parse";
 import { SearchResultPlaylist, SearchResultSong, Song } from "trpc/types";
+import Tooltip from "components/Tooltip";
 
 type Props = {
   playlist: SearchResultPlaylist;
@@ -134,7 +135,7 @@ const PlaylistView: Component<Props> = (props) => {
                 </Suspense>
               </div>
               <div class="flex">
-                <div class="space-x-2">
+                <div class="flex-1 space-x-2">
                   <button
                     type="button"
                     class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
@@ -150,16 +151,22 @@ const PlaylistView: Component<Props> = (props) => {
                     {t("actions.clearSelections")}
                   </button>
                 </div>
-                <button
-                  type="button"
-                  class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
-                  onClick={() => {
-                    props.onSongAdd(selected());
-                    props.onClose();
-                  }}
+                <Tooltip
+                  text={t("tooltip.common.noSelections")}
+                  visible={selected().length === 0}
                 >
-                  {t("actions.addSelected")}
-                </button>
+                  <button
+                    type="button"
+                    class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
+                    onClick={() => {
+                      props.onSongAdd(selected());
+                      props.onClose();
+                    }}
+                    disabled={selected().length === 0}
+                  >
+                    {t("actions.addSelected")}
+                  </button>
+                </Tooltip>
               </div>
             </div>
           </div>

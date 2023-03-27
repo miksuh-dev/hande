@@ -171,6 +171,7 @@ const HistoryComponent: Component = () => {
           onSelectAll={() => handleSelectAll()}
           onClear={() => setSelected([])}
           onSubmit={() => handleAdd(selected())}
+          selected={selected}
         />
       }
     >

@@ -1,8 +1,11 @@
 import { useI18n } from "@solid-primitives/i18n";
 import Pagination from "components/Pagination";
-import { Component } from "solid-js";
+import Tooltip from "components/Tooltip";
+import { Accessor, Component } from "solid-js";
+import { Song } from "trpc/types";
 
 type Props = {
+  selected: Accessor<Song[]>;
   page: number;
   onPageChange: (page: number) => void;
   pageCount: number;
@@ -38,15 +41,19 @@ const FooterComponent: Component<Props> = (props) => {
         onPageChange={(page) => props.onPageChange(page)}
       />
       <div class="flex flex-1 justify-end">
-        <button
-          type="button"
-          class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
-          onClick={() => {
-            props.onSubmit();
-          }}
+        <Tooltip
+          text={t("tooltip.common.noSelections")}
+          visible={props.selected().length === 0}
         >
-          {t("actions.addSelected")}
-        </button>
+          <button
+            type="button"
+            class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
+            onClick={() => props.onSubmit()}
+            disabled={props.selected().length === 0}
+          >
+            {t("actions.addSelected")}
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

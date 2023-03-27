@@ -45,6 +45,7 @@ export default {
       clearPlaylist: "Clear playlist",
       showVideo: "Show video",
       hideVideo: "Hide video",
+      noSelections: "No selections",
     },
     source: {
       song: {

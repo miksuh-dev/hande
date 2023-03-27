@@ -45,6 +45,7 @@ export default {
       clearPlaylist: "Tyhjennä soittolista",
       showVideo: "Näytä video",
       hideVideo: "Piilota video",
+      noSelections: "Ei valintoja",
     },
     source: {
       song: {
