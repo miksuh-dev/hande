@@ -11,7 +11,7 @@ const Social: Component = () => {
         <SocialComponent />
       </div>
       <div
-        class="visible fixed right-0 left-0 bottom-0 z-30 flex flex-col items-end space-y-2 p-2 lg:left-auto xl:hidden"
+        class="visible fixed right-0 bottom-0 z-30 flex flex-col items-end space-y-2 p-2 lg:left-auto xl:hidden"
         classList={{
           "top-0 lg:w-1/2": open(),
         }}
