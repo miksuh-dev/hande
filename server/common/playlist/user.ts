@@ -193,7 +193,7 @@ export const shufflePlaylist = async (requester: OnlineUser) => {
   return updatedSongs;
 };
 
-export const playNext = async (id: number, user: OnlineUser) => {
+export const playNext = async (id: number, requester: OnlineUser) => {
   const nextSong = await getNextSong();
 
   const position = (nextSong?.position ?? 0) - 1;
@@ -208,7 +208,7 @@ export const playNext = async (id: number, user: OnlineUser) => {
   });
 
   sendMessage(`event.source.${song.type}.setAsNext`, {
-    user,
+    user: requester,
     type: MessageType.ACTION,
     item: song.title,
   });
@@ -216,4 +216,77 @@ export const playNext = async (id: number, user: OnlineUser) => {
   ee.emit(`onUpdate`, { song: { update: [song] } });
 
   return song;
+};
+
+export const movePosition = async (
+  id: number,
+  position: number,
+  requester: OnlineUser
+) => {
+  const songs = await prisma.song.findMany({
+    where: {
+      ended: false,
+      skipped: false,
+      id: { not: getCurrentSong()?.id },
+    },
+    orderBy: [
+      {
+        position: "asc",
+      },
+      {
+        createdAt: "asc",
+      },
+    ],
+  });
+
+  const selectedSong = songs.find((s) => s.id === id);
+  if (!selectedSong) {
+    throw new Error("Song not found");
+  }
+
+  const fromIndex = songs.findIndex((s) => s.id === id);
+  const toIndex = fromIndex + position;
+
+  const updatedPositions = [...songs];
+
+  updatedPositions.splice(fromIndex, 1);
+  updatedPositions.splice(toIndex, 0, selectedSong);
+
+  const updatedSongs = await prisma.$transaction(
+    updatedPositions.map((song, index) => {
+      return prisma.song.update({
+        where: {
+          id: song.id,
+        },
+        data: {
+          position: index,
+        },
+      });
+    })
+  );
+
+  sendMessage(`event.common.movedSong`, {
+    user: requester,
+    type: MessageType.ACTION,
+    item: selectedSong.title,
+  });
+
+  const changedSongs = updatedSongs.filter((newSong, index) => {
+    const oldSong = songs[index];
+    if (!oldSong) {
+      throw new Error("Song not found");
+    }
+
+    if (newSong.id !== oldSong.id) {
+      return true;
+    }
+
+    if (newSong.position !== oldSong.position) {
+      return true;
+    }
+  });
+
+  ee.emit(`onUpdate`, { song: { update: changedSongs } }); //   // ee.emit(`onUpdate`, { song: { update: updatedSongs } });
+
+  return changedSongs;
 };

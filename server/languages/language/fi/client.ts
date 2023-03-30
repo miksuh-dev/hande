@@ -77,6 +77,7 @@ export default {
     common: {
       clearedPlaylist: "Soittolista tyhjennetty",
       shuffledPlaylist: "Soittolista sekoitettu",
+      movedSong: "Kappaleen sijaintia vaihdettu",
     },
     source: {
       song: {
@@ -142,6 +143,7 @@ export default {
     common: {
       clearedPlaylist: "tyhjensi soittolistan.",
       shuffledPlaylist: "sekoitti soittolistan.",
+      movedSong: 'vaihtoi kappaleen "{{ item }}" sijaintia jonossa.',
     },
     source: {
       song: {

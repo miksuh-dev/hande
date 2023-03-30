@@ -76,6 +76,7 @@ export default {
     common: {
       clearedPlaylist: "Playlist cleared",
       shuffledPlaylist: "Playlist shuffled",
+      movedSong: "Moved song",
     },
     source: {
       song: {
@@ -141,6 +142,7 @@ export default {
     common: {
       clearedPlaylist: "cleared playlist.",
       shuffledPlaylist: "shuffled playlist.",
+      movedSong: 'changed song "{{ item }}" position in queue.',
     },
     source: {
       song: {

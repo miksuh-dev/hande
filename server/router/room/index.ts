@@ -6,6 +6,7 @@ import { getCurrentSong } from "../../common/playlist/internal";
 import {
   addSongs,
   clearPlaylist,
+  movePosition,
   playNext,
   removeSong,
   shufflePlaylist,
@@ -101,6 +102,20 @@ export const roomRouter = t.router({
       const song = await playNext(input.id, onlineUser);
 
       return { song };
+    }),
+  movePosition: onlineUserProcedure
+    .input(
+      z.object({
+        id: z.number().min(1),
+        position: z.number(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { onlineUser } = ctx;
+
+      await movePosition(input.id, input.position, onlineUser);
+
+      return true;
     }),
   skipCurrent: onlineUserProcedure
     .input(
