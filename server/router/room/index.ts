@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
+import { DateTime } from "luxon";
 import { z } from "zod";
 import { OnlineUser } from "types/auth";
 import { getCurrentSong } from "../../common/playlist/internal";
@@ -213,6 +214,58 @@ export const roomRouter = t.router({
         pageSize: PAGE_SIZE,
         list: result[1],
       };
+    }),
+  getStatistics: authedProcedure
+    .input(
+      z.object({
+        after: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { prisma } = ctx;
+
+      const after = DateTime.fromISO(input.after, { zone: "utc" });
+      if (!after.isValid) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid date",
+        });
+      }
+
+      const topTen = await prisma.song.groupBy({
+        by: ["contentId"],
+        where: {
+          createdAt: {
+            gte: after.toISO(),
+          },
+        },
+        take: 10,
+        orderBy: {
+          _count: {
+            contentId: "desc",
+          },
+        },
+        _count: {
+          contentId: true,
+        },
+      });
+
+      const songs = await prisma.song.findMany({
+        where: {
+          contentId: {
+            in: topTen.map((r) => r.contentId),
+          },
+        },
+      });
+
+      return topTen.map((r) => {
+        const song = songs.find((s) => s.contentId === r.contentId);
+
+        return {
+          ...song,
+          count: r._count.contentId,
+        };
+      });
     }),
   ping: authedProcedure.input(z.string().min(10)).mutation(({ input }) => {
     const pingTarget = input;

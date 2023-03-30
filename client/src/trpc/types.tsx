@@ -33,3 +33,10 @@ export type Language = inferProcedureOutput<AppRouter["common"]["language"]>;
 export type ListHistory = inferProcedureOutput<
   AppRouter["room"]["listHistory"]
 >;
+
+export type Statistic = inferProcedureOutput<
+  AppRouter["room"]["getStatistics"]
+>[number];
+export type StatisticsInput = inferProcedureInput<
+  AppRouter["room"]["getStatistics"]
+>;

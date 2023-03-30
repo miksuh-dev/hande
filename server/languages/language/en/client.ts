@@ -118,6 +118,16 @@ export default {
     user: "User",
     text: "Title",
   },
+  statistics: {
+    title: "Top 10",
+    playCount: "Played {{ count }} times",
+    filter: {
+      last7days: "Last 7 days",
+      lastMonth: "Last month",
+      last3months: "Last 3 months",
+      lastYear: "Last year",
+    },
+  },
   playlistDialog: {
     title: "Playlist: {{ name }}",
   },

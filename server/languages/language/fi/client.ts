@@ -119,6 +119,16 @@ export default {
     user: "Käyttäjä",
     text: "Otsikko",
   },
+  statistics: {
+    title: "Top 10",
+    playCount: "Toistettu {{ count }} kertaa",
+    filter: {
+      last7days: "Viimeiset 7 päivää",
+      lastMonth: "Viimeisin kuukausi",
+      last3months: "Viimeiset 3 kuukautta",
+      lastYear: "Viimeisin vuosi",
+    },
+  },
   playlistDialog: {
     title: "Soittolista: {{ name }}",
   },
