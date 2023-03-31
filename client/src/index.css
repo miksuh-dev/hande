@@ -20,7 +20,7 @@
   }
 
   input {
-    @apply block w-full rounded-lg border border-neutral-300 bg-white p-2.5 text-sm text-neutral-900 focus:outline-none dark:border-neutral-700 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-300;
+    @apply block w-full rounded-lg border border-neutral-300 bg-white p-2.5 text-sm font-medium text-neutral-900 focus:outline-none dark:border-neutral-700 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-300;
   }
 
   input.secondary {

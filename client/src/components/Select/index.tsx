@@ -61,7 +61,7 @@ const SelectComponent: Component<Props> = (props) => {
             </div>
           </Show>
           <button
-            class="z-10 inline-flex h-full w-full flex-shrink-0 items-center justify-between rounded-lg border border-neutral-300 bg-white py-2.5 px-4 text-center text-sm font-medium text-neutral-900 hover:bg-neutral-100 focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white dark:hover:bg-neutral-600"
+            class="z-10 inline-flex h-full w-full flex-shrink-0 items-center justify-between rounded-lg border border-neutral-300 bg-white py-2.5 px-3 text-center text-sm font-medium text-neutral-900 hover:bg-neutral-100 focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white dark:hover:bg-neutral-600"
             type="button"
             onClick={(e) => {
               e.stopPropagation();
