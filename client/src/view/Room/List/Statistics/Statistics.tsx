@@ -38,8 +38,8 @@ const StatisticsComponent: Component<Props> = (props) => {
                     />
                   </Match>
                   <Match when={statistic.type === "radio"}>
-                    <div class="border-1 flex h-10 w-12 items-center justify-center bg-neutral-100 text-custom-primary-700 dark:bg-neutral-700">
-                      <div class="flex h-8 w-8 justify-center">
+                    <div class="border-1 flex h-10 w-12 items-center justify-center rounded-full bg-neutral-100 text-custom-primary-700 dark:bg-neutral-700">
+                      <div class="flex h-6 w-6 justify-center">
                         <RadioIcon />
                       </div>
                     </div>
