@@ -19,11 +19,23 @@
     @apply inline-flex cursor-pointer justify-center rounded-full p-2 text-custom-primary-800 hover:bg-neutral-100 dark:text-custom-primary-800 dark:hover:bg-neutral-700;
   }
 
-  .input {
-    @apply block w-full rounded-lg border border-neutral-300 bg-white p-2.5 text-sm text-neutral-900 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-white dark:placeholder-neutral-300;
+  input {
+    @apply block w-full rounded-lg border border-neutral-300 bg-white p-2.5 text-sm text-neutral-900 focus:outline-none dark:border-neutral-700 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-300;
+  }
+
+  input.secondary {
+    @apply bg-neutral-100 dark:bg-neutral-800;
   }
 
   .tooltip {
     @apply rounded border-2 border-neutral-500 bg-white text-neutral-900 shadow dark:divide-neutral-600 dark:bg-neutral-800 dark:text-white;
+  }
+
+  .card {
+    @apply border border-neutral-200 bg-neutral-200 shadow-md dark:border-neutral-700 dark:bg-neutral-800;
+  }
+
+  button.card {
+    @apply cursor-pointer text-white hover:bg-neutral-300 disabled:cursor-default disabled:hover:bg-neutral-200 dark:hover:bg-neutral-750 dark:disabled:hover:bg-neutral-800;
   }
 }

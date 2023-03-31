@@ -19,13 +19,10 @@ type Props = {
   onPlayNext: (song: Song) => void;
 };
 
-type DragEventId = DragEvent["draggable"]["id"];
-
 const PlaylistComponent: Component<Props> = (props) => {
   const [t] = useI18n();
   const snackbar = useSnackbar();
 
-  const [activeItem, setActiveItem] = createSignal<DragEventId>();
   const [tempItems, setTempItems] = createSignal<Song[]>([]);
 
   const items = createMemo(() =>
@@ -33,8 +30,6 @@ const PlaylistComponent: Component<Props> = (props) => {
   );
 
   const ids = () => items().map((song) => song.id);
-
-  const onDragStart = ({ draggable }: DragEvent) => setActiveItem(draggable.id);
 
   const onDragEnd = async ({ draggable, droppable }: DragEvent) => {
     if (!draggable || !droppable) return;
@@ -68,13 +63,9 @@ const PlaylistComponent: Component<Props> = (props) => {
   };
 
   return (
-    <DragDropProvider
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-      collisionDetector={closestCorners}
-    >
+    <DragDropProvider onDragEnd={onDragEnd} collisionDetector={closestCorners}>
       <DragDropSensors />
-      <div class="overflow-y-none max-h-full space-y-4 overflow-y-auto rounded-md pr-4">
+      <div class="overflow-y-none max-h-full space-y-2 overflow-y-auto pr-4">
         <SortableProvider ids={ids()}>
           <For each={items()}>
             {(song) => (
@@ -88,7 +79,7 @@ const PlaylistComponent: Component<Props> = (props) => {
         </SortableProvider>
       </div>
       <DragOverlay>
-        <div class="sortable">{activeItem()}</div>
+        <div class="sortable" />
       </DragOverlay>
     </DragDropProvider>
   );

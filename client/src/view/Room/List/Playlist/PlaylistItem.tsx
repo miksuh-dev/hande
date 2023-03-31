@@ -23,15 +23,15 @@ const PlayListItem: Component<Props> = (props) => {
   return (
     <div
       use:sortable
-      class="flex cursor-grab flex-row items-center justify-between border border-neutral-200 p-4 shadow-md dark:border-neutral-700 dark:bg-neutral-800"
+      class="card flex cursor-grab flex-row items-center justify-between p-3"
       classList={{
         "opacity-60": sortable.isActiveDraggable,
         "transition-transform": !!state?.[0].active.draggable,
       }}
     >
       <div class="flex flex-row space-x-8">
-        <SongImage song={props.song} />
-        <div class="flex flex-col py-4">
+        <SongImage song={props.song} size={"small"} />
+        <div class="flex select-none flex-col py-4">
           <h1>{htmlDecode(props.song.title)}</h1>
           <p>
             {t("common.requester")}: {props.song.requester}

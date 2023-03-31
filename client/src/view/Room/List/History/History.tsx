@@ -23,7 +23,7 @@ const HistoryComponent: Component<Props> = (props) => {
   };
 
   return (
-    <div class="space-y h-full max-h-full space-y-2 overflow-y-auto rounded-md pr-4">
+    <div class="space-y h-full max-h-full space-y-2 overflow-y-auto pr-4">
       <Show
         when={!props.loading()}
         fallback={
@@ -37,11 +37,8 @@ const HistoryComponent: Component<Props> = (props) => {
         <For each={props.history}>
           {(song) => (
             <button
-              class="flex w-full cursor-default items-center justify-between rounded-md bg-neutral-100 p-2 px-4 dark:bg-neutral-700"
-              classList={{
-                "hover:bg-neutral-200 dark:hover:bg-neutral-600 cursor-pointer":
-                  !props.isInQueue(song),
-              }}
+              class="card flex w-full cursor-pointer items-center justify-between border p-2 px-4"
+              disabled={props.isInQueue(song)}
               onClick={() => props.onSongSelect(song)}
             >
               <div class="flex items-center space-x-4">

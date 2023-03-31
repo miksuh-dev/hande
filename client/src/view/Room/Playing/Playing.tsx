@@ -18,7 +18,7 @@ const PlayingComponent: Component<Props> = (props) => {
   const [t] = useI18n();
 
   return (
-    <div class="flex max-h-full min-h-[160px] items-center">
+    <div class="flex max-h-full min-h-[160px] items-center ">
       <Show
         when={props.playing}
         fallback={
@@ -29,9 +29,12 @@ const PlayingComponent: Component<Props> = (props) => {
         }
       >
         {(song: PlayingSong) => (
-          <div class="w-full space-y-2">
-            <div class="flex flex-row items-center justify-between">
-              <div class="flex flex-row space-x-8">
+          <div
+            class="flex w-full flex-col space-y-4"
+            style={{ "min-height": "inherit" }}
+          >
+            <div class="flex flex-1 flex-row items-center justify-between space-y-2">
+              <div class="flex h-full flex-row space-x-8">
                 <Show
                   when={props.showVideo && song.type === "song"}
                   fallback={<SongImage song={song} />}

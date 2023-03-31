@@ -68,7 +68,7 @@ const PlaylistView: Component<Props> = (props) => {
         role="dialog"
       >
         <div class="oveflow-y-hidden pointer-events-none relative h-full w-auto">
-          <div class="pointer-events-auto relative flex h-full w-full flex-col rounded-md border-none bg-neutral-50 bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-800">
+          <div class="pointer-events-auto relative flex h-full w-full flex-col rounded-md border-none bg-neutral-50 bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-900">
             <div class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b border-neutral-200 p-4 dark:border-neutral-700">
               <h5 class="text-xl font-medium leading-normal ">
                 {t("playlistDialog.title", {
@@ -85,7 +85,7 @@ const PlaylistView: Component<Props> = (props) => {
               </button>
             </div>
             <div class="flex h-full flex-col space-y-4 overflow-hidden p-4">
-              <div class="relative h-full space-y-3 overflow-y-scroll">
+              <div class="relative h-full space-y-2 overflow-y-scroll">
                 <Suspense
                   fallback={
                     <div class="flex h-full items-center justify-center">
@@ -98,7 +98,7 @@ const PlaylistView: Component<Props> = (props) => {
                   <For each={songs()}>
                     {(song) => (
                       <button
-                        class="flex w-full cursor-default items-center justify-between rounded-md bg-neutral-100 p-3 px-4 dark:bg-neutral-700"
+                        class="card flex w-full cursor-default items-center justify-between p-2 px-4"
                         classList={{
                           "hover:bg-neutral-200 dark:hover:bg-neutral-600 cursor-pointer":
                             !isInQueue(song),

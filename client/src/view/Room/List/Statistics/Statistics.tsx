@@ -13,7 +13,7 @@ const StatisticsComponent: Component<Props> = (props) => {
   const [t] = useI18n();
 
   return (
-    <div class="space-y h-full max-h-full space-y-2 overflow-y-auto rounded-md pr-4">
+    <div class="space-y h-full max-h-full space-y-2 overflow-y-auto pr-4">
       <Show
         when={!props.loading()}
         fallback={
@@ -26,7 +26,7 @@ const StatisticsComponent: Component<Props> = (props) => {
       >
         <For each={props.statistics()}>
           {(statistic, index) => (
-            <div class="flex w-full items-center justify-between rounded-md bg-neutral-100 p-2 px-4 dark:bg-neutral-700">
+            <div class="card flex w-full items-center justify-between p-2 px-4">
               <div class="flex items-center space-x-4">
                 <div class="w-4 flex-shrink-0">{index() + 1}</div>
                 <Switch>
@@ -38,7 +38,7 @@ const StatisticsComponent: Component<Props> = (props) => {
                     />
                   </Match>
                   <Match when={statistic.type === "radio"}>
-                    <div class="border-1 flex h-10 w-12 items-center justify-center rounded-full bg-neutral-100 text-custom-primary-700 dark:bg-neutral-700">
+                    <div class="border-1 flex h-10 w-12 items-center justify-center bg-neutral-100 text-custom-primary-700 dark:bg-neutral-700">
                       <div class="flex h-8 w-8 justify-center">
                         <RadioIcon />
                       </div>

@@ -27,7 +27,7 @@ const FilterComponent: Component<Props> = (props) => {
           <div class="flex w-full flex-row space-x-2">
             <input
               type="text"
-              class="input p-2.5"
+              class="p-2.5"
               placeholder={t("history.text")}
               onChange={(e) =>
                 props.setFormData((existing) => ({
@@ -40,7 +40,7 @@ const FilterComponent: Component<Props> = (props) => {
             />
             <input
               type="text"
-              class="input p-2.5"
+              class="p-2.5"
               placeholder={t("history.user")}
               onChange={(e) =>
                 props.setFormData((existing) => ({

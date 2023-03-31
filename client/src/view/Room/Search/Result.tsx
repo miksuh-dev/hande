@@ -26,98 +26,102 @@ const Result: Component<Props> = (props) => {
   const [t] = useI18n();
 
   return (
-    <div class="absolute top-full left-0 right-0 max-h-[500px]  space-y-2 overflow-auto rounded-sm rounded-t-none bg-neutral-400 p-2 dark:bg-neutral-900">
-      <Show
-        when={!props.loading()}
-        fallback={
-          <div class="flex  justify-center py-2 ">
-            <span class="h-10 w-10">
-              <CircularLoadingSpinner />
-            </span>
-          </div>
-        }
-      >
+    <div class="absolute top-full left-0 right-0 rounded-sm bg-neutral-400 p-2 dark:bg-neutral-900">
+      <div class="space-y-2 overflow-auto">
         <Show
-          when={props.results().length}
+          when={!props.loading()}
           fallback={
-            <div class="flex flex-col justify-center text-center">
-              <h5 class="text-xl">Ei hakutuloksia</h5>
+            <div class="flex  justify-center py-2 ">
+              <span class="h-10 w-10">
+                <CircularLoadingSpinner />
+              </span>
             </div>
           }
         >
-          <For each={props.results()}>
-            {(result) => {
-              return (
-                <div class="w-full bg-white p-3 dark:bg-neutral-800 ">
-                  <div class="flex items-center space-x-2">
-                    <Switch>
-                      <Match when={result.thumbnail}>
-                        <img
-                          class="border-1 h-10 w-10 rounded-full"
-                          src={result.thumbnail.url}
-                          alt=""
-                        />
-                      </Match>
-                      <Match when={result.type === "radio"}>
-                        <div class="border-1 flex h-10 w-12  items-center justify-center rounded-full bg-neutral-100 text-custom-primary-700 dark:bg-neutral-700">
-                          <div class="flex h-4 w-4 justify-center">
-                            <RadioIcon />
+          <Show
+            when={props.results().length}
+            fallback={
+              <div class="flex flex-col justify-center text-center">
+                <h5 class="text-xl">Ei hakutuloksia</h5>
+              </div>
+            }
+          >
+            <For each={props.results()}>
+              {(result) => {
+                return (
+                  <div class="card w-full p-2">
+                    <div class="flex items-center space-x-2">
+                      <Switch>
+                        <Match when={result.thumbnail}>
+                          <img
+                            class="border-1 h-10 w-10 rounded-full"
+                            src={result.thumbnail.url}
+                            alt=""
+                          />
+                        </Match>
+                        <Match when={result.type === "radio"}>
+                          <div class="border-1 flex h-10 w-12  items-center justify-center rounded-full bg-neutral-100 text-custom-primary-700 dark:bg-neutral-700">
+                            <div class="flex h-4 w-4 justify-center">
+                              <RadioIcon />
+                            </div>
                           </div>
-                        </div>
-                      </Match>
-                    </Switch>
-                    <div class="ml-2 flex w-full flex-col space-y-2">
-                      <h5 class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                        {htmlDecode(result.title)}
-                      </h5>
+                        </Match>
+                      </Switch>
+                      <div class="ml-2 flex w-full flex-col space-y-2">
+                        <h5 class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                          {htmlDecode(result.title)}
+                        </h5>
+                      </div>
+                      <Switch>
+                        <Match
+                          when={
+                            props.songs.some(
+                              (s) => s.contentId === result.contentId
+                            ) || props.playing?.contentId === result.contentId
+                          }
+                        >
+                          <button
+                            type="button"
+                            class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
+                            disabled
+                          >
+                            {t("common.inQueue")}
+                          </button>
+                        </Match>
+                        <Match
+                          when={
+                            result.type === "song" || result.type === "radio"
+                          }
+                        >
+                          <button
+                            type="button"
+                            class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
+                            onClick={() => props.onAdd([result])}
+                          >
+                            {t("actions.addToQueue")}
+                          </button>
+                        </Match>
+                        <Match when={result.type === "playlist"}>
+                          <button
+                            type="button"
+                            class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
+                            onClick={() => {
+                              props.onPlaylistView(result);
+                              props.onClose();
+                            }}
+                          >
+                            {t("actions.viewPlaylist")}
+                          </button>
+                        </Match>
+                      </Switch>
                     </div>
-                    <Switch>
-                      <Match
-                        when={
-                          props.songs.some(
-                            (s) => s.contentId === result.contentId
-                          ) || props.playing?.contentId === result.contentId
-                        }
-                      >
-                        <button
-                          type="button"
-                          class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
-                          disabled
-                        >
-                          {t("common.inQueue")}
-                        </button>
-                      </Match>
-                      <Match
-                        when={result.type === "song" || result.type === "radio"}
-                      >
-                        <button
-                          type="button"
-                          class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
-                          onClick={() => props.onAdd([result])}
-                        >
-                          {t("actions.addToQueue")}
-                        </button>
-                      </Match>
-                      <Match when={result.type === "playlist"}>
-                        <button
-                          type="button"
-                          class="ml-auto inline-flex shrink-0 items-center rounded border border-transparent bg-custom-primary-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-custom-primary-800 focus:outline-none focus:ring-2 focus:ring-custom-primary-500 focus:ring-offset-2 dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800 dark:focus:ring-custom-primary-500"
-                          onClick={() => {
-                            props.onPlaylistView(result);
-                            props.onClose();
-                          }}
-                        >
-                          {t("actions.viewPlaylist")}
-                        </button>
-                      </Match>
-                    </Switch>
                   </div>
-                </div>
-              );
-            }}
-          </For>
+                );
+              }}
+            </For>
+          </Show>
         </Show>
-      </Show>
+      </div>
     </div>
   );
 };
