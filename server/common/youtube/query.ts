@@ -43,7 +43,7 @@ export const searchListPlaylist = async (
   }
 
   try {
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&safeSearch=none&type=playlist&maxResults=25&key=${process.env.YOUTUBE_API_KEY}&q=${content}`;
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&safeSearch=none&type=playlist&maxResults=5&key=${process.env.YOUTUBE_API_KEY}&q=${content}`;
 
     const { data }: YoutubePlaylistResult = await axios({
       method: "get",
