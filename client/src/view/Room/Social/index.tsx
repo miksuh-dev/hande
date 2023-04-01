@@ -13,7 +13,7 @@ const Social: Component = () => {
       <div
         class="visible fixed right-0 bottom-0 z-30 flex flex-col items-end space-y-2 p-2 lg:left-auto xl:hidden"
         classList={{
-          "top-0 lg:w-1/2": open(),
+          "top-0 w-screen lg:w-1/2": open(),
         }}
       >
         <Show when={open()}>
