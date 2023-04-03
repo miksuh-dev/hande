@@ -82,13 +82,13 @@ export default {
       song: {
         addedToQueue: 'Added song "{{ item }}" to queue',
         addedManyToQueue: "Added {{ count }} songs to queue",
-        skipped: 'Skipped song "{{ item }}"',
+        skipped: 'Skipped song "{{ item }}".',
         skippedInPlaylist: 'Removed song "{{ item }}" from queue',
         setAsNext: 'Moved song "{{ item }}" to next',
       },
       radio: {
         addedToQueue: 'Added radio station "{{ item }}" to queue',
-        skipped: 'Skipped radio station "{{ item }}"',
+        skipped: 'Skipped radio station "{{ item }}".',
         setAsNext: 'Moved radio station "{{ item }}" to next',
       },
     },
@@ -167,8 +167,8 @@ export default {
         setAsNext: 'moved song "{{ item }}" to next.',
       },
       radio: {
-        start: 'Playing radio station "{{ item }}"',
-        end: 'Finished playing radio station "{{ item }}"',
+        start: 'Playing radio station "{{ item }}".',
+        end: 'Finished playing radio station "{{ item }}".',
 
         added: 'added radio station "{{ item }}" to queue.',
         started: 'started playing radio station "{{ item }}".',

@@ -89,7 +89,7 @@ export default {
       },
       radio: {
         addedToQueue: 'Lisättiin radiokanava "{{ item }}" jonoon',
-        skipped: 'Ohitettiin radiokanava "{{ item }}"',
+        skipped: 'Ohitettiin radiokanava "{{ item }}".',
         setAsNext: 'Siirrettiin radiokanava "{{ item }}" seuraavaksi',
       },
     },
@@ -157,7 +157,7 @@ export default {
     },
     source: {
       song: {
-        start: 'Soitetaan kappale "{{ item }}"',
+        start: 'Soitetaan kappale "{{ item }}".',
         end: 'Kappale "{{ item }}" päättyi.',
 
         added: 'lisäsi kappaleen "{{ item }}" jonoon.',
@@ -168,14 +168,14 @@ export default {
         setAsNext: 'siirsi kappaleen "{{ item }}" jonon kärkeen.',
       },
       radio: {
-        start: 'Toistetaan radiokanavaa "{{ item }}"',
+        start: 'Toistetaan radiokanavaa "{{ item }}".',
         end: 'Radiokanavan toisto "{{ item }}" päättyi.',
 
         added: 'lisäsi radiokanavan "{{ item }}" jonoon.',
         started: 'aloitti radiokanavan "{{ item }} toiston".',
         skipped: 'ohitti radiokanavan "{{ item }}".',
         skippedQueue: 'ohitti radiokanavan "{{ item }}" jonosta.',
-        setAsNext: 'siirsi radiokanavan "{{ item }}" jonon kärkee.n',
+        setAsNext: 'siirsi radiokanavan "{{ item }}" jonon kärkeen.',
       },
     },
   },
