@@ -4,6 +4,7 @@ import { DateTime } from "luxon";
 import { Accessor, Component, For, Show } from "solid-js";
 import { Song } from "trpc/types";
 import { htmlDecode } from "utils/parse";
+import SongThumbnail from "view/Room/common/SongThumbnail";
 
 type Props = {
   history: Song[];
@@ -52,22 +53,16 @@ const HistoryComponent: Component<Props> = (props) => {
                     props.onSongSelect(song);
                   }}
                 />
-                <Show when={song.thumbnail}>
-                  {(thumbnail: string) => (
-                    <img
-                      class="border-1 h-10 w-10 rounded-full"
-                      src={thumbnail}
-                      alt="thumbnail"
-                    />
-                  )}
-                </Show>
+
+                <SongThumbnail song={song} />
                 <div class="flex flex-col text-neutral-900 dark:text-neutral-200">
                   <h3 class="text-md text-left font-medium">
                     {htmlDecode(song.title)}
                   </h3>
                   <div class="space-x-4 self-start text-sm font-medium">
                     <span>
-                      {t("common.requestedAt")}: {song.requester}{" "}
+                      {t("common.requestedAt")}: {song.requester}
+                      {", "}
                       {htmlDecode(
                         DateTime.fromJSDate(song.createdAt, { zone: "utc" })
                           .setZone("local")

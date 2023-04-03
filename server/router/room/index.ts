@@ -261,6 +261,13 @@ export const roomRouter = t.router({
       return topTen.map((r) => {
         const song = songs.find((s) => s.contentId === r.contentId);
 
+        if (!song) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Song not found",
+          });
+        }
+
         return {
           ...song,
           count: r._count.contentId,

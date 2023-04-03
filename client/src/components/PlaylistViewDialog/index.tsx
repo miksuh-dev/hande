@@ -13,6 +13,7 @@ import trpcClient from "trpc";
 import { htmlDecode } from "utils/parse";
 import { SearchResultPlaylist, SearchResultSong, Song } from "trpc/types";
 import Tooltip from "components/Tooltip";
+import SongThumbnail from "view/Room/common/SongThumbnail";
 
 type Props = {
   playlist: SearchResultPlaylist;
@@ -116,13 +117,7 @@ const PlaylistView: Component<Props> = (props) => {
                               onSongSelect(song);
                             }}
                           />
-                          <Show when={song.thumbnail?.url}>
-                            <img
-                              class="border-1 h-10 w-10 rounded-full"
-                              src={song.thumbnail.url}
-                              alt="thumbnail"
-                            />
-                          </Show>
+                          <SongThumbnail song={song} />
                           <div class="ml-4">
                             <h3 class="text-md text-left font-medium text-neutral-900 dark:text-neutral-200">
                               {htmlDecode(song.title)}

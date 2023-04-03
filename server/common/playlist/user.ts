@@ -77,7 +77,7 @@ export const addSongs = async (
     sendMessage(`event.source.${firstSong.type}.added`, {
       user: requester,
       type: MessageType.ACTION,
-      item: firstSong.title,
+      item: firstSong,
     });
   }
 
@@ -105,14 +105,14 @@ export const removeSong = async (id: number, user: OnlineUser) => {
     sendMessage(`event.source.${song.type}.skipped`, {
       user,
       type: MessageType.ACTION,
-      item: song.title,
+      item: song,
     });
     stopCurrentSong();
   } else {
     sendMessage(`event.source.${song.type}.skippedQueue`, {
       user,
       type: MessageType.ACTION,
-      item: song.title,
+      item: song,
     });
     ee.emit(`onUpdate`, { song: { remove: [song.id] } });
   }
@@ -210,7 +210,7 @@ export const playNext = async (id: number, requester: OnlineUser) => {
   sendMessage(`event.source.${song.type}.setAsNext`, {
     user: requester,
     type: MessageType.ACTION,
-    item: song.title,
+    item: song,
   });
 
   ee.emit(`onUpdate`, { song: { update: [song] } });
@@ -268,7 +268,7 @@ export const movePosition = async (
   sendMessage(`event.common.movedSong`, {
     user: requester,
     type: MessageType.ACTION,
-    item: selectedSong.title,
+    item: selectedSong,
   });
 
   const changedSongs = updatedSongs.filter((newSong, index) => {

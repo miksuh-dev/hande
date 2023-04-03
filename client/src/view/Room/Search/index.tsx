@@ -97,7 +97,7 @@ const SearchComponent: Component = () => {
           contentId: r.contentId,
           url: r.url,
           title: r.title,
-          thumbnail: r.thumbnail?.url ?? null,
+          thumbnail: r.thumbnail ?? null,
           type: r.type,
         }))
       );

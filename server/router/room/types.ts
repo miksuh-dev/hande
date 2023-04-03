@@ -1,8 +1,7 @@
 import { Song } from "@prisma/client";
-import { SearchResultThumbnail } from "common/youtube";
 import { PlayingSong } from "types/app";
 import { OnlineUser } from "types/auth";
-import { SOURCES } from "./sources";
+import { SOURCES, SourceType } from "./sources";
 
 export enum MessageType {
   MESSAGE = "MESSAGE",
@@ -15,7 +14,7 @@ export enum MessageType {
 export interface MessageOptions {
   user?: OnlineUser;
   type?: MessageType;
-  item?: string;
+  item?: Song;
   error?: string;
   count?: number;
 }
@@ -24,7 +23,7 @@ interface SystemMessage {
   id: string;
   name: string;
   content: string;
-  item?: string;
+  item?: Song;
   count?: number;
   error?: string;
   timestamp: number;
@@ -66,21 +65,21 @@ interface SourceResult {
   contentId: string;
   title: string;
   description: string;
-  thumbnail: SearchResultThumbnail | null;
+  thumbnail: string | null;
   url: string;
 }
 
 export interface SourceResultSong extends SourceResult {
-  thumbnail: SearchResultThumbnail;
-  type: "song";
+  thumbnail: string;
+  type: SourceType.SONG;
 }
 
 export interface SourceResultPlaylist extends SourceResult {
-  thumbnail: SearchResultThumbnail;
-  type: "playlist";
+  thumbnail: string;
+  type: SourceType.PLAYLIST;
 }
 
 export interface SourceResultRadio extends SourceResult {
   thumbnail: null;
-  type: "radio";
+  type: SourceType.RADIO;
 }

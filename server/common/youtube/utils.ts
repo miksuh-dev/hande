@@ -1,4 +1,5 @@
 import { SourceResultPlaylist, SourceResultSong } from "router/room/types";
+import { SourceType } from "../../router/room/sources";
 import {
   YoutubeItemPlaylist,
   YoutubeItemPlaylistSong,
@@ -10,9 +11,9 @@ export const parseSong = (item: YoutubeItemSong): SourceResultSong => {
     contentId: item.id.videoId,
     title: item.snippet.title,
     description: item.snippet.description,
-    thumbnail: item.snippet.thumbnails.medium,
+    thumbnail: item.snippet.thumbnails.medium.url,
     url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
-    type: "song",
+    type: SourceType.SONG,
   };
 };
 
@@ -23,9 +24,9 @@ export const parsePlaylistSong = (
     contentId: item.snippet.resourceId.videoId,
     title: item.snippet.title,
     description: item.snippet.description,
-    thumbnail: item.snippet.thumbnails.medium,
+    thumbnail: item.snippet.thumbnails.medium.url,
     url: `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`,
-    type: "song",
+    type: SourceType.SONG,
   };
 };
 
@@ -36,8 +37,8 @@ export const parsePlaylist = (
     contentId: item.id.playlistId,
     title: item.snippet.title,
     description: item.snippet.description,
-    thumbnail: item.snippet.thumbnails.medium,
+    thumbnail: item.snippet.thumbnails.medium.url,
     url: `https://www.youtube.com/playlist?list=${item.id.playlistId}`,
-    type: "playlist",
+    type: SourceType.PLAYLIST,
   };
 };

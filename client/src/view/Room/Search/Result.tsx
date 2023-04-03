@@ -9,8 +9,9 @@ import {
 } from "trpc/types";
 import { Accessor } from "solid-js";
 import { htmlDecode } from "utils/parse";
-import { CircularLoadingSpinner, RadioIcon } from "components/common/icon";
+import { CircularLoadingSpinner } from "components/common/icon";
 import { useI18n } from "@solid-primitives/i18n";
+import SongThumbnail from "../common/SongThumbnail";
 
 type Props = {
   results: Accessor<SearchResult[]>;
@@ -51,22 +52,7 @@ const Result: Component<Props> = (props) => {
                 return (
                   <div class="card w-full p-2">
                     <div class="flex items-center space-x-2">
-                      <Switch>
-                        <Match when={result.thumbnail}>
-                          <img
-                            class="border-1 h-10 w-10 rounded-full"
-                            src={result.thumbnail.url}
-                            alt=""
-                          />
-                        </Match>
-                        <Match when={result.type === "radio"}>
-                          <div class="border-1 flex h-10 w-12  items-center justify-center rounded-full bg-neutral-100 text-custom-primary-700 dark:bg-neutral-700">
-                            <div class="flex h-4 w-4 justify-center">
-                              <RadioIcon />
-                            </div>
-                          </div>
-                        </Match>
-                      </Switch>
+                      <SongThumbnail song={result} />
                       <div class="ml-2 flex w-full flex-col space-y-2">
                         <h5 class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
                           {htmlDecode(result.title)}

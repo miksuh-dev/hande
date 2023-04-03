@@ -6,6 +6,7 @@ import Username from "components/Username";
 import { SendMessageIcon } from "components/common/icon";
 import { useI18n } from "@solid-primitives/i18n";
 import { MessageOrDivider } from ".";
+import ChatMessageItem from "./ChatMessageItem";
 
 type Props = {
   messages: Accessor<MessageOrDivider[]>;
@@ -93,7 +94,7 @@ const RoomChat: Component<Props> = (props) => {
                           <Match when={message.error && message.item}>
                             {t(message.content, {
                               error: message.error ?? "",
-                              item: htmlDecode(message.item) ?? "",
+                              item: htmlDecode(message.item.title) ?? "",
                             })}
                           </Match>
                           <Match when={message.error}>
@@ -102,9 +103,10 @@ const RoomChat: Component<Props> = (props) => {
                             })}
                           </Match>
                           <Match when={message.item}>
-                            {t(message.content, {
-                              item: htmlDecode(message.item) ?? "",
-                            })}
+                            <ChatMessageItem
+                              content={message.content}
+                              item={message.item}
+                            />
                           </Match>
                           <Match when={message.count}>
                             {t(message.content, {

@@ -2,6 +2,7 @@ import { Readable } from "stream";
 import { Song } from "@prisma/client";
 import m3u8stream from "m3u8stream";
 import { SourceResultRadio } from "router/room/types";
+import { SourceType } from "../../router/room/sources";
 import { addRadioClickCount } from "./mutation";
 import { SearchResultItem } from "./types";
 
@@ -34,6 +35,6 @@ export const parseSearchListItem = (
     title: item.name,
     description: "",
     thumbnail: null,
-    type: "radio",
+    type: SourceType.RADIO,
   };
 };
