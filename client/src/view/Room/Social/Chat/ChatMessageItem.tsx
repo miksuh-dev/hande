@@ -16,13 +16,15 @@ const ChatMessageItem: Component<Props> = (props) => {
   const [t] = useI18n();
 
   const message = createMemo(() => {
+    const item = htmlDecode(props.item.title);
+
     const rawMessage: string = t(props.content, {
-      item: htmlDecode(props.item.title) ?? "",
+      item,
     });
 
-    const [left, right] = rawMessage.split(`"${htmlDecode(props.item.title)}"`);
+    const [left, right] = rawMessage.split(`"${item}"`);
 
-    return { left, right, original: rawMessage };
+    return { left, right, original: rawMessage, item };
   });
 
   return (
@@ -62,7 +64,7 @@ const ChatMessageItem: Component<Props> = (props) => {
             class="cursor-pointer hover:bg-neutral-800"
             style={{ "white-space": "break-spaces" }}
           >
-            {props.item.title}
+            {message().item}
           </span>
         </Tooltip>
         {message().right}
