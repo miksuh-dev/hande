@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/miksuh-dev/hande/compare/v2.2.0...v2.3.0) (2023-04-08)
+
+
+### Features
+
+* add top 10 tab ([07d1f17](https://github.com/miksuh-dev/hande/commit/07d1f174c85c49062a0d13694e52cf7a3756ef88))
+* allow dragging items in playlist ([e16085f](https://github.com/miksuh-dev/hande/commit/e16085f4a78f280ebdc2923c1b2416dbd3b7178a))
+* prevent submit when no selections ([83ac502](https://github.com/miksuh-dev/hande/commit/83ac502e0b804558510b719f70e695012204d05f))
+* song thumbnail hover tooltip ([0d3d1b7](https://github.com/miksuh-dev/hande/commit/0d3d1b71629194b540d5571aaa8fdee79d4a649f))
+
+
+### Bug Fixes
+
+* bottom row not clickable on mobile ([89ea5f3](https://github.com/miksuh-dev/hande/commit/89ea5f3f4cc62b9e6beb243760ce05f657f0e00e))
+* chat badges not aligning properly ([d1fd7f9](https://github.com/miksuh-dev/hande/commit/d1fd7f9d333ca67d90749047470c2713987aad3e))
+* chat item hover not visible in error message ([059f02b](https://github.com/miksuh-dev/hande/commit/059f02b256b3d834e17aa18e16de13922ea42681))
+* chat message item not decoded ([4c143b1](https://github.com/miksuh-dev/hande/commit/4c143b1a150e33a8c703e9a9fa94f836bfe4fb0d))
+* chat width too narrow on small screens ([9711d1e](https://github.com/miksuh-dev/hande/commit/9711d1efe8f2431e92c47e3ddd59e0854e5c913c))
+* current page overflows after new search ([2a61b17](https://github.com/miksuh-dev/hande/commit/2a61b17c2d972fd5866cb53832dbb1451e5b43de))
+* final play error retry try skipped ([60d3ab4](https://github.com/miksuh-dev/hande/commit/60d3ab49e2340f4c79d87b87d7b5197b64d89b0a))
+* history footer buttons incorrect align ([eb5697a](https://github.com/miksuh-dev/hande/commit/eb5697ab6a9fe0b9223eb0c25ec175ce9e2d4da0))
+* prevent multiple streams ([#6](https://github.com/miksuh-dev/hande/issues/6)) ([f211068](https://github.com/miksuh-dev/hande/commit/f2110681d1da3aabbbc2d5a62405cfb654e3e61c))
+* prevent submitting same songs many times ([0e98b51](https://github.com/miksuh-dev/hande/commit/0e98b519c97da14276f26d82c263d94bcec90083))
+
 ## [2.2.0](https://github.com/miksuh-dev/hande/compare/v2.1.0...v2.2.0) (2023-03-25)
 
 
