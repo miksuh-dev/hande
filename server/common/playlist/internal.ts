@@ -67,7 +67,7 @@ export const removeSongFromQueue = (song: Song) => {
   });
 };
 
-export const onSongEnd = async (song: Song) => {
+const onSongEnd = async (song: Song) => {
   await prisma.song.update({
     where: {
       id: song.id,
@@ -83,8 +83,6 @@ export const onSongEnd = async (song: Song) => {
 
   ee.emit(`onUpdate`, { song: { remove: [song.id] } });
 
-  client.voiceConnection.stopStream();
-
   removeSongFromQueue(song);
 
   const nextSong = await getNextSong();
@@ -95,9 +93,7 @@ export const onSongEnd = async (song: Song) => {
 
 async function onSongError(this: ProcessQueueItem, error: string) {
   try {
-    if (stream) {
-      stream.destroy();
-    }
+    stopStream();
 
     if (this.retryCount <= MAX_RETRIES) {
       sendErrorMessage(
@@ -127,6 +123,9 @@ async function onSongError(this: ProcessQueueItem, error: string) {
 }
 
 const createStream = async (song: Song) => {
+  // Make sure we stop any previous streams
+  stopStream();
+
   if (song.type === SourceType.SONG) {
     return createYoutubeStream(song);
   }
@@ -195,16 +194,8 @@ async function onPlayStart(this: ProcessQueueItem) {
   }
 }
 
-export async function playSong(this: ProcessQueueItem) {
+async function playSong(this: ProcessQueueItem) {
   try {
-    if (endTimeout) {
-      clearTimeout(endTimeout);
-    }
-
-    if (stream) {
-      stream.destroy();
-    }
-
     stream = await createStream(this.song);
 
     let started = false;
@@ -246,13 +237,21 @@ export const getCurrentSong = (): PlayingSong | undefined => {
   return item.song;
 };
 
-export const stopCurrentSong = () => {
-  if (stream) {
-    stream.destroy();
+const stopStream = () => {
+  client.voiceConnection.stopStream();
+
+  if (endTimeout) {
+    clearTimeout(endTimeout);
   }
 
-  client.voiceConnection.stopStream();
-  clearTimeout(endTimeout);
+  if (stream) {
+    stream.destroy();
+    stream = undefined;
+  }
+};
+
+export const stopCurrentSong = () => {
+  stopStream();
 
   ee.emit(`onUpdate`, {
     song: { setPlaying: undefined },
