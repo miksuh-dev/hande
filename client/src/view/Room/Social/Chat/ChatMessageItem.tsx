@@ -10,6 +10,7 @@ import SongThumbnail from "view/Room/common/SongThumbnail";
 type Props = {
   content: string;
   item: Song;
+  error?: string;
 };
 
 const ChatMessageItem: Component<Props> = (props) => {
@@ -20,6 +21,7 @@ const ChatMessageItem: Component<Props> = (props) => {
 
     const rawMessage: string = t(props.content, {
       item,
+      error: props.error ?? "",
     });
 
     const [left, right] = rawMessage.split(`"${item}"`);

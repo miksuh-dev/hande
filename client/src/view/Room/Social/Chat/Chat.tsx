@@ -92,10 +92,11 @@ const RoomChat: Component<Props> = (props) => {
                       >
                         <Switch fallback={htmlDecode(message.content)}>
                           <Match when={message.error && message.item}>
-                            {t(message.content, {
-                              error: message.error ?? "",
-                              item: htmlDecode(message.item.title) ?? "",
-                            })}
+                            <ChatMessageItem
+                              content={message.content}
+                              item={message.item}
+                              error={message.error}
+                            />
                           </Match>
                           <Match when={message.error}>
                             {t(message.content, {
