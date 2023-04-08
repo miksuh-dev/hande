@@ -99,19 +99,24 @@ async function onSongError(this: ProcessQueueItem, error: string) {
       stream.destroy();
     }
 
-    this.retryCount += 1;
+    if (this.retryCount <= MAX_RETRIES) {
+      sendErrorMessage(
+        this.retryCount === MAX_RETRIES ? "event.error" : "event.retry",
+        {
+          item: this.song,
+          error,
+        }
+      );
+    }
 
-    const shouldStop = this.retryCount > MAX_RETRIES;
-
-    sendErrorMessage(shouldStop ? "event.error" : "event.retry", {
-      item: this.song,
-      error,
-    });
-
-    if (shouldStop) {
+    if (this.retryCount > MAX_RETRIES) {
       this.status = ProcessQueueItemStatus.skipped;
       await onSongEnd(this.song);
+
+      return;
     }
+
+    this.retryCount += 1;
 
     setTimeout(() => {
       void processQueue(this);
