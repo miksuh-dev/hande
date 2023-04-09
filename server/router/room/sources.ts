@@ -1,31 +1,11 @@
 import * as radio from "../../common/radio";
 import * as youtube from "../../common/youtube";
+import { SourceType } from "../../types/source";
 import {
   SourceResultSong,
   SourceResultPlaylist,
   SourceResultRadio,
 } from "./types";
-
-export enum SourceType {
-  SONG = "song",
-  PLAYLIST = "playlist",
-  RADIO = "radio",
-}
-
-export const SOURCES = [
-  {
-    id: 1,
-    value: SourceType.SONG,
-  },
-  {
-    id: 2,
-    value: SourceType.PLAYLIST,
-  },
-  {
-    id: 3,
-    value: SourceType.RADIO,
-  },
-];
 
 export const searchFromSource = async (
   text: string,

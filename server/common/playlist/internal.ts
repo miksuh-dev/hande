@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Readable } from "stream";
-import { Song } from "@prisma/client";
 import { DateTime } from "luxon";
 import { PlayingSong } from "types/app";
+import { Song } from "types/prisma";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendErrorMessage, sendMessage } from "../../router/room/message";
-import { SourceType } from "../../router/room/sources";
+import { SourceType } from "../../types/source";
 import client from "../mumble";
 import { createStream as createRadioStream } from "../radio";
 import {
@@ -258,8 +258,8 @@ export const stopCurrentSong = () => {
   });
 };
 
-export const getNextSong = async (): Promise<Song | null> => {
-  return await prisma.song.findFirst({
+export const getNextSong = async () => {
+  return (await prisma.song.findFirst({
     where: {
       ended: false,
       skipped: false,
@@ -272,5 +272,5 @@ export const getNextSong = async (): Promise<Song | null> => {
         createdAt: "asc",
       },
     ],
-  });
+  })) as Song | null;
 };

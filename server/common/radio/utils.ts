@@ -1,8 +1,8 @@
 import { Readable } from "stream";
-import { Song } from "@prisma/client";
 import m3u8stream from "m3u8stream";
 import { SourceResultRadio } from "router/room/types";
-import { SourceType } from "../../router/room/sources";
+import { Song } from "types/prisma";
+import { SourceType } from "../../types/source";
 import { addRadioClickCount } from "./mutation";
 import { SearchResultItem } from "./types";
 

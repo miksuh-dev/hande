@@ -2,12 +2,7 @@ import { Component, createEffect, createSignal, Show } from "solid-js";
 import trpcClient from "trpc";
 import Result from "./Result";
 import Search from "./Search";
-import {
-  SearchResult,
-  SearchResultPlaylist,
-  SearchResultRadio,
-  SearchResultSong,
-} from "trpc/types";
+import { AddSongInput, SearchResult, SearchResultPlaylist } from "trpc/types";
 import useSnackbar from "hooks/useSnackbar";
 import { htmlDecode } from "utils/parse";
 import { RoomData } from "../data";
@@ -88,9 +83,7 @@ const SearchComponent: Component = () => {
     }
   };
 
-  const handleAdd = async (
-    result: SearchResultSong[] | SearchResultRadio[]
-  ) => {
+  const handleAdd = async (result: AddSongInput) => {
     try {
       const songs = await trpcClient.room.addSong.mutate(
         result.map((r) => ({

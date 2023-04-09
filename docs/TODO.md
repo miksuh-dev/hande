@@ -7,6 +7,7 @@ Common:
 - [x] Language select support
 - [x] English translation
 - [x] Validation of languages, so that there are no missing translations keys
+- [ ] Find way to type enums (Song.type) using Prisma and SQLite
 
 To Mumble:
 

@@ -15,16 +15,13 @@ import {
 import { PAGE_SIZE } from "../../constants";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
+import { Song } from "../../types/prisma";
+import { SOURCES, SourceType } from "../../types/source";
 import { schemaForType } from "../../utils/trpc";
 import * as userState from "../user/state";
 import { authedProcedure, onlineUserProcedure } from "../utils";
 import { messages, sendMessage } from "./message";
-import {
-  searchFromPlaylist,
-  searchFromSource,
-  SOURCES,
-  SourceType,
-} from "./sources";
+import { searchFromPlaylist, searchFromSource } from "./sources";
 import { MessageType, UpdateEvent } from "./types";
 
 export const roomRouter = t.router({
@@ -49,7 +46,7 @@ export const roomRouter = t.router({
 
     return {
       playing: getCurrentSong(),
-      songs: playlist,
+      songs: playlist as Song[],
       messages,
       users: [...userState.users.values()].map((u) => u.user),
       sources: SOURCES,
@@ -63,7 +60,7 @@ export const roomRouter = t.router({
           contentId: z.string().min(1),
           title: z.string().min(1),
           thumbnail: z.string().nullable(),
-          type: z.enum(["song", "radio"]),
+          type: z.enum([SourceType.SONG, SourceType.RADIO]),
         })
       )
     )
@@ -250,13 +247,13 @@ export const roomRouter = t.router({
         },
       });
 
-      const songs = await prisma.song.findMany({
+      const songs = (await prisma.song.findMany({
         where: {
           contentId: {
             in: topTen.map((r) => r.contentId),
           },
         },
-      });
+      })) as Song[];
 
       return topTen.map((r) => {
         const song = songs.find((s) => s.contentId === r.contentId);
@@ -270,6 +267,7 @@ export const roomRouter = t.router({
 
         return {
           ...song,
+          type: song.type as SourceType,
           count: r._count.contentId,
         };
       });

@@ -1,5 +1,5 @@
-import { Song } from "@prisma/client";
 import { DateTime } from "luxon";
+import { Song } from "./prisma";
 
 export type PlayingSong = Song & {
   startedAt: DateTime;

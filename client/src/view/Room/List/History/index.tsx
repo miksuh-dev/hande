@@ -4,7 +4,7 @@ import { TabContainer } from "components/Tabs";
 import useSnackbar from "hooks/useSnackbar";
 import { Component, createMemo, createSignal, onMount } from "solid-js";
 import trpcClient from "trpc";
-import { ListHistory, Song } from "trpc/types";
+import { AddSongInput, ListHistory, Song } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import { RoomData } from "../../data";
 import Filter from "./Filter";
@@ -67,7 +67,7 @@ const HistoryComponent: Component = () => {
     }
   };
 
-  const handleAdd = async (result: Song[]) => {
+  const handleAdd = async (result: AddSongInput) => {
     try {
       const addedSongs = result.map((r) => {
         if (r.type !== "song") {

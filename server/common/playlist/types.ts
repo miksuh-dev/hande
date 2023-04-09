@@ -1,5 +1,5 @@
-import { Song } from "@prisma/client";
 import { PlayingSong } from "types/app";
+import { Song } from "types/prisma";
 
 export interface PlayError {
   id: number;

@@ -1,5 +1,5 @@
 import { SourceResultPlaylist, SourceResultSong } from "router/room/types";
-import { SourceType } from "../../router/room/sources";
+import { SourceType } from "../../types/source";
 import {
   YoutubeItemPlaylist,
   YoutubeItemPlaylistSong,

@@ -1,14 +1,13 @@
 import type { inferProcedureInput, inferProcedureOutput } from "@trpc/server";
 import { inferObservableValue } from "@trpc/server/observable";
 import type { AppRouter } from "../../../server/router";
-import { SourceType } from "../../../server/router/room/sources";
+import { SourceType } from "../../../server/types/source";
 
 export type Room = inferProcedureOutput<AppRouter["room"]["get"]>;
+export type Song = Room["songs"][number];
 
 export type Source = Room["sources"][number];
-export type Song = Room["songs"][number] & {
-  type: Source["value"];
-};
+
 export type PlayingSong = Song & { startedAt: string; duration: number };
 
 export type User = Room["users"][number];
@@ -27,6 +26,8 @@ export type SearchResultSong = SearchResult & { type: SourceType.SONG };
 export type SearchResultPlaylist = SearchResult & { type: SourceType.PLAYLIST };
 export type SearchResultRadio = SearchResult & { type: SourceType.RADIO };
 
+export type AddSongInput = inferProcedureInput<AppRouter["room"]["addSong"]>;
+
 export type RoomUpdateEvent = inferObservableValue<
   inferProcedureOutput<AppRouter["room"]["onUpdate"]>
 >;
@@ -39,10 +40,10 @@ export type ListHistory = inferProcedureOutput<
 
 export type Statistic = inferProcedureOutput<
   AppRouter["room"]["getStatistics"]
->[number] & {
-  type: Source["value"];
-};
+>[number];
 
 export type StatisticsInput = inferProcedureInput<
   AppRouter["room"]["getStatistics"]
 >;
+
+export { SourceType };

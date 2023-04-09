@@ -1,4 +1,5 @@
 import { OnlineUser } from "types/auth";
+import { Song } from "types/prisma";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendMessage } from "../../router/room/message";
@@ -39,7 +40,7 @@ export const addSongs = async (
   const position = lastSong ? lastSong.position + 1 : 0;
 
   const contentIds = songs.map((o) => o.contentId);
-  const addedSongs = await prisma.$transaction(
+  const addedSongs = (await prisma.$transaction(
     songs
       .filter(
         ({ contentId }, index) => !contentIds.includes(contentId, index + 1)
@@ -57,7 +58,7 @@ export const addSongs = async (
           },
         });
       })
-  );
+  )) as Song[];
 
   const firstSong = addedSongs[0];
 
@@ -92,14 +93,14 @@ export const addSongs = async (
 };
 
 export const removeSong = async (id: number, user: OnlineUser) => {
-  const song = await prisma.song.update({
+  const song = (await prisma.song.update({
     where: {
       id,
     },
     data: {
       skipped: true,
     },
-  });
+  })) as Song;
 
   if (song.id === getCurrentSong()?.id) {
     sendMessage(`event.source.${song.type}.skipped`, {
@@ -198,14 +199,14 @@ export const playNext = async (id: number, requester: OnlineUser) => {
 
   const position = (nextSong?.position ?? 0) - 1;
 
-  const song = await prisma.song.update({
+  const song = (await prisma.song.update({
     where: {
       id: id,
     },
     data: {
       position,
     },
-  });
+  })) as Song;
 
   sendMessage(`event.source.${song.type}.setAsNext`, {
     user: requester,
@@ -223,7 +224,7 @@ export const movePosition = async (
   position: number,
   requester: OnlineUser
 ) => {
-  const songs = await prisma.song.findMany({
+  const songs = (await prisma.song.findMany({
     where: {
       ended: false,
       skipped: false,
@@ -237,7 +238,7 @@ export const movePosition = async (
         createdAt: "asc",
       },
     ],
-  });
+  })) as Song[];
 
   const selectedSong = songs.find((s) => s.id === id);
   if (!selectedSong) {
@@ -252,7 +253,7 @@ export const movePosition = async (
   updatedPositions.splice(fromIndex, 1);
   updatedPositions.splice(toIndex, 0, selectedSong);
 
-  const updatedSongs = await prisma.$transaction(
+  const updatedSongs = (await prisma.$transaction(
     updatedPositions.map((song, index) => {
       return prisma.song.update({
         where: {
@@ -263,7 +264,7 @@ export const movePosition = async (
         },
       });
     })
-  );
+  )) as Song[];
 
   sendMessage(`event.common.movedSong`, {
     user: requester,

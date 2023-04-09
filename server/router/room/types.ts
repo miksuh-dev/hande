@@ -1,7 +1,7 @@
-import { Song } from "@prisma/client";
 import { PlayingSong } from "types/app";
 import { OnlineUser } from "types/auth";
-import { SOURCES, SourceType } from "./sources";
+import { Song } from "types/prisma";
+import { SourceType } from "../../types/source";
 
 export enum MessageType {
   MESSAGE = "MESSAGE",
@@ -58,8 +58,6 @@ export interface UpdateEvent {
     update?: OnlineUser;
   };
 }
-
-export type Source = typeof SOURCES[number];
 
 interface SourceResult {
   contentId: string;
