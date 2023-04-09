@@ -107,13 +107,6 @@ export default class Client extends EventEmitter {
     this.connection.on("UserState", (data: any) => {
       userState.handle(data);
 
-      this.connection.writeProto("RequestBlob", {
-        username: this.options.name,
-        password: this.options.password,
-        opus: true,
-        tokens: this.options.tokens,
-      });
-
       if (data.name === this.options.name) {
         this.user = this.users.get(data.session);
       }
