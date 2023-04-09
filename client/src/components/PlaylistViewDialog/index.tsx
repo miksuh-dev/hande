@@ -5,7 +5,6 @@ import {
   createResource,
   createSignal,
   For,
-  Show,
   Suspense,
 } from "solid-js";
 import { Portal } from "solid-js/web";

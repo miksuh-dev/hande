@@ -18,7 +18,6 @@ const createMessage = (content: string, options?: MessageOptions): Message => {
       property,
       state,
       ...(options.item && { item: options.item }),
-      ...(options.count && { count: options.count }),
       ...(options.error && { error: options.error }),
     };
   }

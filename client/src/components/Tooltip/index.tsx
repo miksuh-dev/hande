@@ -1,11 +1,13 @@
 import { Component, createSignal, JSX, Match, Show, Switch } from "solid-js";
 import { Portal } from "solid-js/web";
+import trackClickOutside from "utils/trackClickOutside";
 
 type Props = {
   children: JSX.Element;
   text?: string;
   content?: JSX.Element;
   visible?: boolean;
+  dynamic?: boolean;
 };
 
 type Position = {
@@ -16,70 +18,77 @@ type Position = {
 enum Anchor {
   TOP = "top",
   BOTTOM = "bottom",
-  LEFT = "left",
-  RIGHT = "right",
 }
 
 const SPACING = 16;
 
 const Tooltip: Component<Props> = (props) => {
   const [position, setPosition] = createSignal<Position | undefined>();
-  const [show, setShow] = createSignal<boolean>(false);
-  const [anchor, setAnchor] = createSignal<Anchor[]>([Anchor.BOTTOM]);
+  const [visible, setVisible] = createSignal<boolean>(false);
+  const [toggle, setToggle] = createSignal<boolean>(false);
+  const [anchor, setAnchor] = createSignal<Anchor>(Anchor.BOTTOM);
 
   let tooltipRef: HTMLDivElement;
 
-  const getAnchors = (x: number, y: number, width: number, height: number) => {
-    const anchors: Anchor[] = [];
-
-    if (x + width / 2 >= window.innerWidth) {
-      anchors.push(Anchor.LEFT);
-    }
-
-    if (x - width / 2 <= 0) {
-      anchors.push(Anchor.RIGHT);
-    }
-
-    if (y + height + SPACING >= window.innerHeight) {
-      anchors.push(Anchor.TOP);
-    } else {
-      anchors.push(Anchor.BOTTOM);
-    }
-
-    return anchors;
-  };
-
   const handleMouseMove = (event: MouseEvent) => {
-    const { x, y } = event;
     if (!tooltipRef) return;
 
+    let { x, y } = event;
     const { width, height } = tooltipRef.getBoundingClientRect();
-    const anchors = getAnchors(x, y, width, height);
 
-    const ySpacing = anchors.includes(Anchor.BOTTOM) ? SPACING : -SPACING;
+    if (x - width / 2 <= 0) {
+      x = width / 2;
+    }
 
-    setAnchor(anchors);
+    if (x + width / 2 > window.innerWidth) {
+      x = window.innerWidth - width / 2;
+    }
+
+    const anchor =
+      y + height + SPACING > window.innerHeight ? Anchor.TOP : Anchor.BOTTOM;
+    const anchorSpacing = anchor === Anchor.TOP ? -SPACING : SPACING;
+
+    y = y - height / 2 + anchorSpacing;
+
+    setAnchor(anchor);
+
     setPosition({
-      x: x - width / 2,
-      y: y - height / 2 + ySpacing,
+      x,
+      y,
     });
   };
 
   return (
     <span
-      class="cursor-pointer"
-      onMouseOver={() => setShow(true)}
-      onMouseLeave={() => {
-        setShow(false);
-        setPosition(undefined);
+      classList={{
+        "cursor-default": !props.dynamic,
+        "cursor-pointer": props.dynamic,
       }}
-      onMouseMove={handleMouseMove}
+      onClick={(event) => {
+        if (props.dynamic) {
+          event.stopPropagation();
+          setToggle(!toggle());
+        }
+      }}
+      onMouseEnter={() => setVisible(true)}
+      onMouseOver={() => setVisible(true)}
+      onMouseLeave={() => {
+        if (!toggle()) {
+          setVisible(false);
+          setPosition(undefined);
+        }
+      }}
+      onMouseMove={(event) => {
+        if (!toggle()) {
+          handleMouseMove(event);
+        }
+      }}
     >
       {props.children}
-      <Show when={show() && (props.visible ?? true)}>
+      <Show when={visible() && (props.visible ?? true)}>
         <Portal>
           <div
-            class="tooltip pointer-events-none absolute z-50 w-max p-2 text-center text-xs"
+            class="tooltip pointer-events-none absolute z-50 w-max -translate-x-1/2 p-2 text-center text-xs"
             style={{
               left: `${position()?.x}px`,
               top: `${position()?.y}px`,
@@ -87,17 +96,34 @@ const Tooltip: Component<Props> = (props) => {
               bottom: "auto",
             }}
             classList={{
-              "-translate-y-1/2": anchor().includes(Anchor.TOP),
-              "translate-y-1/2": anchor().includes(Anchor.BOTTOM),
-              "-translate-x-1/2": anchor().includes(Anchor.LEFT),
-              "translate-x-1/2": anchor().includes(Anchor.RIGHT),
+              "pointer-events-auto": props.dynamic,
+              "pointer-events-none": !props.dynamic,
+              "-translate-y-1/2": anchor() === Anchor.TOP,
+              "translate-y-1/2": anchor() === Anchor.BOTTOM,
             }}
             ref={(el) => {
               tooltipRef = el;
             }}
           >
             <Switch>
-              <Match when={props.content}>{props.content}</Match>
+              <Match when={props.content}>
+                <div
+                  class="flex max-h-[500px] max-w-xl flex-col overflow-hidden"
+                  ref={(ref) => {
+                    if (props.dynamic) {
+                      trackClickOutside(ref, () => {
+                        setVisible(false);
+                        setPosition(undefined);
+                        setToggle(false);
+                      });
+                    }
+                  }}
+                >
+                  <div class="h-full space-y-3 overflow-y-scroll">
+                    {props.content}
+                  </div>
+                </div>
+              </Match>
               <Match when={props.text}>{props.text}</Match>
             </Switch>
           </div>

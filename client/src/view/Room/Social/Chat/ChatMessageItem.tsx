@@ -1,4 +1,4 @@
-import { Component, createMemo } from "solid-js";
+import { Component, createMemo, For } from "solid-js";
 import { Show } from "solid-js";
 import { DateTime } from "luxon";
 import { htmlDecode } from "utils/parse";
@@ -9,7 +9,7 @@ import SongThumbnail from "view/Room/common/SongThumbnail";
 
 type Props = {
   content: string;
-  item: Song;
+  item: Song[];
   error?: string;
 };
 
@@ -17,61 +17,68 @@ const ChatMessageItem: Component<Props> = (props) => {
   const [t] = useI18n();
 
   const message = createMemo(() => {
-    const item = htmlDecode(props.item.title);
-
+    const firstItem = props.item[0];
     const rawMessage: string = t(props.content, {
-      item,
+      item: firstItem?.title ?? "",
       error: props.error ?? "",
+      count: props.item.length.toString(),
     });
+
+    if (!firstItem || props.item.length > 1) {
+      return {
+        item: rawMessage,
+      };
+    }
+
+    const item = htmlDecode(firstItem.title);
 
     const [left, right] = rawMessage.split(`"${item}"`);
 
-    return { left, right, original: rawMessage, item };
+    return { left, right, item };
   });
 
   return (
-    <Show when={message().left && message().right} fallback={<>{message}</>}>
-      <span class="inline">
-        {message().left}
-        <Tooltip
-          content={
-            <div>
-              <div class="flex flex-col space-y-2">
-                <div class="flex flex-row items-center space-x-2">
-                  <SongThumbnail song={props.item} />
-                  <div class="flex flex-col">
-                    <h3 class="text-md text-left font-medium">
-                      {htmlDecode(props.item.title ?? "")}
-                    </h3>
-                    <div class="space-x-4 self-start text-xs font-medium">
-                      <span class="text-neutral-300">
-                        {t("common.requestedAt")}
-                        {": "}
-                        {props.item.requester}
-                        {", "}
-                        {DateTime.fromJSDate(props.item.createdAt, {
-                          zone: "utc",
-                        })
-                          .setZone("local")
-                          .toFormat("dd.MM.yyyy HH:mm")}
-                      </span>
-                    </div>
+    <span class="inline">
+      <Show when={message().left}>{message().left}</Show>
+      <Tooltip
+        dynamic={props.item.length > 1}
+        content={
+          <For each={props.item}>
+            {(item) => (
+              <div class="flex flex-row items-center space-x-2">
+                <SongThumbnail song={item} />
+                <div class="flex flex-col">
+                  <h3 class="text-md text-left font-medium">
+                    {htmlDecode(item.title ?? "")}
+                  </h3>
+                  <div class="space-x-4 self-start text-xs font-medium">
+                    <span class="text-neutral-300">
+                      {t("common.requestedAt")}
+                      {": "}
+                      {item.requester}
+                      {", "}
+                      {DateTime.fromJSDate(item.createdAt, {
+                        zone: "utc",
+                      })
+                        .setZone("local")
+                        .toFormat("dd.MM.yyyy HH:mm")}
+                    </span>
                   </div>
                 </div>
               </div>
-            </div>
-          }
+            )}
+          </For>
+        }
+      >
+        <span
+          class="hover:bg-neutral-800"
+          style={{ "white-space": "break-spaces" }}
         >
-          <span
-            class="cursor-pointer hover:bg-neutral-800"
-            style={{ "white-space": "break-spaces" }}
-          >
-            {message().item}
-          </span>
-        </Tooltip>
-        {message().right}
-      </span>
-    </Show>
+          {message().item}
+        </span>
+      </Tooltip>
+      <Show when={message().right}>{message().right}</Show>
+    </span>
   );
 };
 export default ChatMessageItem;

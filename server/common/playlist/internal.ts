@@ -77,7 +77,7 @@ const onSongEnd = async (song: Song) => {
     },
   });
 
-  sendMessage(`event.source.${song.type}.end`, { item: song });
+  sendMessage(`event.source.${song.type}.end`, { item: [song] });
 
   stopCurrentSong();
 
@@ -99,7 +99,7 @@ async function onSongError(this: ProcessQueueItem, error: string) {
       sendErrorMessage(
         this.retryCount === MAX_RETRIES ? "event.error" : "event.retry",
         {
-          item: this.song,
+          item: [this.song],
           error,
         }
       );
@@ -146,7 +146,7 @@ async function onPlayStart(this: ProcessQueueItem) {
     }
 
     sendMessage(`event.source.${this.song.type}.start`, {
-      item: this.song,
+      item: [this.song],
     });
 
     if (this.song.type === SourceType.SONG) {

@@ -14,17 +14,15 @@ export enum MessageType {
 export interface MessageOptions {
   user?: OnlineUser;
   type?: MessageType;
-  item?: Song;
+  item?: Song[];
   error?: string;
-  count?: number;
 }
 
 interface SystemMessage {
   id: string;
   name: string;
   content: string;
-  item?: Song;
-  count?: number;
+  item?: Song[];
   error?: string;
   timestamp: number;
   type: MessageType;
