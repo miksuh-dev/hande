@@ -15,7 +15,7 @@ import {
 import { PAGE_SIZE } from "../../constants";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
-import { Song } from "../../types/prisma";
+import { Song, SongTypeSong } from "../../types/prisma";
 import { SOURCES, SourceType } from "../../types/source";
 import { schemaForType } from "../../utils/trpc";
 import * as userState from "../user/state";
@@ -209,7 +209,7 @@ export const roomRouter = t.router({
       return {
         total: result[0],
         pageSize: PAGE_SIZE,
-        list: result[1],
+        list: result[1] as SongTypeSong[],
       };
     }),
   getStatistics: authedProcedure
@@ -267,7 +267,7 @@ export const roomRouter = t.router({
 
         return {
           ...song,
-          type: song.type as SourceType,
+          type: song.type,
           count: r._count.contentId,
         };
       });

@@ -5,7 +5,7 @@ import useSnackbar from "hooks/useSnackbar";
 import { DateTime } from "luxon";
 import { Component, createSignal, onMount } from "solid-js";
 import trpcClient from "trpc";
-import { AddSongInput, Statistic, StatisticsInput } from "trpc/types";
+import { StatisticItem, StatisticsInput } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import { RoomData } from "view/Room/data";
 import Filter from "./Filter";
@@ -24,7 +24,7 @@ const StatisticsComponent: Component = () => {
   const [formData, setFormData] = createSignal<FormData>({
     after: DateTime.now().minus({ days: 7 }).toISO(),
   });
-  const [result, setResult] = createSignal<Statistic[]>([]);
+  const [result, setResult] = createSignal<StatisticItem[]>([]);
 
   onMount(() => {
     handleSubmit(formData());
@@ -49,7 +49,7 @@ const StatisticsComponent: Component = () => {
     }
   };
 
-  const handleAdd = async (result: AddSongInput) => {
+  const handleAdd = async (result: StatisticItem[]) => {
     try {
       const songs = await trpcClient.room.addSong.mutate(
         result.map((r) => ({

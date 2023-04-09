@@ -1,22 +1,22 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { CircularLoadingSpinner } from "components/common/icon";
 import { Accessor, Component, For, Show } from "solid-js";
-import { AddSongInput, PlayingSong, Song, Statistic } from "trpc/types";
+import { PlayingSong, Song, StatisticItem } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 
 type Props = {
-  statistics: Accessor<Statistic[]>;
+  statistics: Accessor<StatisticItem[]>;
   songs: Song[];
   playing: PlayingSong;
-  onAdd: (song: AddSongInput) => void;
+  onAdd: (song: StatisticItem[]) => void;
   loading: Accessor<boolean>;
 };
 
 const StatisticsComponent: Component<Props> = (props) => {
   const [t] = useI18n();
 
-  const isInQueue = (song: Statistic) => {
+  const isInQueue = (song: StatisticItem) => {
     return (
       props.songs.some((s) => s.contentId === song.contentId) ||
       (props.playing && props.playing.contentId === song.contentId)

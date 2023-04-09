@@ -4,7 +4,7 @@ import { TabContainer } from "components/Tabs";
 import useSnackbar from "hooks/useSnackbar";
 import { Component, createMemo, createSignal, onMount } from "solid-js";
 import trpcClient from "trpc";
-import { AddSongInput, ListHistory, Song } from "trpc/types";
+import { HistoryItem, ListHistory } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import { RoomData } from "../../data";
 import Filter from "./Filter";
@@ -30,7 +30,7 @@ const HistoryComponent: Component = () => {
     page: 1,
   });
   const [result, setResult] = createSignal<ListHistory>();
-  const [selected, setSelected] = createSignal<Song[]>([]);
+  const [selected, setSelected] = createSignal<HistoryItem[]>([]);
 
   onMount(() => {
     handleSubmit(formData());
@@ -67,7 +67,7 @@ const HistoryComponent: Component = () => {
     }
   };
 
-  const handleAdd = async (result: AddSongInput) => {
+  const handleAdd = async (result: HistoryItem[]) => {
     try {
       const addedSongs = result.map((r) => {
         if (r.type !== "song") {
@@ -79,7 +79,7 @@ const HistoryComponent: Component = () => {
           url: r.url,
           title: r.title,
           thumbnail: r.thumbnail ?? null,
-          type: r.type as "song",
+          type: r.type,
         };
       });
 
@@ -109,7 +109,7 @@ const HistoryComponent: Component = () => {
     }
   };
 
-  const isInQueue = (song: Song) => {
+  const isInQueue = (song: HistoryItem) => {
     const { playing, songs } = room();
 
     return (
@@ -118,7 +118,7 @@ const HistoryComponent: Component = () => {
     );
   };
 
-  const handleSongSelect = (song: Song) => {
+  const handleSongSelect = (song: HistoryItem) => {
     const isSelected = selected().some((s) => s.contentId === song.contentId);
 
     if (isSelected) {

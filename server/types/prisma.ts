@@ -1,7 +1,12 @@
 import { Song as PrismaSong } from "@prisma/client";
 import { SourceType } from "./source";
 
-export type WithSongType<T> = Omit<T, "type"> & {
+export type WithSongTypeAny<T> = Omit<T, "type"> & {
   type: SourceType.SONG | SourceType.RADIO;
 };
-export type Song = WithSongType<PrismaSong>;
+
+export type SongTypeSong = Omit<PrismaSong, "type"> & {
+  type: SourceType.SONG;
+};
+
+export type Song = WithSongTypeAny<PrismaSong>;

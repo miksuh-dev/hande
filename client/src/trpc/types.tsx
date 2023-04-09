@@ -38,7 +38,9 @@ export type ListHistory = inferProcedureOutput<
   AppRouter["room"]["listHistory"]
 >;
 
-export type Statistic = inferProcedureOutput<
+export type HistoryItem = ListHistory["list"][number];
+
+export type StatisticItem = inferProcedureOutput<
   AppRouter["room"]["getStatistics"]
 >[number];
 

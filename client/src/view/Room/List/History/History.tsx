@@ -2,17 +2,17 @@ import { useI18n } from "@solid-primitives/i18n";
 import { CircularLoadingSpinner } from "components/common/icon";
 import { DateTime } from "luxon";
 import { Accessor, Component, For, Show } from "solid-js";
-import { Song } from "trpc/types";
+import { HistoryItem, Song } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 
 type Props = {
-  history: Song[];
+  history: HistoryItem[];
   songs: Song[];
   playing: Song | undefined;
   selected: Accessor<Song[]>;
-  onSongSelect: (song: Song) => void;
-  isInQueue: (song: Song) => boolean;
+  onSongSelect: (song: HistoryItem) => void;
+  isInQueue: (song: HistoryItem) => boolean;
   loading: Accessor<boolean>;
 };
 
