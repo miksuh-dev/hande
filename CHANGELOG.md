@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/miksuh-dev/hande/compare/v2.3.0...v2.4.0) (2023-04-11)
+
+
+### Features
+
+* button to add songs from statistics to queue ([cacb6f8](https://github.com/miksuh-dev/hande/commit/cacb6f8ae8e53ecef664c27e337b12a9800ce795))
+* changelog to user menu ([c67e0f4](https://github.com/miksuh-dev/hande/commit/c67e0f426d71abd107b306cb656217eff3aef2a6))
+* show scrollable tooltip on multiple song add ([f8b992c](https://github.com/miksuh-dev/hande/commit/f8b992c34ad43281d7344fd7e39bc53052d41a55))
+
 ## [2.3.0](https://github.com/miksuh-dev/hande/compare/v2.2.0...v2.3.0) (2023-04-08)
 
 
