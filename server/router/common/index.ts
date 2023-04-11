@@ -1,9 +1,15 @@
+import fs from "fs";
+import path from "path";
+import MarkdownIt from "markdown-it";
 import { z } from "zod";
 import {
   getClientLanguage,
   availableLanguages as available,
 } from "../../languages";
+import { userProcedure } from "../../router/utils";
 import { t } from "../../trpc";
+
+const markdownIt = new MarkdownIt();
 
 export const commonRouter = t.router({
   language: t.procedure
@@ -26,6 +32,16 @@ export const commonRouter = t.router({
         available,
       };
     }),
+  changelog: userProcedure.query(() => {
+    const content = markdownIt
+      .parse(
+        fs.readFileSync(path.join(process.cwd(), "CHANGELOG.md")).toString(),
+        {}
+      )
+      .filter((_, index) => index > 5); // Ignore description in the beginning
+
+    return markdownIt.renderer.render(content, {}, {});
+  }),
 });
 
 export type CommonRouter = typeof commonRouter;

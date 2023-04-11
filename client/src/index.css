@@ -38,4 +38,40 @@
   button.card {
     @apply cursor-pointer text-white hover:bg-neutral-300 disabled:cursor-default disabled:hover:bg-neutral-200 dark:hover:bg-neutral-750 dark:disabled:hover:bg-neutral-800;
   }
+
+  .markdown h1 {
+    @apply text-2xl font-bold text-neutral-900 dark:text-white;
+  }
+
+  .markdown ul {
+    @apply mb-4 pl-2;
+  }
+
+  .markdown li {
+    @apply list-inside list-disc;
+  }
+
+  .markdown li p {
+    @apply m-0 inline;
+  }
+
+  .markdown p {
+    @apply m-0 mb-2;
+  }
+
+  .markdown h1 {
+    @apply m-0 mb-2 text-2xl font-bold text-neutral-900 dark:text-white;
+  }
+
+  .markdown h2 {
+    @apply m-0 mb-2 border-b border-neutral-300 pb-2 text-xl font-bold text-neutral-900 dark:border-neutral-600 dark:text-white;
+  }
+
+  .markdown h3 {
+    @apply m-0 mb-2 text-lg font-bold text-neutral-900 dark:text-white;
+  }
+
+  .markdown a {
+    @apply text-custom-primary-800 hover:underline dark:text-custom-primary-800;
+  }
 }

@@ -11,6 +11,7 @@ export default {
     language: {
       tooltip: "Vaihda kieltä",
     },
+    changelog: "Muutoshistoria",
   },
   search: {
     placeholder: "Hae...",

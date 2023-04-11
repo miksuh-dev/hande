@@ -11,6 +11,7 @@ export default {
     language: {
       tooltip: "Change language",
     },
+    changelog: "Changelog",
   },
   search: {
     placeholder: "Search...",
