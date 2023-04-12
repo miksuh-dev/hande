@@ -13,7 +13,7 @@ const Navbar: Component = () => {
           href="/room"
           class="flex self-center whitespace-nowrap text-xl font-semibold text-custom-primary-700"
         >
-          <span class="mr-2 h-6 w-6">
+          <span class="mr-2 h-6 w-6 hover:animate-spin">
             <CrownIcon />
           </span>
           Hande
