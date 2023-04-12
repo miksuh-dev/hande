@@ -3,6 +3,7 @@ import { observable } from "@trpc/server/observable";
 import { DateTime } from "luxon";
 import { z } from "zod";
 import { OnlineUser } from "types/auth";
+import { getSessionVersion } from "utils/auth";
 import { getCurrentSong } from "../../common/playlist/internal";
 import {
   addSongs,
@@ -50,6 +51,7 @@ export const roomRouter = t.router({
       messages,
       users: [...userState.users.values()].map((u) => u.user),
       sources: SOURCES,
+      version: getSessionVersion().version,
     };
   }),
   addSong: onlineUserProcedure

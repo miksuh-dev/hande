@@ -171,6 +171,7 @@ function RoomData() {
         songs: [],
         playing: undefined,
         sources: [],
+        version: undefined,
       },
     }
   );
