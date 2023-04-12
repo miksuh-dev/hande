@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/miksuh-dev/hande/compare/v2.4.0...v2.5.0) (2023-04-12)
+
+
+### Features
+
+* circle on user menu when unread messages ([b3596a3](https://github.com/miksuh-dev/hande/commit/b3596a32f843fb822943af5a88657f9b369aa467))
+
 ## [2.4.0](https://github.com/miksuh-dev/hande/compare/v2.3.0...v2.4.0) (2023-04-11)
 
 
