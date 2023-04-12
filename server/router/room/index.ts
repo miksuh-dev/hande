@@ -3,7 +3,6 @@ import { observable } from "@trpc/server/observable";
 import { DateTime } from "luxon";
 import { z } from "zod";
 import { OnlineUser } from "types/auth";
-import { getSessionVersion } from "utils/auth";
 import { getCurrentSong } from "../../common/playlist/internal";
 import {
   addSongs,
@@ -18,6 +17,7 @@ import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import { Song, SongTypeSong } from "../../types/prisma";
 import { SOURCES, SourceType } from "../../types/source";
+import { getSessionVersion } from "../../utils/auth";
 import { schemaForType } from "../../utils/trpc";
 import * as userState from "../user/state";
 import { authedProcedure, onlineUserProcedure } from "../utils";
