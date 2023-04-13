@@ -1,5 +1,30 @@
+import fs from "fs";
 import ee from "../../eventEmitter";
 import { Message, MessageOptions, MessageType } from "./types";
+
+const HISTORY_FILE = "message-history.json";
+
+export const store = () => {
+  const data = JSON.stringify(messages);
+
+  console.log(`Saved ${messages.length} messages to ${HISTORY_FILE}`);
+
+  return fs.writeFileSync(HISTORY_FILE, data);
+};
+
+export const load = () => {
+  try {
+    const content = fs.readFileSync(HISTORY_FILE, "utf-8");
+
+    const data = JSON.parse(content) as Message[];
+
+    console.log(`Loaded ${data.length} messages from ${HISTORY_FILE}`);
+
+    messages.unshift(...data);
+  } catch (e) {
+    console.log(`No message history found in ${HISTORY_FILE}`);
+  }
+};
 
 export const messages = new Array<Message>();
 

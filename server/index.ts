@@ -7,6 +7,7 @@ import ws from "ws";
 import client from "./common/mumble";
 import { createContext } from "./context";
 import { appRouter, AppRouter } from "./router";
+import * as messages from "./router/room/message";
 
 client.on("ready", () => {
   console.log("ready");
@@ -79,8 +80,14 @@ wss.on("connection", () => {
   console.log(`Connection (${wss.clients.size})`);
 });
 
+process.on("exit", () => {
+  messages.store();
+});
+
 process.on("SIGTERM", () => {
   wsHandler.broadcastReconnectNotification();
   wss.close();
   server.close();
 });
+
+messages.load();
