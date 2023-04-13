@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/miksuh-dev/hande/compare/v2.5.0...v2.6.0) (2023-04-13)
+
+
+### Features
+
+* store chat log between server restarts ([46ea91a](https://github.com/miksuh-dev/hande/commit/46ea91afd7c6420382a594ff08c5a9103a2ed9e7))
+
+
+### Bug Fixes
+
+* song name parsing fails sometimes in chat ([1ffa7f0](https://github.com/miksuh-dev/hande/commit/1ffa7f07eba3eb2450e6706c7dfba75d05481781))
+
 ## [2.5.0](https://github.com/miksuh-dev/hande/compare/v2.4.0...v2.5.0) (2023-04-12)
 
 
