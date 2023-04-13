@@ -17,20 +17,21 @@ const ChatMessageItem: Component<Props> = (props) => {
   const [t] = useI18n();
 
   const message = createMemo(() => {
-    const firstItem = props.item[0];
-    const rawMessage: string = t(props.content, {
-      item: firstItem?.title ?? "",
-      error: props.error ?? "",
+    const messageProps = {
       count: props.item.length.toString(),
-    });
+      ...(props.item[0] && { item: htmlDecode(props.item[0].title) }),
+      ...(props.error && { error: props.error }),
+    };
 
-    if (!firstItem || props.item.length > 1) {
+    const rawMessage: string = t(props.content, messageProps);
+
+    const { item } = messageProps;
+
+    if (!item || props.item.length > 1) {
       return {
         item: rawMessage,
       };
     }
-
-    const item = htmlDecode(firstItem.title);
 
     const [left, right] = rawMessage.split(`"${item}"`);
 
