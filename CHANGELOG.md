@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.7.1](https://github.com/miksuh-dev/hande/compare/v2.7.0...v2.7.1) (2023-08-04)
+
+
+### Bug Fixes
+
+* build failing to invalid import ([655d89c](https://github.com/miksuh-dev/hande/commit/655d89c9214d17550ea7cfa13432e71da4455203))
+
 ## [2.7.0](https://github.com/miksuh-dev/hande/compare/v2.6.0...v2.7.0) (2023-08-04)
 
 
