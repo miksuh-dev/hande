@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/miksuh-dev/hande/compare/v2.6.0...v2.7.0) (2023-08-04)
+
+
+### Features
+
+* Add random song to queue from history ([89a90be](https://github.com/miksuh-dev/hande/commit/89a90be73eb316a6d9196a11d61b6f573f7d2b56))
+
 ## [2.6.0](https://github.com/miksuh-dev/hande/compare/v2.5.0...v2.6.0) (2023-04-13)
 
 
