@@ -1,5 +1,6 @@
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
+import { SourceType } from "types/source";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendMessage } from "../../router/room/message";
@@ -156,6 +157,53 @@ export const clearPlaylist = async (requester: OnlineUser) => {
   ee.emit(`onUpdate`, { song: { remove: songs.map((s) => s.id) } });
 
   return songs;
+};
+
+export const addRandomSong = async (requester: OnlineUser) => {
+  const totalSongs = await prisma.song.count({
+    where: {
+      skipped: false,
+      ended: true,
+      type: SourceType.SONG,
+    },
+  });
+
+  const song = await prisma.song.findFirstOrThrow({
+    where: {
+      skipped: false,
+      ended: true,
+      type: SourceType.SONG,
+    },
+    skip: Math.floor(Math.random() * totalSongs),
+  });
+
+  const addedSong = (await prisma.song.create({
+    data: {
+      url: song.url,
+      contentId: song.contentId,
+      title: song.title,
+      thumbnail: song.thumbnail,
+      requester: requester.name,
+      type: song.type,
+    },
+  })) as Song;
+
+  sendMessage(`event.common.addedRandom`, {
+    user: requester,
+    type: MessageType.ACTION,
+    item: [addedSong],
+  });
+
+  ee.emit(`onUpdate`, { song: { add: [addedSong] } });
+
+  if (!getCurrentSong()) {
+    const nextSong = await getNextSong();
+    if (nextSong) {
+      await addSongToQueue(nextSong);
+    }
+  }
+
+  return addedSong;
 };
 
 export const shufflePlaylist = async (requester: OnlineUser) => {

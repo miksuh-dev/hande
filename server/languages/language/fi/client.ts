@@ -47,6 +47,7 @@ export default {
       showVideo: "Näytä video",
       hideVideo: "Piilota video",
       noSelections: "Ei valintoja",
+      addRandomSong: "Lisää satunnainen kappale",
     },
     source: {
       song: {
@@ -79,6 +80,7 @@ export default {
       clearedPlaylist: "Soittolista tyhjennetty",
       shuffledPlaylist: "Soittolista sekoitettu",
       movedSong: "Kappaleen sijaintia vaihdettu",
+      addedRandom: "Lisättiin satunnainen kappale",
     },
     source: {
       song: {
@@ -155,6 +157,7 @@ export default {
       clearedPlaylist: "tyhjensi soittolistan.",
       shuffledPlaylist: "sekoitti soittolistan.",
       movedSong: 'vaihtoi kappaleen "{{ item }}" sijaintia jonossa.',
+      addedRandom: 'lisäsi sattumanvaraisen kappaleen "{{ item }}" jonoon.',
     },
     source: {
       song: {

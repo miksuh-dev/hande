@@ -5,6 +5,7 @@ import { z } from "zod";
 import { OnlineUser } from "types/auth";
 import { getCurrentSong } from "../../common/playlist/internal";
 import {
+  addRandomSong,
   addSongs,
   clearPlaylist,
   movePosition,
@@ -71,6 +72,13 @@ export const roomRouter = t.router({
 
       return addSongs(input, onlineUser);
     }),
+  addRandomSong: onlineUserProcedure.mutation(async ({ ctx }) => {
+    const { onlineUser } = ctx;
+
+    await addRandomSong(onlineUser);
+
+    return true;
+  }),
   removeSong: onlineUserProcedure
     .input(
       z.object({

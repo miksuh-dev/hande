@@ -47,6 +47,7 @@ export default {
       showVideo: "Show video",
       hideVideo: "Hide video",
       noSelections: "No selections",
+      addRandomSong: "Add random song",
     },
     source: {
       song: {
@@ -78,6 +79,7 @@ export default {
       clearedPlaylist: "Playlist cleared",
       shuffledPlaylist: "Playlist shuffled",
       movedSong: "Moved song",
+      addedRandom: "Added random song",
     },
     source: {
       song: {
@@ -154,6 +156,7 @@ export default {
       clearedPlaylist: "cleared playlist.",
       shuffledPlaylist: "shuffled playlist.",
       movedSong: 'changed song "{{ item }}" position in queue.',
+      addedRandom: 'added random song "{{ item }}" to queue.',
     },
     source: {
       song: {
