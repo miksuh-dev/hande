@@ -48,6 +48,7 @@ export default {
       hideVideo: "Hide video",
       noSelections: "No selections",
       addRandomSong: "Add random song",
+      randomSong: "Randomly added song",
     },
     source: {
       song: {

@@ -1,5 +1,5 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { SkipSongIcon } from "components/common/icon";
+import { RandomIcon, SkipSongIcon } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Component, Show } from "solid-js";
 import { Song, PlayingSong } from "trpc/types";
@@ -41,11 +41,26 @@ const PlayingComponent: Component<Props> = (props) => {
                 >
                   <YoutubeEmbedding song={song} />
                 </Show>
-                <div class="flex flex-col justify-center py-4">
-                  <h1>{htmlDecode(song.title)}</h1>
-                  <p>
-                    {t("common.requester")}: {song.requester}
-                  </p>
+                <div class="flex justify-center">
+                  <div class="flex flex-col justify-center py-4">
+                    <div class="flex flex-row space-x-4 ">
+                      <Show when={song.random}>
+                        <div class="flex items-center">
+                          <span class="h-10 w-10">
+                            <Tooltip text={t("tooltip.common.randomSong")}>
+                              <RandomIcon />
+                            </Tooltip>
+                          </span>
+                        </div>
+                      </Show>
+                      <div>
+                        <h1>{htmlDecode(song.title)}</h1>
+                        <p>
+                          {t("common.requester")}: {song.requester}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="pr-2">

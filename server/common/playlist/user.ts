@@ -202,6 +202,7 @@ export const addRandomSong = async (requester: OnlineUser) => {
       requester: requester.name,
       type: song.type,
       position,
+      random: true,
     },
   })) as Song;
 

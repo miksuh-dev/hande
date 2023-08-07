@@ -48,6 +48,7 @@ export default {
       hideVideo: "Piilota video",
       noSelections: "Ei valintoja",
       addRandomSong: "Lisää satunnainen kappale",
+      randomSong: "Satunnaisesti lisätty kappale",
     },
     source: {
       song: {

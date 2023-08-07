@@ -20,4 +20,5 @@ model Song {
   requester  String
   position   Int @default(0)
   type       String
+  random     Boolean @default(false)
 }

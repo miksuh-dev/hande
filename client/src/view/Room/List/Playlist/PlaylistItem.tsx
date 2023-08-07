@@ -1,8 +1,8 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { createSortable, useDragDropContext } from "@thisbeyond/solid-dnd";
-import { CrossIcon, UpArrowIcon } from "components/common/icon";
+import { CrossIcon, RandomIcon, UpArrowIcon } from "components/common/icon";
 import Tooltip from "components/Tooltip";
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
 import { Song } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongImage from "../../common/SongImage";
@@ -32,10 +32,23 @@ const PlayListItem: Component<Props> = (props) => {
       <div class="flex flex-row space-x-8">
         <SongImage song={props.song} size={"small"} />
         <div class="flex select-none flex-col py-4">
-          <h1>{htmlDecode(props.song.title)}</h1>
-          <p>
-            {t("common.requester")}: {props.song.requester}
-          </p>
+          <div class="flex flex-row space-x-4">
+            <Show when={props.song.random}>
+              <div class="flex flex-row space-x-2 items-center">
+                <span class="h-8 w-8">
+                  <Tooltip text={t("tooltip.common.randomSong")}>
+                    <RandomIcon />
+                  </Tooltip>
+                </span>
+              </div>
+            </Show>
+            <div>
+              <h1>{htmlDecode(props.song.title)}</h1>
+              <p>
+                {t("common.requester")}: {props.song.requester}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
