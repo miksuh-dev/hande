@@ -168,6 +168,22 @@ export const addRandomSong = async (requester: OnlineUser) => {
     },
   });
 
+  const lastSong = await prisma.song.findFirst({
+    where: {
+      ended: false,
+      skipped: false,
+    },
+    orderBy: [
+      {
+        position: "desc",
+      },
+      {
+        createdAt: "desc",
+      },
+    ],
+  });
+  const position = lastSong ? lastSong.position + 1 : 0;
+
   const song = await prisma.song.findFirstOrThrow({
     where: {
       skipped: false,
@@ -185,6 +201,7 @@ export const addRandomSong = async (requester: OnlineUser) => {
       thumbnail: song.thumbnail,
       requester: requester.name,
       type: song.type,
+      position,
     },
   })) as Song;
 
