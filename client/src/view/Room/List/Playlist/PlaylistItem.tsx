@@ -31,7 +31,7 @@ const PlayListItem: Component<Props> = (props) => {
     >
       <div class="flex flex-row space-x-8">
         <SongImage song={props.song} size={"small"} />
-        <div class="flex select-none flex-col py-4">
+        <div class="flex select-none flex-col py-4 justify-center">
           <div class="flex flex-row space-x-4">
             <Show when={props.song.random}>
               <div class="flex flex-row space-x-2 items-center">
