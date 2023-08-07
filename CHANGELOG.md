@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.1](https://github.com/miksuh-dev/hande/compare/v2.8.0...v2.8.1) (2023-08-07)
+
+
+### Bug Fixes
+
+* playlist item not in center ([a75031d](https://github.com/miksuh-dev/hande/commit/a75031d3ba7c735427f2fc9311978fc8cf8bd783))
+
 ## [2.8.0](https://github.com/miksuh-dev/hande/compare/v2.7.1...v2.8.0) (2023-08-07)
 
 
