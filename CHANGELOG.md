@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.0](https://github.com/miksuh-dev/hande/compare/v2.7.1...v2.8.0) (2023-08-07)
+
+
+### Features
+
+* show if song is randomly added to playlist ([65f07ff](https://github.com/miksuh-dev/hande/commit/65f07ff1dca59b27eec1f702058e28397ecb345b))
+
+
+### Bug Fixes
+
+* random song was to beginning of the playlist ([4a98532](https://github.com/miksuh-dev/hande/commit/4a98532105afe74a791218c84d3884c0630d7850))
+
 ### [2.7.1](https://github.com/miksuh-dev/hande/compare/v2.7.0...v2.7.1) (2023-08-04)
 
 
