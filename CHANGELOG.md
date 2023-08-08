@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/miksuh-dev/hande/compare/v2.8.2...v2.9.0) (2023-08-08)
+
+
+### Features
+
+* allow customizing chat message limit ([f441eba](https://github.com/miksuh-dev/hande/commit/f441ebadda26d58be26f64d55b424e706e6eeae7))
+
 ### [2.8.2](https://github.com/miksuh-dev/hande/compare/v2.8.1...v2.8.2) (2023-08-08)
 
 
