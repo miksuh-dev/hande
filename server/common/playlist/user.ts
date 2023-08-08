@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
 import ee from "../../eventEmitter";
@@ -160,51 +161,59 @@ export const clearPlaylist = async (requester: OnlineUser) => {
 };
 
 export const addRandomSong = async (requester: OnlineUser) => {
-  const totalSongs = await prisma.song.count({
-    where: {
-      skipped: false,
-      ended: true,
-      type: SourceType.SONG,
-    },
-  });
+  const addedSong = await prisma.$transaction(
+    async (transaction) => {
+      const totalSongs = await transaction.song.count({
+        where: {
+          skipped: false,
+          ended: true,
+          type: SourceType.SONG,
+        },
+      });
 
-  const lastSong = await prisma.song.findFirst({
-    where: {
-      ended: false,
-      skipped: false,
-    },
-    orderBy: [
-      {
-        position: "desc",
-      },
-      {
-        createdAt: "desc",
-      },
-    ],
-  });
-  const position = lastSong ? lastSong.position + 1 : 0;
+      const lastSong = await transaction.song.findFirst({
+        where: {
+          ended: false,
+          skipped: false,
+        },
+        orderBy: [
+          {
+            position: "desc",
+          },
+          {
+            createdAt: "desc",
+          },
+        ],
+      });
 
-  const song = await prisma.song.findFirstOrThrow({
-    where: {
-      skipped: false,
-      ended: true,
-      type: SourceType.SONG,
-    },
-    skip: Math.floor(Math.random() * totalSongs),
-  });
+      const randomSongIndex = Math.floor(Math.random() * totalSongs);
+      const song = await prisma.song.findFirstOrThrow({
+        where: {
+          skipped: false,
+          ended: true,
+          type: SourceType.SONG,
+        },
+        skip: randomSongIndex,
+      });
 
-  const addedSong = (await prisma.song.create({
-    data: {
-      url: song.url,
-      contentId: song.contentId,
-      title: song.title,
-      thumbnail: song.thumbnail,
-      requester: requester.name,
-      type: song.type,
-      position,
-      random: true,
+      const position = lastSong ? lastSong.position + 1 : 0;
+      return (await transaction.song.create({
+        data: {
+          url: song.url,
+          contentId: song.contentId,
+          title: song.title,
+          thumbnail: song.thumbnail,
+          requester: requester.name,
+          type: song.type,
+          position,
+          random: true,
+        },
+      })) as Song;
     },
-  })) as Song;
+    {
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+    }
+  );
 
   sendMessage(`event.common.addedRandom`, {
     user: requester,
