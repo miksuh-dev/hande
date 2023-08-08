@@ -197,7 +197,7 @@ export const addRandomSong = async (requester: OnlineUser) => {
       });
 
       const position = lastSong ? lastSong.position + 1 : 0;
-      return (await transaction.song.create({
+      return transaction.song.create({
         data: {
           url: song.url,
           contentId: song.contentId,
@@ -208,7 +208,7 @@ export const addRandomSong = async (requester: OnlineUser) => {
           position,
           random: true,
         },
-      })) as Song;
+      }) as Promise<Song>;
     },
     {
       isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
