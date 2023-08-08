@@ -64,8 +64,10 @@ const createMessage = (content: string, options?: MessageOptions): Message => {
 export const sendMessage = (content: string, options?: MessageOptions) => {
   const message = createMessage(content, options);
 
+  const messageLimit = process.env.CHAT_MESSAGE_LIMIT ?? 100;
+
   messages.push(message);
-  messages.splice(0, messages.length - 100);
+  messages.splice(0, messages.length - Number(messageLimit));
 
   ee.emit(`onUpdate`, { message: { add: message } });
 

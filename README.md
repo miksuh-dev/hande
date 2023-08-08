@@ -76,3 +76,4 @@ Copy `.env.example` to `.env` and fill in the values. The following variables ar
 | `YOUTUBE_DL_LOCATION` | Bot uses yt-dlp to stream videos on youtube. |
 | `RADIO_SEARCH_URL` | Bot searches radio stations from [radio-browser.info](https://radio-browser.info). Insert desired API endpoint URL here |
 | `SERVER_LANGUAGE` | Currently supported languages are: `en` (English) and `fi` (Finnish) |
+| `CHAT_MESSAGE_LIMIT` | Maximum number of chat messages stored on exit and sent visible to user |
