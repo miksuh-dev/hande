@@ -22,3 +22,13 @@ model Song {
   type       String
   random     Boolean @default(false)
 }
+
+model SongRating {
+  id        Int    @id @default(autoincrement())
+  contentId    String   
+  vote     Int
+  voter    String
+  @@unique([contentId, voter], name: "voter_unique")
+  @@index([contentId], name: "contentId_index")
+}
+

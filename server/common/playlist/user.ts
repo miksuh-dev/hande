@@ -1,14 +1,17 @@
+import { TRPCError } from "@trpc/server";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendMessage } from "../../router/room/message";
 import { MessageType } from "../../router/room/types";
+import { VoteType } from "../../types/app";
 import { SourceType } from "../../types/source";
 import {
   addSongToQueue,
   getCurrentSong,
   getNextSong,
+  getSongRating,
   removeSongFromQueue,
   stopCurrentSong,
 } from "./internal";
@@ -131,6 +134,59 @@ export const removeSong = async (id: number, user: OnlineUser) => {
   return song;
 };
 
+export const voteSong = async (
+  contentId: string,
+  vote: VoteType,
+  user: OnlineUser
+) => {
+  const voteValue = vote === VoteType.UP ? 1 : -1;
+
+  const existingVote = await prisma.songRating.findFirst({
+    where: {
+      contentId,
+      voter: user.name,
+    },
+  });
+
+  if (existingVote?.vote === voteValue) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "error.alreadyVoted",
+    });
+  }
+
+  const data = {
+    contentId,
+    voter: user.name,
+    vote: voteValue,
+  };
+
+  const addedVote = await prisma.songRating.upsert({
+    where: {
+      voter_unique: {
+        contentId,
+        voter: user.name,
+      },
+    },
+    update: data,
+    create: data,
+  });
+
+  const currentSong = getCurrentSong();
+  if (currentSong && currentSong.contentId === contentId) {
+    const rating = await getSongRating(contentId);
+
+    const updatedSong = {
+      ...currentSong,
+      rating,
+    };
+
+    ee.emit(`onUpdate`, { song: { setPlaying: updatedSong } });
+  }
+
+  return addedVote;
+};
+
 export const clearPlaylist = async (requester: OnlineUser) => {
   const songs = await prisma.song.findMany({
     where: {
@@ -160,22 +216,29 @@ export const clearPlaylist = async (requester: OnlineUser) => {
 };
 
 export const addRandomSong = async (requester: OnlineUser) => {
-  const totalSongs = await prisma.song.count({
-    where: {
-      skipped: false,
-      ended: true,
-      type: SourceType.SONG,
-    },
-  });
+  const rows: { contentId: string }[] = await prisma.$queryRaw`
+      SELECT s.contentId
+      FROM SONG as s 
+      LEFT JOIN (
+        SELECT vote as vote, contentId, voter
+        FROM SongRating
+        WHERE vote != -1
+      ) sr ON (s.contentId = sr.contentId) 
+      WHERE s.type = 'song'
+      GROUP BY s.contentId, sr.voter
+    `;
 
-  const randomSongIndex = Math.floor(Math.random() * totalSongs);
+  const randomSongIndex = Math.floor(Math.random() * rows.length);
+  const randomSongContentId = rows[randomSongIndex]?.contentId;
+  if (!randomSongContentId) {
+    throw new Error("No songs found");
+  }
+
   const song = await prisma.song.findFirstOrThrow({
     where: {
-      skipped: false,
-      ended: true,
       type: SourceType.SONG,
+      contentId: randomSongContentId,
     },
-    skip: randomSongIndex,
   });
 
   const addedSong = await prisma.$transaction(async (transaction) => {
@@ -204,6 +267,8 @@ export const addRandomSong = async (requester: OnlineUser) => {
         requester: requester.name,
         type: song.type,
         position,
+        ended: false,
+        skipped: false,
         random: true,
       },
     }) as Promise<Song>;

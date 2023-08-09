@@ -1,4 +1,4 @@
-import { Song } from "trpc/types";
+import { Song, VoteType } from "trpc/types";
 import { useRouteData } from "@solidjs/router";
 import useSnackbar from "hooks/useSnackbar";
 import { Component, createSignal } from "solid-js";
@@ -35,6 +35,21 @@ const PlayingComponent: Component = () => {
     }
   };
 
+  const handleVote = async (contentId: string, vote: VoteType) => {
+    try {
+      await trpcClient.room.voteSong.mutate({
+        contentId,
+        vote,
+      });
+
+      snackbar.success(t("snackbar.common.voted"));
+    } catch (err) {
+      if (err instanceof Error) {
+        snackbar.error(t(err.message) ?? err.message);
+      }
+    }
+  };
+
   return (
     <div class="flex-0 flex flex-col rounded-md bg-white dark:bg-neutral-900">
       <div class="flex border-b border-neutral-300 dark:border-neutral-700">
@@ -63,6 +78,7 @@ const PlayingComponent: Component = () => {
           playing={room().playing}
           showVideo={showVideo()}
           onSkip={handleSkip}
+          onVote={handleVote}
         />
       </div>
     </div>

@@ -74,6 +74,7 @@ export default {
     tokenExpired: "Token expired",
     oldVersion: "Your session is outdated",
     socketReconnecting: "Socket connection lost. Reconnecting...",
+    alreadyVoted: "You have already voted",
   },
   snackbar: {
     common: {
@@ -81,6 +82,7 @@ export default {
       shuffledPlaylist: "Playlist shuffled",
       movedSong: "Moved song",
       addedRandom: "Added random song",
+      voted: "Vote given",
     },
     source: {
       song: {

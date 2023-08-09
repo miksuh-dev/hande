@@ -137,6 +137,19 @@ const createStream = async (song: Song) => {
   throw new Error("Unknown song type");
 };
 
+export const getSongRating = async (contentId: string) => {
+  const rating = await prisma.songRating.aggregate({
+    where: {
+      contentId,
+    },
+    _sum: {
+      vote: true,
+    },
+  });
+
+  return rating._sum.vote ?? 0;
+};
+
 async function onPlayStart(this: ProcessQueueItem) {
   try {
     this.status = ProcessQueueItemStatus.processing;
@@ -173,14 +186,29 @@ async function onPlayStart(this: ProcessQueueItem) {
       this.song.startedAt = DateTime.now();
     }
 
-    await prisma.song.update({
-      where: {
-        id: this.song.id,
-      },
-      data: {
-        started: true,
-      },
-    });
+    const [rating] = await Promise.all([
+      getSongRating(this.song.contentId),
+      prisma.song.update({
+        where: {
+          id: this.song.id,
+        },
+        data: {
+          started: true,
+        },
+      }),
+    ]);
+
+    this.song.rating = rating;
+
+    const index = processingQueue.findIndex(
+      (item) => item.song.id === this.song.id
+    );
+
+    if (index === -1) {
+      throw new Error("Failed to find song in queue");
+    }
+
+    processingQueue[index] = this;
 
     ee.emit(`onUpdate`, {
       song: { setPlaying: this.song },

@@ -12,13 +12,19 @@ import {
   playNext,
   removeSong,
   shufflePlaylist,
+  voteSong,
 } from "../../common/playlist/user";
 import { PAGE_SIZE } from "../../constants";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
+import { VoteType } from "../../types/app";
 import { Song, SongTypeSong } from "../../types/prisma";
 import { SOURCES, SourceType } from "../../types/source";
 import { getSessionVersion } from "../../utils/auth";
+import {
+  enrichUpdateMessageWithUserVote,
+  enrichWithUserVote,
+} from "../../utils/middleware";
 import { schemaForType } from "../../utils/trpc";
 import * as userState from "../user/state";
 import { authedProcedure, onlineUserProcedure } from "../utils";
@@ -28,7 +34,7 @@ import { MessageType, UpdateEvent } from "./types";
 
 export const roomRouter = t.router({
   get: authedProcedure.query(async ({ ctx }) => {
-    const { prisma } = ctx;
+    const { prisma, user } = ctx;
 
     const playlist = await prisma.song.findMany({
       where: {
@@ -47,7 +53,7 @@ export const roomRouter = t.router({
     });
 
     return {
-      playing: getCurrentSong(),
+      playing: await enrichWithUserVote(getCurrentSong(), user),
       songs: playlist as Song[],
       messages,
       users: [...userState.users.values()].map((u) => u.user),
@@ -136,6 +142,22 @@ export const roomRouter = t.router({
 
       return removeSong(input.id, onlineUser);
     }),
+  voteSong: onlineUserProcedure
+    .input(
+      z.object({
+        contentId: z.string().min(1),
+        vote: z.enum([VoteType.UP, VoteType.DOWN]),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { onlineUser } = ctx;
+      const { contentId, vote } = input;
+
+      await voteSong(contentId, vote, onlineUser);
+
+      return true;
+    }),
+
   clearPlaylist: onlineUserProcedure.mutation(async ({ ctx }) => {
     const { onlineUser } = ctx;
 
@@ -323,7 +345,11 @@ export const roomRouter = t.router({
 
       return observable<Partial<UpdateEvent>>((emit) => {
         const onUpdate = (updatedLobby: Partial<UpdateEvent>) => {
-          emit.next(updatedLobby);
+          void (async () => {
+            emit.next(
+              await enrichUpdateMessageWithUserVote(updatedLobby, user)
+            );
+          })();
         };
 
         ee.on(`onUpdate`, onUpdate);

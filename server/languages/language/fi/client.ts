@@ -75,6 +75,7 @@ export default {
     tokenExpired: "Kirjautumisesi on vanhentunut",
     oldVersion: "Istuntosi versio on vanhentunut",
     socketReconnecting: "Yhteys palvelimeen katkesi. Yhdistetään uudelleen...",
+    alreadyVoted: "Olet jo äänestänyt tätä kappaletta",
   },
   snackbar: {
     common: {
@@ -82,6 +83,7 @@ export default {
       shuffledPlaylist: "Soittolista sekoitettu",
       movedSong: "Kappaleen sijaintia vaihdettu",
       addedRandom: "Lisättiin satunnainen kappale",
+      voted: "Ääni annettu",
     },
     source: {
       song: {

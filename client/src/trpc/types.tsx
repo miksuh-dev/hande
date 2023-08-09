@@ -2,13 +2,19 @@ import type { inferProcedureInput, inferProcedureOutput } from "@trpc/server";
 import { inferObservableValue } from "@trpc/server/observable";
 import type { AppRouter } from "../../../server/router";
 import { SourceType } from "../../../server/types/source";
+import { VoteType } from "../../../server/types/app";
 
 export type Room = inferProcedureOutput<AppRouter["room"]["get"]>;
 export type Song = Room["songs"][number];
 
 export type Source = Room["sources"][number];
 
-export type PlayingSong = Song & { startedAt: string; duration: number };
+export type PlayingSong = Song & {
+  startedAt: string;
+  duration: number;
+  rating: number;
+  vote?: VoteType;
+};
 
 export type User = Room["users"][number];
 export type IncomingMessage = Room["messages"][number];
@@ -48,4 +54,4 @@ export type StatisticsInput = inferProcedureInput<
   AppRouter["room"]["getStatistics"]
 >;
 
-export { SourceType };
+export { SourceType, VoteType };

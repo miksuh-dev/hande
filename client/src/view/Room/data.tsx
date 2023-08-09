@@ -101,8 +101,10 @@ const handleUpdateEvent = (
 
     if (event.song.update) {
       const updatedSongs = event.song.update;
+      console.log("updatedSongs", updatedSongs);
 
       if (!updatedSongs?.length) {
+        console.log("nope");
         return existingRoom;
       }
 
@@ -122,6 +124,13 @@ const handleUpdateEvent = (
 
       if (!song) {
         return { ...existingRoom, playing: undefined };
+      }
+
+      if (song.contentId === existingRoom.playing?.contentId) {
+        return {
+          ...existingRoom,
+          playing: { ...existingRoom.playing, ...song },
+        };
       }
 
       return {
