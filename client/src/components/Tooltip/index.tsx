@@ -1,6 +1,7 @@
 import { Component, createSignal, JSX, Match, Show, Switch } from "solid-js";
 import { Portal } from "solid-js/web";
 import trackClickOutside from "utils/trackClickOutside";
+import trackMoveOutside from "utils/trackMoveOutside";
 
 type Props = {
   children: JSX.Element;
@@ -119,7 +120,15 @@ const Tooltip: Component<Props> = (props) => {
                     }
                   }}
                 >
-                  <div class="h-full space-y-3 overflow-y-scroll">
+                  <div
+                    class="h-full space-y-3 overflow-y-scroll"
+                    ref={(tooltipRef) =>
+                      trackMoveOutside(tooltipRef, () => {
+                        setVisible(false);
+                        setToggle(false);
+                      })
+                    }
+                  >
                     {props.content}
                   </div>
                 </div>

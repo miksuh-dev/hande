@@ -1,4 +1,10 @@
-import { Component, createMemo, For } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createMemo,
+  createSignal,
+  For,
+} from "solid-js";
 import { Show } from "solid-js";
 import { DateTime } from "luxon";
 import { htmlDecode } from "utils/parse";
@@ -42,7 +48,7 @@ const ChatMessageItem: Component<Props> = (props) => {
     <span class="inline">
       <Show when={message().left}>{message().left}</Show>
       <Tooltip
-        dynamic={props.item.length > 1}
+        dynamic
         content={
           <For each={props.item}>
             {(item) => (
@@ -52,8 +58,8 @@ const ChatMessageItem: Component<Props> = (props) => {
                   <h3 class="text-md text-left font-medium">
                     {htmlDecode(item.title ?? "")}
                   </h3>
-                  <div class="space-x-4 self-start text-xs font-medium">
-                    <span class="text-neutral-300">
+                  <div class="flex flex-col text-xs font-medium items-start space-y-1">
+                    <p class="text-neutral-300">
                       {t("common.requestedAt")}
                       {": "}
                       {item.requester}
@@ -63,7 +69,15 @@ const ChatMessageItem: Component<Props> = (props) => {
                       })
                         .setZone("local")
                         .toFormat("dd.MM.yyyy HH:mm")}
-                    </span>
+                    </p>
+                    <a
+                      href={"https://www.youtube.com/watch?v=" + item.contentId}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-blue-500 hover:underline inline-block"
+                    >
+                      Youtube
+                    </a>
                   </div>
                 </div>
               </div>
