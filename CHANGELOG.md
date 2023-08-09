@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0](https://github.com/miksuh-dev/hande/compare/v2.9.1...v2.10.0) (2023-08-09)
+
+
+### Features
+
+* add song rating ([7f600d8](https://github.com/miksuh-dev/hande/commit/7f600d89494639b4ac133ec81a69c9f180c0fb0a))
+* Show youtube link on chat item tooltips ([732ce75](https://github.com/miksuh-dev/hande/commit/732ce75587c255f24ad3b4b3f9a6d2ad2a2a2e80))
+
 ### [2.9.1](https://github.com/miksuh-dev/hande/compare/v2.9.0...v2.9.1) (2023-08-09)
 
 
