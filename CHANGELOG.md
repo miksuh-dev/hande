@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.9.1](https://github.com/miksuh-dev/hande/compare/v2.9.0...v2.9.1) (2023-08-09)
+
+
+### Bug Fixes
+
+* adding random songs quickly timeouts ([85a484e](https://github.com/miksuh-dev/hande/commit/85a484e8a4a4c8b8c7f94553fb9bfa8ad3dbbd20))
+
 ## [2.9.0](https://github.com/miksuh-dev/hande/compare/v2.8.2...v2.9.0) (2023-08-08)
 
 
