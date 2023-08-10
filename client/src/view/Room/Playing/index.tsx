@@ -35,9 +35,14 @@ const PlayingComponent: Component = () => {
     }
   };
 
-  const handleVote = async (contentId: string, vote: VoteType) => {
+  const handleVote = async (
+    songId: number,
+    contentId: string,
+    vote: VoteType
+  ) => {
     try {
       await trpcClient.room.voteSong.mutate({
+        songId,
         contentId,
         vote,
       });

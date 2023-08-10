@@ -135,6 +135,7 @@ export const removeSong = async (id: number, user: OnlineUser) => {
 };
 
 export const voteSong = async (
+  songId: number,
   contentId: string,
   vote: VoteType,
   user: OnlineUser
@@ -143,6 +144,7 @@ export const voteSong = async (
 
   const existingVote = await prisma.songRating.findFirst({
     where: {
+      songId,
       contentId,
       voter: user.name,
     },
@@ -157,6 +159,7 @@ export const voteSong = async (
 
   const data = {
     contentId,
+    songId,
     voter: user.name,
     vote: voteValue,
   };
@@ -164,6 +167,7 @@ export const voteSong = async (
   const addedVote = await prisma.songRating.upsert({
     where: {
       voter_unique: {
+        songId,
         contentId,
         voter: user.name,
       },

@@ -145,15 +145,16 @@ export const roomRouter = t.router({
   voteSong: onlineUserProcedure
     .input(
       z.object({
+        songId: z.number().min(1),
         contentId: z.string().min(1),
         vote: z.enum([VoteType.UP, VoteType.DOWN]),
       })
     )
     .mutation(async ({ input, ctx }) => {
       const { onlineUser } = ctx;
-      const { contentId, vote } = input;
+      const { songId, contentId, vote } = input;
 
-      await voteSong(contentId, vote, onlineUser);
+      await voteSong(songId, contentId, vote, onlineUser);
 
       return true;
     }),

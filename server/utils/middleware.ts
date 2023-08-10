@@ -17,6 +17,7 @@ export const enrichWithUserVote = async (
 
   const rating = await prisma.songRating.findFirst({
     where: {
+      songId: song.id,
       contentId: song.contentId,
       voter: user.name,
     },
