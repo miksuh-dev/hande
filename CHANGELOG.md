@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://github.com/miksuh-dev/hande/compare/v2.10.0...v2.11.0) (2023-08-10)
+
+
+### Features
+
+* allow voting once per song play ([e77d12a](https://github.com/miksuh-dev/hande/commit/e77d12aceb2c1fc382fedb80324583048d04a67b))
+
 ## [2.10.0](https://github.com/miksuh-dev/hande/compare/v2.9.1...v2.10.0) (2023-08-09)
 
 
