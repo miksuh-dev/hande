@@ -121,7 +121,7 @@ const Tooltip: Component<Props> = (props) => {
                   }}
                 >
                   <div
-                    class="h-full space-y-3 overflow-y-scroll"
+                    class="h-full space-y-3 overflow-y-auto"
                     ref={(tooltipRef) =>
                       trackMoveOutside(tooltipRef, () => {
                         setVisible(false);
