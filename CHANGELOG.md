@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.13.0](https://github.com/miksuh-dev/hande/compare/v2.11.0...v2.13.0) (2023-09-15)
+
+
+### Features
+
+* show original requster with  random songs ([c9c1bcf](https://github.com/miksuh-dev/hande/commit/c9c1bcf2aaaa62d051c4c4256f8f1bd603d1bfbc))
+
+
+### Bug Fixes
+
+* incorrect original random song requester ([24f0f49](https://github.com/miksuh-dev/hande/commit/24f0f49c32c99423d0325bac9c7bf6d334bd6d82))
+* unnecessary scroll bar when single item ([cd9155f](https://github.com/miksuh-dev/hande/commit/cd9155fadc8dfd71c08e689cdb97f32d2fbf6a0c))
+
 ## [2.12.0](https://github.com/miksuh-dev/hande/compare/v2.11.0...v2.12.0) (2023-09-15)
 
 
