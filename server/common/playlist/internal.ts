@@ -159,7 +159,7 @@ export const getSongOriginalRequester = async (song: Song) => {
         contentId: song.contentId,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     })
     .then((result) => result?.requester);
