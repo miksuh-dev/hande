@@ -8,6 +8,7 @@ Common:
 - [x] English translation
 - [x] Validation of languages, so that there are no missing translations keys
 - [ ] Find way to type enums (Song.type) using Prisma and SQLite
+- [ ] Improve random song selection algorithm (use number table)
 
 To Mumble:
 
@@ -23,6 +24,7 @@ To website:
 - [ ] Statistics
 - [ ] View changelog
 - [x] Disconnect timeout so refreshing page doesn't instantly send leave message
+- [ ] Make playlist show better in smaller screens
 
 ### Bugs:
 
