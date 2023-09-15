@@ -101,6 +101,8 @@ export default {
   },
   common: {
     requester: "Requester",
+    requesterWithOriginal:
+      "Requester: {{ requester }} (original: {{ original }})",
     requestedAt: "Requested at",
     inQueue: "In queue",
     connectionClosed: "Connection closed",

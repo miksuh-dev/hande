@@ -64,7 +64,20 @@ const PlayingComponent: Component<Props> = (props) => {
                         <div>
                           <h1>{htmlDecode(song.title)}</h1>
                           <p>
-                            {t("common.requester")}: {song.requester}
+                            <Show
+                              keyd
+                              when={song.originalRequester}
+                              fallback={`${t("common.requester")}: ${
+                                song.requester
+                              }`}
+                            >
+                              {(originalRequester: string) =>
+                                t("common.requesterWithOriginal", {
+                                  requester: song.requester,
+                                  original: originalRequester,
+                                })
+                              }
+                            </Show>
                           </p>
                         </div>
                       </div>
