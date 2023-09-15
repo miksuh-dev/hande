@@ -7,6 +7,7 @@ export type PlayingSong = Song & {
   duration?: number;
   rating: number;
   vote?: VoteType | undefined;
+  originalRequester?: string;
 };
 
 export enum VoteType {

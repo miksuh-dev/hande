@@ -102,6 +102,8 @@ export default {
   },
   common: {
     requester: "Toivoja",
+    requesterWithOriginal:
+      "Toivoja: {{ requester }} (alkuperäinen: {{ original }})",
     requestedAt: "Toivottu",
     inQueue: "Jonossa",
     connectionClosed: "Yhteys huoneeseen päätettiin",

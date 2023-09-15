@@ -150,6 +150,21 @@ export const getSongRating = async (contentId: string) => {
   return rating._sum.vote ?? 0;
 };
 
+export const getSongOriginalRequester = async (song: Song) => {
+  if (!song.random) return undefined;
+
+  return prisma.song
+    .findFirst({
+      where: {
+        contentId: song.contentId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+    .then((result) => result?.requester);
+};
+
 async function onPlayStart(this: ProcessQueueItem) {
   try {
     this.status = ProcessQueueItemStatus.processing;
@@ -186,8 +201,9 @@ async function onPlayStart(this: ProcessQueueItem) {
       this.song.startedAt = DateTime.now();
     }
 
-    const [rating] = await Promise.all([
+    const [rating, originalRequester] = await Promise.all([
       getSongRating(this.song.contentId),
+      getSongOriginalRequester(this.song),
       prisma.song.update({
         where: {
           id: this.song.id,
@@ -199,6 +215,7 @@ async function onPlayStart(this: ProcessQueueItem) {
     ]);
 
     this.song.rating = rating;
+    if (originalRequester) this.song.originalRequester = originalRequester;
 
     const index = processingQueue.findIndex(
       (item) => item.song.id === this.song.id
