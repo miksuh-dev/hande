@@ -28,7 +28,7 @@ const Result: Component<Props> = (props) => {
 
   return (
     <div class="absolute top-full left-0 right-0 rounded-sm bg-neutral-400 p-2 dark:bg-neutral-900">
-      <div class="space-y-2 overflow-auto">
+      <div class="space-y-2 overflow-auto scrollbar">
         <Show
           when={!props.loading()}
           fallback={

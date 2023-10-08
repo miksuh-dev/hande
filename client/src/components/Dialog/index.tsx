@@ -36,8 +36,8 @@ const PlaylistView: Component<Props> = (props) => {
                 <CrossIcon />
               </button>
             </div>
-            <div class="flex h-full flex-col space-y-4 overflow-hidden p-4">
-              <div class="relative h-full space-y-2 overflow-y-scroll">
+            <div class="flex h-full flex-col space-y-4 overflow-hidden p-4 pr-2">
+              <div class="relative h-full space-y-2 overflow-y-scroll scrollbar pr-4">
                 {props.children}
               </div>
               {props.actions}

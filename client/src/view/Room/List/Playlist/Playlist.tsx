@@ -65,7 +65,7 @@ const PlaylistComponent: Component<Props> = (props) => {
   return (
     <DragDropProvider onDragEnd={onDragEnd} collisionDetector={closestCorners}>
       <DragDropSensors />
-      <div class="overflow-y-none max-h-full space-y-2 overflow-y-auto pr-4">
+      <div class="max-h-full space-y-2 overflow-y-auto pr-4 scrollbar">
         <SortableProvider ids={ids()}>
           <For each={items()}>
             {(song) => (

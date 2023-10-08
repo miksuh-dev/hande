@@ -39,7 +39,7 @@ const RoomChat: Component<Props> = (props) => {
   return (
     <div class="flex flex-1 flex-col">
       <div class="flex h-full flex-col bg-white dark:bg-neutral-900">
-        <div class="flex-1 overflow-y-scroll px-1 pb-3">
+        <div class="flex-1 overflow-y-scroll px-1 pb-3 scrollbar">
           <Show
             when={props.messages().length}
             fallback={

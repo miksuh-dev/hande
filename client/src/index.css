@@ -90,3 +90,34 @@
     @apply bg-neutral-300 rounded-lg appearance-none cursor-pointer border-solid border-neutral-400  dark:border-neutral-600 dark:bg-neutral-700;
   }
 }
+
+@layer utilities {
+  .scrollbar {
+    scrollbar-color: var(--primary-color-800) transparent;
+    scrollbar-width: auto;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    @apply w-1 h-1;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: var(--primary-color-800);
+    @apply rounded-2xl;
+  }
+  .scrollbar::-webkit-scrollbar-thumb:active {
+    background-color: var(--primary-color-300);
+  }
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color-500);
+  }
+
+  /* Scroll track styles (Background) */
+  .scrollbar::-webkit-scrollbar-track {
+    background: "transparent";
+  }
+  .scrollbar::-webkit-scrollbar-track:hover,
+  .scrollbar::-webkit-scrollbar-track:active {
+    background: "transparent";
+  }
+}
