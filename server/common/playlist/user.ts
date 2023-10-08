@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getRandomSong } from "prisma/query";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
 import ee from "../../eventEmitter";
@@ -6,7 +7,6 @@ import prisma from "../../prisma";
 import { sendMessage } from "../../router/room/message";
 import { MessageType } from "../../router/room/types";
 import { VoteType } from "../../types/app";
-import { SourceType } from "../../types/source";
 import {
   addSongToQueue,
   getCurrentSong,
@@ -220,30 +220,7 @@ export const clearPlaylist = async (requester: OnlineUser) => {
 };
 
 export const addRandomSong = async (requester: OnlineUser) => {
-  const rows: { contentId: string }[] = await prisma.$queryRaw`
-      SELECT s.contentId
-      FROM SONG as s 
-      LEFT JOIN (
-        SELECT vote as vote, contentId, voter
-        FROM SongRating
-        WHERE vote != -1
-      ) sr ON (s.contentId = sr.contentId) 
-      WHERE s.type = 'song'
-      GROUP BY s.contentId, sr.voter
-    `;
-
-  const randomSongIndex = Math.floor(Math.random() * rows.length);
-  const randomSongContentId = rows[randomSongIndex]?.contentId;
-  if (!randomSongContentId) {
-    throw new Error("No songs found");
-  }
-
-  const song = await prisma.song.findFirstOrThrow({
-    where: {
-      type: SourceType.SONG,
-      contentId: randomSongContentId,
-    },
-  });
+  const song = await getRandomSong();
 
   const addedSong = await prisma.$transaction(async (transaction) => {
     const lastSong = await transaction.song.findFirst({
