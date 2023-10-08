@@ -13,6 +13,7 @@ import { VoteType } from "trpc/types";
 import SongImage from "../common/SongImage";
 import Progress from "./Progress";
 import YoutubeEmbedding from "./YoutubeEmbedding";
+import VolumeControl from "view/Room/Playing/VolumeControl";
 
 type Props = {
   playing: PlayingSong | undefined;
@@ -136,9 +137,12 @@ const PlayingComponent: Component<Props> = (props) => {
                 </Tooltip>
               </div>
             </div>
-            <Show when={song.duration}>
-              <Progress playing={song} />
-            </Show>
+            <div class="flex flex-row space-x-2">
+              <VolumeControl playing={song} />
+              <Show when={song.duration}>
+                <Progress playing={song} />
+              </Show>
+            </div>
           </div>
         )}
       </Show>

@@ -162,6 +162,7 @@ export default {
       shuffledPlaylist: "shuffled playlist.",
       movedSong: 'changed song "{{ item }}" position in queue.',
       addedRandom: 'added random song "{{ item }}" to queue.',
+      changedVolume: 'changed volume of song "{{ item }}".',
     },
     source: {
       song: {

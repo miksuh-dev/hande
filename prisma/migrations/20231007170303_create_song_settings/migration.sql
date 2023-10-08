@@ -1,0 +1,5 @@
+-- CreateTable
+CREATE TABLE "SongSettings" (
+    "contentId" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "volume" INTEGER NOT NULL DEFAULT 50
+);

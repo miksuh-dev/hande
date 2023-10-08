@@ -15,6 +15,7 @@ export type PlayingSong = Song & {
   rating: number;
   vote?: VoteType;
   originalRequester?: string;
+  volume: number;
 };
 
 export type User = Room["users"][number];

@@ -8,7 +8,7 @@ Common:
 - [x] English translation
 - [x] Validation of languages, so that there are no missing translations keys
 - [ ] Find way to type enums (Song.type) using Prisma and SQLite
-- [ ] Improve random song selection algorithm (use number table)
+- [x] Improve random song selection algorithm
 
 To Mumble:
 

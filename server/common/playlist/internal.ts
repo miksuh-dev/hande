@@ -165,6 +165,19 @@ export const getSongOriginalRequester = async (song: Song) => {
     .then((result) => result?.requester);
 };
 
+export const getSongSettings = async (song: Song) => {
+  return (
+    (await prisma.songSettings.findFirst({
+      where: {
+        contentId: song.contentId,
+      },
+    })) ?? {
+      contentId: song.contentId,
+      volume: 50,
+    }
+  );
+};
+
 async function onPlayStart(this: ProcessQueueItem) {
   try {
     this.status = ProcessQueueItemStatus.processing;
@@ -201,9 +214,10 @@ async function onPlayStart(this: ProcessQueueItem) {
       this.song.startedAt = DateTime.now();
     }
 
-    const [rating, originalRequester] = await Promise.all([
+    const [rating, originalRequester, songSettings] = await Promise.all([
       getSongRating(this.song.contentId),
       getSongOriginalRequester(this.song),
+      getSongSettings(this.song),
       prisma.song.update({
         where: {
           id: this.song.id,
@@ -216,6 +230,10 @@ async function onPlayStart(this: ProcessQueueItem) {
 
     this.song.rating = rating;
     if (originalRequester) this.song.originalRequester = originalRequester;
+
+    this.song.volume = songSettings.volume;
+
+    setVolume(this.song.volume);
 
     const index = processingQueue.findIndex(
       (item) => item.song.id === this.song.id
@@ -265,6 +283,10 @@ async function playSong(this: ProcessQueueItem) {
       .on("error", (message: string) => {
         void onSongError.call(this, message);
       });
+
+    // TODO Temporary solution to prevent too loud song start
+    // This gets overwritten in onPlayStart
+    setVolume(0);
   } catch (e) {
     if (e instanceof Error) {
       void onSongError.call(this, e.message);
@@ -318,4 +340,9 @@ export const getNextSong = async () => {
       },
     ],
   })) as Song | null;
+};
+
+export const setVolume = (volume: number) => {
+  // 50 -> 0.5
+  client.voiceConnection.setVolume(volume / 100);
 };

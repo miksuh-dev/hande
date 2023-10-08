@@ -163,6 +163,7 @@ export default {
       shuffledPlaylist: "sekoitti soittolistan.",
       movedSong: 'vaihtoi kappaleen "{{ item }}" sijaintia jonossa.',
       addedRandom: 'lisäsi sattumanvaraisen kappaleen "{{ item }}" jonoon.',
+      changedVolume: 'vaihtoi kappaleen "{{ item }}" äänenvoimakkuutta.',
     },
     source: {
       song: {

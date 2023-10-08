@@ -74,4 +74,19 @@
   .markdown a {
     @apply text-custom-primary-800 hover:underline dark:text-custom-primary-800;
   }
+
+  /* WebKit/Blink */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    @apply bg-custom-primary-700 w-4 h-4 rounded-lg border-custom-primary-900;
+  }
+
+  /* Firefox */
+  input[type="range"]::-moz-range-thumb {
+    @apply bg-custom-primary-700 w-4 h-4 rounded-lg border-custom-primary-900;
+  }
+
+  input[type="range"] {
+    @apply bg-neutral-300 rounded-lg appearance-none cursor-pointer border-solid border-neutral-400  dark:border-neutral-600 dark:bg-neutral-700;
+  }
 }

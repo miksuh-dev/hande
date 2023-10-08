@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
-import { getRandomSong } from "prisma/query";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
+import { getRandomSong } from "../../prisma/query";
 import { sendMessage } from "../../router/room/message";
 import { MessageType } from "../../router/room/types";
 import { VoteType } from "../../types/app";
@@ -13,6 +13,7 @@ import {
   getNextSong,
   getSongRating,
   removeSongFromQueue,
+  setVolume,
   stopCurrentSong,
 } from "./internal";
 
@@ -189,6 +190,52 @@ export const voteSong = async (
   }
 
   return addedVote;
+};
+
+export const volumeChange = async (
+  contentId: string,
+  volume: number,
+  user: OnlineUser
+) => {
+  const settings = await prisma.songSettings.upsert({
+    create: {
+      contentId,
+      volume,
+    },
+    update: {
+      volume,
+    },
+    where: {
+      contentId,
+    },
+  });
+
+  const song = (await prisma.song.findFirstOrThrow({
+    where: { contentId },
+    orderBy: {
+      createdAt: "asc",
+    },
+  })) as Song;
+
+  const currentSong = getCurrentSong();
+  if (currentSong && currentSong.contentId === contentId) {
+    const updatedSong = {
+      ...currentSong,
+      volume: settings.volume,
+    };
+
+    ee.emit(`onUpdate`, { song: { setPlaying: updatedSong } });
+
+    setVolume(settings.volume);
+  }
+
+  sendMessage(`event.common.changedVolume`, {
+    user,
+    type: MessageType.ACTION,
+    item: [song],
+  });
+
+  return settings;
 };
 
 export const clearPlaylist = async (requester: OnlineUser) => {

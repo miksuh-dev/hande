@@ -12,6 +12,7 @@ import {
   playNext,
   removeSong,
   shufflePlaylist,
+  volumeChange,
   voteSong,
 } from "../../common/playlist/user";
 import { PAGE_SIZE } from "../../constants";
@@ -158,7 +159,21 @@ export const roomRouter = t.router({
 
       return true;
     }),
+  changeVolume: onlineUserProcedure
+    .input(
+      z.object({
+        contentId: z.string().min(1),
+        volume: z.number().min(0).max(100),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { onlineUser } = ctx;
+      const { contentId, volume } = input;
 
+      await volumeChange(contentId, volume, onlineUser);
+
+      return true;
+    }),
   clearPlaylist: onlineUserProcedure.mutation(async ({ ctx }) => {
     const { onlineUser } = ctx;
 
