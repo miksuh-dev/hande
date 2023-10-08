@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.14.0](https://github.com/miksuh-dev/hande/compare/v2.13.0...v2.14.0) (2023-10-08)
+
+
+### Features
+
+* add scrollbar styling ([a09be4b](https://github.com/miksuh-dev/hande/commit/a09be4ba09465f36f2e57c04cf2f409773af34f6))
+* Add song specific volume control ([932531c](https://github.com/miksuh-dev/hande/commit/932531cef8cba4feda8f6595d322528339503e56))
+* Improve random song calculation ([07f6772](https://github.com/miksuh-dev/hande/commit/07f6772a0981556313e1335fc9e9550dd8594966))
+
 ## [2.13.0](https://github.com/miksuh-dev/hande/compare/v2.11.0...v2.13.0) (2023-09-15)
 
 
