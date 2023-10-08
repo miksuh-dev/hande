@@ -21,10 +21,11 @@ To Mumble:
 To website:
 
 - [x] Playlist support
-- [ ] Statistics
-- [ ] View changelog
+- [x] Statistics
+- [x] View changelog
 - [x] Disconnect timeout so refreshing page doesn't instantly send leave message
 - [ ] Make playlist show better in smaller screens
+- [ ] Improve light theme
 
 ### Bugs:
 
