@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.1](https://github.com/miksuh-dev/hande/compare/v2.14.0...v2.14.1) (2023-10-13)
+
 ## [2.14.0](https://github.com/miksuh-dev/hande/compare/v2.13.0...v2.14.0) (2023-10-08)
 
 
