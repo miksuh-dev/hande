@@ -8,7 +8,7 @@ import SongThumbnail from "view/Room/common/SongThumbnail";
 type Props = {
   statistics: Accessor<StatisticItem[]>;
   songs: Song[];
-  playing: PlayingSong;
+  playing: PlayingSong | undefined;
   onAdd: (song: StatisticItem[]) => void;
   loading: Accessor<boolean>;
 };

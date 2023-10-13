@@ -26,7 +26,7 @@ const PlaylistComponent: Component<Props> = (props) => {
   const [tempItems, setTempItems] = createSignal<Song[]>([]);
 
   const items = createMemo(() =>
-    tempItems().length ? tempItems() : props.songs
+    tempItems().length ? tempItems() : props.songs,
   );
 
   const ids = () => items().map((song) => song.id);
@@ -68,8 +68,9 @@ const PlaylistComponent: Component<Props> = (props) => {
       <div class="max-h-full space-y-2 overflow-y-auto pr-4 scrollbar">
         <SortableProvider ids={ids()}>
           <For each={items()}>
-            {(song) => (
+            {(song, index) => (
               <PlayListItem
+                index={index}
                 song={song}
                 onSkip={props.onSkip}
                 onPlayNext={props.onPlayNext}

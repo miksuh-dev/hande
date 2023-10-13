@@ -4,6 +4,7 @@ import { Readable } from "stream";
 import { DateTime } from "luxon";
 import { PlayingSong } from "types/app";
 import { Song } from "types/prisma";
+import { ProcessQueueItem, ProcessQueueItemStatus } from "./types";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendErrorMessage, sendMessage } from "../../router/room/message";
@@ -14,7 +15,6 @@ import {
   createStream as createYoutubeStream,
   getVideoInfo,
 } from "../youtube-dl";
-import { ProcessQueueItem, ProcessQueueItemStatus } from "./types";
 
 const MAX_RETRIES = 3;
 

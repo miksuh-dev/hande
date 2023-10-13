@@ -5,7 +5,11 @@ import tsconfigPaths from "vitest-tsconfig-paths";
 
 export default defineConfig({
   base: "",
-  plugins: [solidPlugin(), eslint(), tsconfigPaths()],
+  plugins: [
+    solidPlugin(),
+    eslint({ failOnError: true, failOnWarning: false }),
+    tsconfigPaths(),
+  ],
   server: {
     port: 3000,
   },

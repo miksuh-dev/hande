@@ -9,6 +9,15 @@ const voteValueToVoteType = (vote: number) => {
   return undefined;
 };
 
+export const playingToClient = (song: PlayingSong | undefined) => {
+  if (!song) return song;
+
+  return {
+    ...song,
+    startedAt: song.startedAt.toISO(),
+  };
+};
+
 export const enrichWithUserVote = async (
   song: PlayingSong | undefined,
   user: MumbleUser

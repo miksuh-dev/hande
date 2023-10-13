@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import fs from "fs";
+import handleMessage from "./handlers/message";
 import NoodleJS from "../../../NoodleJS";
 import ee from "../../eventEmitter";
-import handleMessage from "./handlers/message";
 
 const client = new NoodleJS({
   url: process.env.MUMBLE_ADDRESS,

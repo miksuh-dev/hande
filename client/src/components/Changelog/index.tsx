@@ -18,9 +18,10 @@ const ChangeLog: Component<Props> = (props) => {
   const { room } = useRouteData<RoomData>();
 
   const [loading, setLoading] = createSignal(false);
-  const [result, setResult] = createSignal<ReturnType<
-    typeof trpcClient.common.changelog.query
-  > | null>(null);
+  const [result, setResult] =
+    createSignal<
+      Awaited<ReturnType<typeof trpcClient.common.changelog.query> | null>
+    >(null);
 
   onMount(async () => {
     try {
@@ -46,7 +47,7 @@ const ChangeLog: Component<Props> = (props) => {
         <div
           class="markdown px-3"
           // eslint-disable-next-line solid/no-innerhtml
-          innerHTML={result()}
+          innerHTML={result() ?? undefined}
         />
       </Show>
     </Dialog>

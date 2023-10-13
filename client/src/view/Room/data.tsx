@@ -101,10 +101,8 @@ const handleUpdateEvent = (
 
     if (event.song.update) {
       const updatedSongs = event.song.update;
-      console.log("updatedSongs", updatedSongs);
 
       if (!updatedSongs?.length) {
-        console.log("nope");
         return existingRoom;
       }
 
@@ -180,7 +178,7 @@ function RoomData() {
         songs: [],
         playing: undefined,
         sources: [],
-        version: undefined,
+        version: "0.0.0",
       },
     }
   );

@@ -1,6 +1,6 @@
-import { serverLanguage } from "../../../../languages";
 import commands from "./commands";
 import { Message } from "./types";
+import { serverLanguage } from "../../../../languages";
 
 const t = serverLanguage.commands.help;
 

@@ -122,6 +122,6 @@ const themes = {
 };
 
 export type ThemeName = keyof typeof themes;
-export type Theme = typeof themes[ThemeName];
+export type Theme = (typeof themes)[ThemeName];
 
 export default themes as Record<ThemeName, Theme>;

@@ -9,4 +9,16 @@ export type SongTypeSong = Omit<PrismaSong, "type"> & {
   type: SourceType.SONG;
 };
 
+export type WithType<
+  S extends PrismaSong,
+  T extends SourceType
+> = T extends SourceType.SONG
+  ? Omit<S, "duration"> & {
+      type: T;
+      duration: number;
+    }
+  : {
+      type: T;
+    };
+
 export type Song = WithSongTypeAny<PrismaSong>;

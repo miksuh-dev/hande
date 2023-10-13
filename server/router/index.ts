@@ -1,7 +1,7 @@
-import { t } from "../trpc";
 import { commonRouter } from "./common";
 import { roomRouter } from "./room";
 import { userRouter } from "./user";
+import { t } from "../trpc";
 
 export const appRouter = t.mergeRouters(
   t.router({ user: userRouter }),

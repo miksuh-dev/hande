@@ -6,8 +6,8 @@ import useAuth from "hooks/useAuth";
 import roomData from "view/Room/data";
 import tokenData from "view/Token/data";
 import AuthGate from "auth/AuthGate";
+import Loading from "components/Loading";
 
-const Loading = lazy(() => import("components/Loading"));
 const MainView = lazy(() => import("view/Main"));
 const RoomView = lazy(() => import("view/Room"));
 const GuestLoginView = lazy(() => import("view/GuestLogin"));

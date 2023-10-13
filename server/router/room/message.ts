@@ -1,6 +1,6 @@
 import fs from "fs";
-import ee from "../../eventEmitter";
 import { Message, MessageOptions, MessageType } from "./types";
+import ee from "../../eventEmitter";
 
 const HISTORY_FILE = "message-history.json";
 

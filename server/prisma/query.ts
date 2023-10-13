@@ -1,5 +1,5 @@
-import { SourceType } from "../types/source";
 import prisma from "./";
+import { SourceType } from "../types/source";
 
 export const getRandomSong = async () => {
   const [row]: { contentId: string; random_weight: string }[] =

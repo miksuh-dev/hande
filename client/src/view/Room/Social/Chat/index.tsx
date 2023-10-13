@@ -9,8 +9,8 @@ type Props = {
   messages: IncomingMessage[];
 };
 
-type Divider = Omit<IncomingMessage, "type" | "content" | "name"> & {
-  type: string;
+export type Divider = Omit<IncomingMessage, "type" | "content" | "name"> & {
+  type: "DIVIDER";
   property: {
     isSystem: boolean;
   };
@@ -37,10 +37,10 @@ const RoomChat: Component<Props> = (props) => {
         : !DateTime.now().setZone("local").hasSame(startOfDay, "day");
 
       if (dateChange) {
-        const divider = {
+        const divider: Divider = {
           id: startOfDay.toMillis().toString(),
           timestamp: startOfDay.toMillis(),
-          type: "divider",
+          type: "DIVIDER",
           property: {
             isSystem: true,
           },

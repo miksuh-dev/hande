@@ -1,12 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
-import ee from "../../eventEmitter";
-import prisma from "../../prisma";
-import { getRandomSong } from "../../prisma/query";
-import { sendMessage } from "../../router/room/message";
-import { MessageType } from "../../router/room/types";
-import { VoteType } from "../../types/app";
 import {
   addSongToQueue,
   getCurrentSong,
@@ -16,6 +10,12 @@ import {
   setVolume,
   stopCurrentSong,
 } from "./internal";
+import ee from "../../eventEmitter";
+import prisma from "../../prisma";
+import { getRandomSong } from "../../prisma/query";
+import { sendMessage } from "../../router/room/message";
+import { MessageType } from "../../router/room/types";
+import { VoteType } from "../../types/app";
 
 export const addSongs = async (
   songs: {

@@ -9,6 +9,7 @@ Common:
 - [x] Validation of languages, so that there are no missing translations keys
 - [ ] Find way to type enums (Song.type) using Prisma and SQLite
 - [x] Improve random song selection algorithm
+- [ ] Update i18n to ^2.0.0 and refactor
 
 To Mumble:
 

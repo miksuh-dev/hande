@@ -20,7 +20,7 @@ const MenuItem: Component<Props> = (props) => {
       <button
         onClick={(event) => {
           event.stopPropagation();
-          props.onClick();
+          props.onClick?.();
         }}
         class="flex w-full items-center justify-between py-3 px-4 text-left text-sm text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-custom-primary-700"
       >

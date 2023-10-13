@@ -62,7 +62,7 @@ const Result: Component<Props> = (props) => {
                         <Match
                           when={
                             props.songs.some(
-                              (s) => s.contentId === result.contentId
+                              (s) => s.contentId === result.contentId,
                             ) || props.playing?.contentId === result.contentId
                           }
                         >

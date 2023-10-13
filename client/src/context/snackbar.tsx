@@ -66,9 +66,8 @@ export const SnackbarProvider: Component<{
                     ? t("error.unkown") ?? "Unknown error"
                     : ""
                 }
-                keyd
               >
-                {(message: string) => message}
+                {snackbar()?.message}
               </Show>
             </div>
             <div class="flex items-center">

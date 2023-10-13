@@ -3,11 +3,20 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import "dotenv/config";
 import express from "express";
+import { Settings } from "luxon";
 import ws from "ws";
 import client from "./common/mumble";
 import { createContext } from "./context";
 import { appRouter, AppRouter } from "./router";
 import * as messages from "./router/room/message";
+
+Settings.throwOnInvalid = true;
+
+declare module "luxon" {
+  interface TSSettings {
+    throwOnInvalid: true;
+  }
+}
 
 client.on("ready", () => {
   console.log("ready");

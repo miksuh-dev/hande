@@ -35,6 +35,8 @@ const getZodErrorMessages = (error: ZodIssue) => {
       return error.message;
     case ZodIssueCode.not_multiple_of:
       return error.message;
+    default:
+      return "unknown error";
   }
 };
 

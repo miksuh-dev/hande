@@ -7,6 +7,12 @@ import env from "config";
 
 import App from "./App";
 
+declare module "luxon" {
+  interface TSSettings {
+    throwOnInvalid: true;
+  }
+}
+
 const root = document.getElementById("root");
 if (!root) throw new Error("No root element found");
 
@@ -18,5 +24,5 @@ render(
       </BaseProvider>
     </Router>
   ),
-  root
+  root,
 );

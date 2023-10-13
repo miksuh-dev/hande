@@ -9,6 +9,7 @@ type Props = {
   content?: JSX.Element;
   visible?: boolean;
   dynamic?: boolean;
+  destroyOnClick?: boolean;
 };
 
 type Position = {
@@ -28,6 +29,7 @@ const Tooltip: Component<Props> = (props) => {
   const [visible, setVisible] = createSignal<boolean>(false);
   const [toggle, setToggle] = createSignal<boolean>(false);
   const [anchor, setAnchor] = createSignal<Anchor>(Anchor.BOTTOM);
+  const [destroyed, setDestroyed] = createSignal(false);
 
   let tooltipRef: HTMLDivElement;
 
@@ -69,9 +71,16 @@ const Tooltip: Component<Props> = (props) => {
         if (props.dynamic) {
           event.stopPropagation();
           setToggle(!toggle());
+        } else if (props.destroyOnClick) {
+          setDestroyed(true);
+          setVisible(false);
+          setPosition(undefined);
         }
       }}
-      onMouseEnter={() => setVisible(true)}
+      onMouseEnter={() => {
+        setVisible(true);
+        setDestroyed(false);
+      }}
       onMouseOver={() => setVisible(true)}
       onMouseLeave={() => {
         if (!toggle()) {
@@ -86,7 +95,7 @@ const Tooltip: Component<Props> = (props) => {
       }}
     >
       {props.children}
-      <Show when={visible() && (props.visible ?? true)}>
+      <Show when={visible() && (props.visible ?? true) && !destroyed()}>
         <Portal>
           <div
             class="tooltip pointer-events-none absolute z-50 w-max -translate-x-1/2 p-2 text-center text-xs"
@@ -108,32 +117,34 @@ const Tooltip: Component<Props> = (props) => {
           >
             <Switch>
               <Match when={props.content}>
-                <div
-                  class="flex max-h-[500px] max-w-xl flex-col overflow-hidden"
-                  ref={(ref) => {
-                    if (props.dynamic) {
-                      trackClickOutside(ref, () => {
-                        setVisible(false);
-                        setPosition(undefined);
-                        setToggle(false);
-                      });
-                    }
-                  }}
-                >
+                {(content) => (
                   <div
-                    class="h-full space-y-3 overflow-y-auto"
-                    ref={(tooltipRef) =>
-                      trackMoveOutside(tooltipRef, () => {
-                        setVisible(false);
-                        setToggle(false);
-                      })
-                    }
+                    class="flex max-h-[500px] max-w-xl flex-col overflow-hidden"
+                    ref={(ref) => {
+                      if (props.dynamic) {
+                        trackClickOutside(ref, () => {
+                          setVisible(false);
+                          setPosition(undefined);
+                          setToggle(false);
+                        });
+                      }
+                    }}
                   >
-                    {props.content}
+                    <div
+                      class="h-full space-y-3 overflow-y-auto"
+                      ref={(tooltipRef) =>
+                        trackMoveOutside(tooltipRef, () => {
+                          setVisible(false);
+                          setToggle(false);
+                        })
+                      }
+                    >
+                      {content()}
+                    </div>
                   </div>
-                </div>
+                )}
               </Match>
-              <Match when={props.text}>{props.text}</Match>
+              <Match when={props.text}>{(text) => text()}</Match>
             </Switch>
           </div>
         </Portal>

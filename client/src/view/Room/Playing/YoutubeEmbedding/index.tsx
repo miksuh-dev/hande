@@ -1,14 +1,14 @@
 import useSnackbar from "hooks/useSnackbar";
 import { DateTime } from "luxon";
-import { Component, onMount } from "solid-js";
-import { PlayingSong } from "trpc/types";
+import { Accessor, Component, onMount } from "solid-js";
+import { PlayingTypeSong } from "trpc/types";
 import { useI18n } from "@solid-primitives/i18n";
 import { CustomWindow, ReadyEvent } from "./types";
 
 declare let window: CustomWindow;
 
 type Props = {
-  song: PlayingSong;
+  song: Accessor<PlayingTypeSong>;
 };
 
 const PlayingComponent: Component<Props> = (props) => {
@@ -25,7 +25,7 @@ const PlayingComponent: Component<Props> = (props) => {
 
     YT?.ready(function () {
       new YT.Player("player", {
-        videoId: props.song.contentId,
+        videoId: props.song().contentId,
         events: {
           onReady: onPlayerReady,
         },
@@ -52,9 +52,11 @@ const PlayingComponent: Component<Props> = (props) => {
   });
 
   const onPlayerReady = (event: ReadyEvent) => {
+    const startedAt = props.song().startedAt;
+
     const startTime = DateTime.utc().diff(
-      DateTime.fromISO(props.song.startedAt, { zone: "utc" }),
-      "seconds"
+      DateTime.fromISO(startedAt, { zone: "utc" }),
+      "seconds",
     ).seconds;
 
     event.target.seekTo(Math.ceil(startTime + 2));
@@ -63,7 +65,11 @@ const PlayingComponent: Component<Props> = (props) => {
   return (
     <iframe
       id="player"
-      src={`https://www.youtube.com/embed/${props.song.contentId}?rel=0&autoplay=0&mute=1&controls=0&showInfo=0&modestbranding=1&enablejsapi=1&origin=${window.location.origin}`}
+      src={`https://www.youtube.com/embed/${
+        props.song().contentId
+      }?rel=0&autoplay=0&mute=1&controls=0&showInfo=0&modestbranding=1&enablejsapi=1&origin=${
+        window.location.origin
+      }`}
       width="540"
       height="300"
       frame-border="0"

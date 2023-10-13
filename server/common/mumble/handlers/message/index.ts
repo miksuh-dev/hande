@@ -1,7 +1,7 @@
-import { BASE } from "../../../../constants";
-import { serverLanguage } from "../../../../languages";
 import commands from "./commands";
 import { Message } from "./types";
+import { BASE } from "../../../../constants";
+import { serverLanguage } from "../../../../languages";
 
 const t = serverLanguage.commands.common;
 

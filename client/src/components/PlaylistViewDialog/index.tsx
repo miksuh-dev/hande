@@ -1,6 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { CircularLoadingSpinner } from "components/common/icon";
 import {
+  Accessor,
   Component,
   createResource,
   createSignal,
@@ -15,7 +16,7 @@ import SongThumbnail from "view/Room/common/SongThumbnail";
 import Dialog from "components/Dialog";
 
 type Props = {
-  playlist: SearchResultPlaylist;
+  playlist: Accessor<SearchResultPlaylist>;
   playing: Song | undefined;
   songs: Song[];
   onSongAdd: (songs: SearchResultSong[]) => Promise<void>;
@@ -29,7 +30,7 @@ const PlaylistView: Component<Props> = (props) => {
 
   const [songs] = createResource<SearchResultSong[]>(() =>
     trpcClient.room.listPlaylist.query({
-      playlistId: props.playlist.contentId,
+      playlistId: props.playlist().contentId,
     })
   );
 
@@ -63,7 +64,7 @@ const PlaylistView: Component<Props> = (props) => {
   return (
     <Dialog
       title={t("playlistDialog.title", {
-        name: htmlDecode(props.playlist.title),
+        name: htmlDecode(props.playlist().title),
       })}
       onClose={() => props.onClose()}
       actions={

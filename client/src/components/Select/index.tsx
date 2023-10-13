@@ -78,7 +78,7 @@ const SelectComponent: Component<Props> = (props) => {
                 </div>
               }
             >
-              {props.selectedSource?.name}
+              {(selectedSource) => selectedSource().name}
             </Show>
             <svg
               aria-hidden="true"

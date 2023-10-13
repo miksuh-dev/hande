@@ -1,11 +1,11 @@
-import * as radio from "../../common/radio";
-import * as youtube from "../../common/youtube";
-import { SourceType } from "../../types/source";
 import {
   SourceResultSong,
   SourceResultPlaylist,
   SourceResultRadio,
 } from "./types";
+import * as radio from "../../common/radio";
+import * as youtube from "../../common/youtube";
+import { SourceType } from "../../types/source";
 
 export const searchFromSource = async (
   text: string,

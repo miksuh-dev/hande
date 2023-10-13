@@ -6,7 +6,7 @@ import trpcClient from "trpc";
 import { PlayingSong } from "trpc/types";
 
 type Props = {
-  playing: PlayingSong;
+  playing: NonNullable<PlayingSong>;
 };
 
 const VolumeControlComponent: Component<Props> = (props) => {

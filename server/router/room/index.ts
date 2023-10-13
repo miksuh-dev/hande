@@ -3,6 +3,9 @@ import { observable } from "@trpc/server/observable";
 import { DateTime } from "luxon";
 import { z } from "zod";
 import { OnlineUser } from "types/auth";
+import { messages, sendMessage } from "./message";
+import { searchFromPlaylist, searchFromSource } from "./sources";
+import { MessageType, UpdateEvent } from "./types";
 import { getCurrentSong } from "../../common/playlist/internal";
 import {
   addRandomSong,
@@ -25,13 +28,11 @@ import { getSessionVersion } from "../../utils/auth";
 import {
   enrichUpdateMessageWithUserVote,
   enrichWithUserVote,
+  playingToClient,
 } from "../../utils/middleware";
 import { schemaForType } from "../../utils/trpc";
 import * as userState from "../user/state";
 import { authedProcedure, onlineUserProcedure } from "../utils";
-import { messages, sendMessage } from "./message";
-import { searchFromPlaylist, searchFromSource } from "./sources";
-import { MessageType, UpdateEvent } from "./types";
 
 export const roomRouter = t.router({
   get: authedProcedure.query(async ({ ctx }) => {
@@ -54,7 +55,9 @@ export const roomRouter = t.router({
     });
 
     return {
-      playing: await enrichWithUserVote(getCurrentSong(), user),
+      playing: playingToClient(
+        await enrichWithUserVote(getCurrentSong(), user)
+      ),
       songs: playlist as Song[],
       messages,
       users: [...userState.users.values()].map((u) => u.user),

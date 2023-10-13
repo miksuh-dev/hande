@@ -2,9 +2,9 @@ import { Readable } from "stream";
 import m3u8stream from "m3u8stream";
 import { SourceResultRadio } from "router/room/types";
 import { Song } from "types/prisma";
-import { SourceType } from "../../types/source";
 import { addRadioClickCount } from "./mutation";
 import { SearchResultItem } from "./types";
+import { SourceType } from "../../types/source";
 
 export const createStream = async (song: Song) => {
   const addedClick = await addRadioClickCount(song.contentId);

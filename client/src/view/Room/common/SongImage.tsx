@@ -1,9 +1,9 @@
 import { RadioIcon } from "components/common/icon";
-import { Component, createMemo, Match, Show, Switch } from "solid-js";
+import { Accessor, Component, createMemo, Match, Show, Switch } from "solid-js";
 import { Song } from "trpc/types";
 
 type Props = {
-  song: Song;
+  song: Accessor<Song>;
   size?: "small" | "large";
 };
 
@@ -20,8 +20,8 @@ const SongImage: Component<Props> = (props) => {
     >
       <div>
         <Switch>
-          <Match when={props.song.type === "song"}>
-            <Show when={props.song.thumbnail}>
+          <Match when={props.song().type === "song"}>
+            <Show when={props.song().thumbnail}>
               {(thumbnail) => (
                 <img
                   classList={{
@@ -30,13 +30,13 @@ const SongImage: Component<Props> = (props) => {
                   }}
                   class="flex"
                   draggable={false}
-                  src={thumbnail}
+                  src={thumbnail()}
                   alt="thumbnail"
                 />
               )}
             </Show>
           </Match>
-          <Match when={props.song.type === "radio"}>
+          <Match when={props.song().type === "radio"}>
             <div
               class="flex self-center p-4 text-custom-primary-700"
               classList={{

@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { DateTime } from "luxon";
 import { z } from "zod";
 import { OnlineUser } from "types/auth";
+import * as userState from "./state";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import {
@@ -12,7 +13,6 @@ import {
 } from "../../utils/auth";
 import { schemaForType } from "../../utils/trpc";
 import { userProcedure, guestProcedure, onlineUserProcedure } from "../utils";
-import * as userState from "./state";
 
 export const userRouter = t.router({
   me: userProcedure.query(({ ctx }) => {
