@@ -1,3 +1,4 @@
+import { getSongSettings } from "common/playlist/internal";
 import { PlayingSong } from "types/app";
 import { Song } from "types/prisma";
 
@@ -31,3 +32,5 @@ export type ProcessQueueItem = (NonActiveItem | ActiveItem) & {
   retryCount: number;
   callback: () => Promise<void>;
 };
+
+export type Options = Awaited<ReturnType<typeof getSongSettings>>;

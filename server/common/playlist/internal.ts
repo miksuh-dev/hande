@@ -4,7 +4,7 @@ import { Readable } from "stream";
 import { DateTime } from "luxon";
 import { PlayingSong } from "types/app";
 import { Song } from "types/prisma";
-import { ProcessQueueItem, ProcessQueueItemStatus } from "./types";
+import { Options, ProcessQueueItem, ProcessQueueItemStatus } from "./types";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendErrorMessage, sendMessage } from "../../router/room/message";
@@ -178,7 +178,7 @@ export const getSongSettings = async (song: Song) => {
   );
 };
 
-async function onPlayStart(this: ProcessQueueItem) {
+async function onPlayStart(this: ProcessQueueItem, options: Options) {
   try {
     this.status = ProcessQueueItemStatus.processing;
 
@@ -214,10 +214,9 @@ async function onPlayStart(this: ProcessQueueItem) {
       this.song.startedAt = DateTime.now();
     }
 
-    const [rating, originalRequester, songSettings] = await Promise.all([
+    const [rating, originalRequester] = await Promise.all([
       getSongRating(this.song.contentId),
       getSongOriginalRequester(this.song),
-      getSongSettings(this.song),
       prisma.song.update({
         where: {
           id: this.song.id,
@@ -231,9 +230,7 @@ async function onPlayStart(this: ProcessQueueItem) {
     this.song.rating = rating;
     if (originalRequester) this.song.originalRequester = originalRequester;
 
-    this.song.volume = songSettings.volume;
-
-    setVolume(this.song.volume);
+    this.song.volume = options.volume;
 
     const index = processingQueue.findIndex(
       (item) => item.song.id === this.song.id
@@ -261,12 +258,16 @@ async function playSong(this: ProcessQueueItem) {
   try {
     stream = await createStream(this.song);
 
+    const options = await getSongSettings(this.song);
+
     let started = false;
     stream.on("data", () => {
       if (!started) {
         started = true;
 
-        onPlayStart.call(this).catch((e) => {
+        setVolume(options.volume);
+
+        onPlayStart.call(this, options).catch((e) => {
           console.log("e", e);
         });
       }
@@ -283,10 +284,6 @@ async function playSong(this: ProcessQueueItem) {
       .on("error", (message: string) => {
         void onSongError.call(this, message);
       });
-
-    // TODO Temporary solution to prevent too loud song start
-    // This gets overwritten in onPlayStart
-    setVolume(0);
   } catch (e) {
     if (e instanceof Error) {
       void onSongError.call(this, e.message);
