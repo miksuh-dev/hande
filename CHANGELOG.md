@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.2](https://github.com/miksuh-dev/hande/compare/v2.14.0...v2.14.2) (2023-10-13)
+
+
+### Bug Fixes
+
+* Set song volume before play ([a624157](https://github.com/miksuh-dev/hande/commit/a624157f0855a951d3d0c9ed4995b38f1161babd))
+
 ### [2.14.1](https://github.com/miksuh-dev/hande/compare/v2.14.0...v2.14.1) (2023-10-13)
 
 ## [2.14.0](https://github.com/miksuh-dev/hande/compare/v2.13.0...v2.14.0) (2023-10-08)
