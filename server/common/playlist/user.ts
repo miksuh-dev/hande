@@ -107,30 +107,30 @@ export const removeSong = async (id: number, user: OnlineUser) => {
     },
   })) as Song;
 
-  if (song.id === getCurrentSong()?.id) {
+  const currentSong = removeSongFromQueue(song);
+  if (currentSong) {
     sendMessage(`event.source.${song.type}.skipped`, {
       user,
       type: MessageType.ACTION,
       item: [song],
     });
     stopCurrentSong();
+
+    if (!getCurrentSong()) {
+      const nextSong = await getNextSong();
+      if (nextSong) {
+        await addSongToQueue(nextSong);
+      }
+    }
   } else {
     sendMessage(`event.source.${song.type}.skippedQueue`, {
       user,
       type: MessageType.ACTION,
       item: [song],
     });
-    ee.emit(`onUpdate`, { song: { remove: [song.id] } });
   }
 
-  removeSongFromQueue(song);
-
-  if (!getCurrentSong()) {
-    const nextSong = await getNextSong();
-    if (nextSong) {
-      await addSongToQueue(nextSong);
-    }
-  }
+  ee.emit(`onUpdate`, { song: { remove: [song.id] } });
 
   return song;
 };

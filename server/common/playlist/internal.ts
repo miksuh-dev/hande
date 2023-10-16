@@ -60,9 +60,11 @@ export const addSongToQueue = async (song: Song) => {
 };
 
 export const removeSongFromQueue = (song: Song) => {
-  processingQueue.forEach((item, index) => {
+  return processingQueue.find((item, index) => {
     if (item.song.id === song.id) {
-      processingQueue.splice(index, 1);
+      const found = processingQueue.splice(index, 1);
+
+      return found[0];
     }
   });
 };
