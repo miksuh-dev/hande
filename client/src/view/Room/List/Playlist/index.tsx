@@ -29,7 +29,7 @@ const PlaylistComponent: Component = () => {
       snackbar.success(
         t(`snackbar.source.${skippedSong.type}.skippedInPlaylist`, {
           item: htmlDecode(skippedSong.title),
-        })
+        }),
       );
     } catch (err) {
       if (err instanceof Error) {
@@ -47,7 +47,7 @@ const PlaylistComponent: Component = () => {
       snackbar.success(
         t(`snackbar.source.${song.type}.setAsNext`, {
           item: htmlDecode(song.title),
-        })
+        }),
       );
     } catch (err) {
       if (err instanceof Error) {
@@ -98,16 +98,13 @@ const PlaylistComponent: Component = () => {
         actions={
           <>
             <Tooltip text={t("tooltip.common.addRandomSong")}>
-              <button
-                class="icon-button h-10 w-10"
-                onClick={() => handleAddRandomSong()}
-              >
+              <button class="icon-button" onClick={() => handleAddRandomSong()}>
                 <RandomIcon />
               </button>
             </Tooltip>
             <Tooltip text={t("tooltip.common.shufflePlaylist")}>
               <button
-                class="icon-button h-10 w-10"
+                class="icon-button"
                 onClick={() => handleShufflePlaylist()}
                 disabled={room().songs.length === 0}
               >
@@ -116,7 +113,7 @@ const PlaylistComponent: Component = () => {
             </Tooltip>
             <Tooltip text={t("tooltip.common.clearPlaylist")}>
               <button
-                class="icon-button h-10 w-10"
+                class="icon-button"
                 onClick={(e) => {
                   e.stopPropagation();
                   setClearDialogOpen(true);

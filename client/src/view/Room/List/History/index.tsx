@@ -91,7 +91,7 @@ const HistoryComponent: Component = () => {
         snackbar.success(
           t(`snackbar.source.song.addedManyToQueue`, {
             count: songs.length.toString(),
-          })
+          }),
         );
       } else if (songs[0]) {
         const song = songs[0];
@@ -99,7 +99,7 @@ const HistoryComponent: Component = () => {
         snackbar.success(
           t(`snackbar.source.${song.type}.addedToQueue`, {
             item: htmlDecode(song.title),
-          })
+          }),
         );
       }
     } catch (error) {
@@ -114,7 +114,7 @@ const HistoryComponent: Component = () => {
 
     return (
       songs.some((s) => s.contentId === song.contentId) ||
-      (playing && playing.contentId === song.contentId)
+      playing?.contentId === song.contentId
     );
   };
 
@@ -134,7 +134,7 @@ const HistoryComponent: Component = () => {
     const newSelected = (result()?.list ?? []).filter(
       (s) =>
         !songs.some((ps) => s.contentId === ps.contentId) &&
-        (!playing || playing.contentId !== s.contentId)
+        (!playing || playing.contentId !== s.contentId),
     );
 
     const updatedSelected = [...selected(), ...newSelected];
@@ -142,8 +142,8 @@ const HistoryComponent: Component = () => {
 
     setSelected(
       updatedSelected.filter(
-        ({ contentId }, index) => !contentIds.includes(contentId, index + 1)
-      )
+        ({ contentId }, index) => !contentIds.includes(contentId, index + 1),
+      ),
     );
   };
 

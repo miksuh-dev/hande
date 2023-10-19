@@ -16,7 +16,7 @@
   }
 
   .icon-button {
-    @apply inline-flex cursor-pointer justify-center rounded-full p-2 text-custom-primary-800 hover:bg-neutral-100 dark:text-custom-primary-800 dark:hover:bg-neutral-700;
+    @apply flex cursor-pointer items-center p-2 h-10 w-10 rounded-full text-custom-primary-800 hover:bg-neutral-100 dark:text-custom-primary-800 dark:hover:bg-neutral-700;
   }
 
   input {

@@ -24,7 +24,7 @@ const playListCompare = (a: Song, b: Song) => {
 
 const handleUpdateEvent = (
   existingRoom: Room,
-  event: RoomUpdateEvent
+  event: RoomUpdateEvent,
 ): Room => {
   if (!existingRoom) {
     return existingRoom;
@@ -63,7 +63,7 @@ const handleUpdateEvent = (
       return {
         ...existingRoom,
         users: existingRoom.users.map((u) =>
-          u.hash === updatedUser.hash ? updatedUser : u
+          u.hash === updatedUser.hash ? updatedUser : u,
         ),
       };
     }
@@ -180,7 +180,7 @@ function RoomData() {
         sources: [],
         version: "0.0.0",
       },
-    }
+    },
   );
 
   onMount(() => {
@@ -211,7 +211,7 @@ function RoomData() {
           // Retry connection
           initRoomSocket();
         },
-      }
+      },
     );
 
     trpcClient.room.ping.mutate(clientId).catch((err) => {
@@ -231,7 +231,7 @@ function RoomData() {
             return handleUpdateEvent(existingRoom, event);
           });
         },
-      }
+      },
     );
 
     onCleanup(() => {

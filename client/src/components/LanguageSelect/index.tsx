@@ -22,7 +22,7 @@ const LanguageSelect: Component = () => {
       <Tooltip text={t("navigation.language.tooltip")} visible={!open()}>
         <button
           type="button"
-          class="flex w-9 rounded-full text-sm text-custom-primary-700"
+          class="icon-button"
           onClick={() => setOpen((open) => !open)}
         >
           <LanguageIcon />

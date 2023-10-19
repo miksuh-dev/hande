@@ -11,7 +11,7 @@ type Props = {
   };
 };
 
-const SongImage: Component<Props> = (props) => {
+const SongThumbnail: Component<Props> = (props) => {
   return (
     <Switch>
       <Match when={props.song.thumbnail}>
@@ -44,4 +44,4 @@ const SongImage: Component<Props> = (props) => {
   );
 };
 
-export default SongImage;
+export default SongThumbnail;

@@ -17,7 +17,7 @@ const FilterComponent: Component<Props> = (props) => {
   return (
     <>
       <form
-        class="item-center flex flex-1"
+        class="item-center flex flex-1 space-x-2"
         onSubmit={(e) => {
           e.preventDefault();
           props.onSubmit(props.formData());
@@ -55,12 +55,10 @@ const FilterComponent: Component<Props> = (props) => {
         </div>
         <button
           type="submit"
-          class="ml-2 rounded-lg border border-custom-primary-700 bg-custom-primary-900 p-2.5 text-sm font-medium text-white hover:bg-custom-primary-800 focus:outline-none dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800"
+          class="rounded-lg border border-custom-primary-700 bg-custom-primary-900 p-2 text-sm font-medium text-white hover:bg-custom-primary-800 focus:outline-none dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800"
           disabled={props.loading()}
         >
-          <div class="h-5 w-5">
-            <FilterIcon />
-          </div>
+          <FilterIcon />
           <span class="sr-only">Hae kappaletta</span>
         </button>
       </form>

@@ -1,3 +1,4 @@
+import { SingleArrowLeft, SingleArrowRight } from "components/common/icon";
 import { Component, createMemo, For } from "solid-js";
 
 interface Props {
@@ -61,7 +62,7 @@ const PaginationComponent: Component<Props> = (props) => {
         class="rounded-l-md border border-neutral-300 bg-white px-3 py-2 leading-tight text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700 disabled:hover:bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700 dark:hover:text-white dark:disabled:bg-neutral-800"
       >
         <span class="sr-only">Previous</span>
-        {"<"}
+        <SingleArrowLeft />
       </button>
       <For each={[...leftPages(), props.currentPage, ...rightPages()]}>
         {(page) => (
@@ -89,7 +90,7 @@ const PaginationComponent: Component<Props> = (props) => {
         class="rounded-r-md border border-neutral-300 bg-white px-3 py-2 leading-tight text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700 disabled:hover:bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700 dark:hover:text-white dark:disabled:bg-neutral-800"
       >
         <span class="sr-only">Next</span>
-        {">"}
+        <SingleArrowRight />
       </button>
     </nav>
   );

@@ -66,7 +66,7 @@ const PlayListItem: Component<Props> = (props) => {
       <div class="flex flex-row space-x-2 pr-2">
         <Tooltip
           text={t(`tooltip.source.${song().type}.playNext`)}
-          destroyOnClick
+          closeOnClick
         >
           <button
             onClick={() => props.onPlayNext(song())}
@@ -77,7 +77,7 @@ const PlayListItem: Component<Props> = (props) => {
         </Tooltip>
         <Tooltip
           text={t(`tooltip.source.${song().type}.skipInPlaylist`)}
-          destroyOnClick
+          closeOnClick
         >
           <button
             onClick={() => props.onSkip(song())}

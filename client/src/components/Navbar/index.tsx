@@ -19,8 +19,10 @@ const Navbar: Component = () => {
           Hande
         </Link>
         <div class="flex items-center space-x-4 md:order-2">
-          <ThemeSelect />
-          <LanguageSelect />
+          <div class="space-x-2 flex">
+            <ThemeSelect />
+            <LanguageSelect />
+          </div>
           <UserMenu />
         </div>
       </div>

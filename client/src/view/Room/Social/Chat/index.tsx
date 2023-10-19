@@ -4,6 +4,8 @@ import trpcClient from "trpc";
 import Chat from "./Chat";
 import { IncomingMessage } from "trpc/types";
 import { DateTime } from "luxon";
+import { useRouteData } from "@solidjs/router";
+import type { RoomData } from "view/Room/data";
 
 type Props = {
   messages: IncomingMessage[];
@@ -20,6 +22,8 @@ export type MessageOrDivider = IncomingMessage | Divider;
 
 const RoomChat: Component<Props> = (props) => {
   const [message, setMessage] = createSignal("");
+
+  const { room } = useRouteData<RoomData>();
 
   let ref: HTMLDivElement | undefined = undefined;
 
@@ -73,6 +77,8 @@ const RoomChat: Component<Props> = (props) => {
     if (props.messages.length && ref) {
       ref.scrollIntoView({ behavior: "auto" });
     }
+
+    return room()?.playing?.id;
   });
 
   return (
