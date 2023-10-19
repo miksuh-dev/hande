@@ -14,4 +14,5 @@ export type PlayingSong = Song & {
 export enum VoteType {
   UP = "UP",
   DOWN = "DOWN",
+  NONE = "NONE",
 }

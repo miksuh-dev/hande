@@ -23,7 +23,7 @@ type Props = {
   showVideo: Accessor<boolean>;
   setShowVideo: Setter<boolean>;
   onSkip: (song: Song) => void;
-  onVote: (songId: number, contentId: string, vote: VoteType) => void;
+  onVote: (song: Song, vote: VoteType) => void;
 };
 
 const PlayingComponent: Component<Props> = (props) => {
@@ -98,7 +98,12 @@ const PlayingComponent: Component<Props> = (props) => {
                 <div class="space-x-2 w-max flex items-center ">
                   <button
                     onClick={() =>
-                      props.onVote(song().id, song().contentId, VoteType.UP)
+                      props.onVote(
+                        song(),
+                        song()?.vote === VoteType.UP
+                          ? VoteType.NONE
+                          : VoteType.UP,
+                      )
                     }
                     classList={{
                       "text-green-500 dark:text-green-500":
@@ -122,7 +127,12 @@ const PlayingComponent: Component<Props> = (props) => {
                   </span>
                   <button
                     onClick={() =>
-                      props.onVote(song().id, song().contentId, VoteType.DOWN)
+                      props.onVote(
+                        song(),
+                        song()?.vote === VoteType.DOWN
+                          ? VoteType.NONE
+                          : VoteType.DOWN,
+                      )
                     }
                     classList={{
                       "text-red-500 dark:text-red-500":

@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
 import {
@@ -135,28 +134,24 @@ export const removeSong = async (id: number, user: OnlineUser) => {
   return song;
 };
 
+const getVoteValue = (vote: VoteType) => {
+  switch (vote) {
+    case VoteType.UP:
+      return 1;
+    case VoteType.DOWN:
+      return -1;
+    default:
+      return 0;
+  }
+};
+
 export const voteSong = async (
   songId: number,
   contentId: string,
   vote: VoteType,
   user: OnlineUser
 ) => {
-  const voteValue = vote === VoteType.UP ? 1 : -1;
-
-  const existingVote = await prisma.songRating.findFirst({
-    where: {
-      songId,
-      contentId,
-      voter: user.name,
-    },
-  });
-
-  if (existingVote?.vote === voteValue) {
-    throw new TRPCError({
-      code: "CONFLICT",
-      message: "error.alreadyVoted",
-    });
-  }
+  const voteValue = getVoteValue(vote);
 
   const data = {
     contentId,

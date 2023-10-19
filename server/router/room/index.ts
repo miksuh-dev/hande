@@ -151,7 +151,7 @@ export const roomRouter = t.router({
       z.object({
         songId: z.number().min(1),
         contentId: z.string().min(1),
-        vote: z.enum([VoteType.UP, VoteType.DOWN]),
+        vote: z.enum([VoteType.UP, VoteType.DOWN, VoteType.NONE]),
       })
     )
     .mutation(async ({ input, ctx }) => {
