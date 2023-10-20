@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.15.0](https://github.com/miksuh-dev/hande/compare/v2.14.2...v2.15.0) (2023-10-20)
+
+
+### Features
+
+* allow song vote canceling ([43551bd](https://github.com/miksuh-dev/hande/commit/43551bd6a0c2c3195be22d873a59e8b917008f37))
+* Major ui refactor ([dd85742](https://github.com/miksuh-dev/hande/commit/dd85742184751fe1efb1c4e521eba4d2963019a0))
+* On song end only clear current song if queue is empty ([4f423e7](https://github.com/miksuh-dev/hande/commit/4f423e77d66734abde725e6e3d433568941f0186))
+
+
+### Bug Fixes
+
+* prevent removing same song multiple times ([eb98287](https://github.com/miksuh-dev/hande/commit/eb98287d3bc720688fe3ff0481410f088265bb38))
+
 ### [2.14.3](https://github.com/miksuh-dev/hande/compare/v2.14.2...v2.14.3) (2023-10-13)
 
 ### [2.14.2](https://github.com/miksuh-dev/hande/compare/v2.14.0...v2.14.2) (2023-10-13)
