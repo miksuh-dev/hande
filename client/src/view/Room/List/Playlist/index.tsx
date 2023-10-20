@@ -33,7 +33,9 @@ const PlaylistComponent: Component = () => {
       );
     } catch (err) {
       if (err instanceof Error) {
-        snackbar.error(t("error.common", { error: err.message }));
+        snackbar.error(
+          t("error.common", { error: t(err.message) || err.message }),
+        );
       }
     }
   };

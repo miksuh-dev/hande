@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
 import {
@@ -97,14 +98,23 @@ export const addSongs = async (
 };
 
 export const removeSong = async (id: number, user: OnlineUser) => {
-  const song = (await prisma.song.update({
-    where: {
-      id,
-    },
-    data: {
-      skipped: true,
-    },
-  })) as Song;
+  const song = (await prisma.song
+    .update({
+      where: {
+        id,
+        skipped: false,
+        ended: false,
+      },
+      data: {
+        skipped: true,
+      },
+    })
+    .catch(() => {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "error.songNotFound",
+      });
+    })) as Song;
 
   const currentSong = removeSongFromQueue(song);
   if (currentSong) {
@@ -113,7 +123,7 @@ export const removeSong = async (id: number, user: OnlineUser) => {
       type: MessageType.ACTION,
       item: [song],
     });
-    stopCurrentSong();
+    await stopCurrentSong(song);
 
     if (!getCurrentSong()) {
       const nextSong = await getNextSong();
@@ -399,7 +409,10 @@ export const movePosition = async (
 
   const selectedSong = songs.find((s) => s.id === id);
   if (!selectedSong) {
-    throw new Error("Song not found");
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "error.songNotFound",
+    });
   }
 
   const fromIndex = songs.findIndex((s) => s.id === id);
@@ -432,7 +445,10 @@ export const movePosition = async (
   const changedSongs = updatedSongs.filter((newSong, index) => {
     const oldSong = songs[index];
     if (!oldSong) {
-      throw new Error("Song not found");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "error.songNotFound",
+      });
     }
 
     if (newSong.id !== oldSong.id) {

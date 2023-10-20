@@ -76,6 +76,7 @@ export default {
     oldVersion: "Istuntosi versio on vanhentunut",
     socketReconnecting: "Yhteys palvelimeen katkesi. Yhdistetään uudelleen...",
     alreadyVoted: "Olet jo äänestänyt tätä kappaletta",
+    songNotFound: "Kappaletta ei löytynyt",
   },
   snackbar: {
     common: {

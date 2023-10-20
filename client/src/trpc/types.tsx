@@ -2,7 +2,7 @@ import type { inferProcedureInput, inferProcedureOutput } from "@trpc/server";
 import { inferObservableValue } from "@trpc/server/observable";
 import type { AppRouter } from "../../../server/router";
 import { SourceType } from "../../../server/types/source";
-import { VoteType } from "../../../server/types/app";
+import { VoteType, PlayState } from "../../../server/types/app";
 import { WithType } from "../../../server/types/prisma";
 
 export type Room = inferProcedureOutput<AppRouter["room"]["get"]>;
@@ -55,4 +55,4 @@ export type StatisticsInput = inferProcedureInput<
   AppRouter["room"]["getStatistics"]
 >;
 
-export { SourceType, VoteType };
+export { SourceType, VoteType, PlayState };

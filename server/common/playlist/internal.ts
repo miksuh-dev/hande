@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Readable } from "stream";
 import { DateTime } from "luxon";
-import { PlayingSong } from "types/app";
-import { Song } from "types/prisma";
 import { Options, ProcessQueueItem, ProcessQueueItemStatus } from "./types";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendErrorMessage, sendMessage } from "../../router/room/message";
+import { PlayingSong, PlayState } from "../../types/app";
+import { Song } from "../../types/prisma";
 import { SourceType } from "../../types/source";
 import client from "../mumble";
 import { createStream as createRadioStream } from "../radio";
@@ -81,7 +81,7 @@ const onSongEnd = async (song: Song) => {
 
   sendMessage(`event.source.${song.type}.end`, { item: [song] });
 
-  stopCurrentSong();
+  await stopCurrentSong(song);
 
   ee.emit(`onUpdate`, { song: { remove: [song.id] } });
 
@@ -187,6 +187,8 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
     if (this.status !== ProcessQueueItemStatus.processing) {
       throw new Error("Failed to update song status");
     }
+
+    this.song.state = PlayState.PLAYING;
 
     sendMessage(`event.source.${this.song.type}.start`, {
       item: [this.song],
@@ -316,14 +318,6 @@ const stopStream = () => {
   }
 };
 
-export const stopCurrentSong = () => {
-  stopStream();
-
-  ee.emit(`onUpdate`, {
-    song: { setPlaying: undefined },
-  });
-};
-
 export const getNextSong = async () => {
   return (await prisma.song.findFirst({
     where: {
@@ -339,6 +333,19 @@ export const getNextSong = async () => {
       },
     ],
   })) as Song | null;
+};
+
+export const stopCurrentSong = async (song: Song) => {
+  stopStream();
+
+  const nextSong = await getNextSong();
+  const state = nextSong
+    ? { contentId: song.contentId, state: PlayState.ENDED }
+    : undefined;
+
+  ee.emit(`onUpdate`, {
+    song: { setPlaying: state },
+  });
 };
 
 export const setVolume = (volume: number) => {

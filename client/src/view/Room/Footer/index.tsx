@@ -10,7 +10,7 @@ import {
 } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Accessor, Component, Show, Setter, createSignal } from "solid-js";
-import { Song, PlayingTypeSong, SourceType } from "trpc/types";
+import { Song, PlayingTypeSong, SourceType, PlayState } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import { VoteType } from "trpc/types";
 import Progress from "./Progress";
@@ -51,7 +51,9 @@ const PlayingComponent: Component<Props> = (props) => {
       );
     } catch (err) {
       if (err instanceof Error) {
-        snackbar.error(t("error.common", { error: err.message }));
+        snackbar.error(
+          t("error.common", { error: t(err.message) || err.message }),
+        );
       }
     }
   };
@@ -200,6 +202,7 @@ const PlayingComponent: Component<Props> = (props) => {
                   <button
                     onClick={() => handleSkip(song())}
                     class="icon-button w-12 h-12 p-1"
+                    disabled={song().state === PlayState.ENDED}
                   >
                     <SkipSongIcon />
                   </button>

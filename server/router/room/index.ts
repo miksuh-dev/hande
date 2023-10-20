@@ -104,7 +104,7 @@ export const roomRouter = t.router({
       } catch (e) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Song not found",
+          message: "error.songNotFound",
         });
       }
     }),
@@ -312,7 +312,7 @@ export const roomRouter = t.router({
         if (!song) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Song not found",
+            message: "error.songNotFound",
           });
         }
 

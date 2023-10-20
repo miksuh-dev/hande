@@ -75,6 +75,7 @@ export default {
     oldVersion: "Your session is outdated",
     socketReconnecting: "Socket connection lost. Reconnecting...",
     alreadyVoted: "You have already voted",
+    songNotFound: "Song not found",
   },
   snackbar: {
     common: {
