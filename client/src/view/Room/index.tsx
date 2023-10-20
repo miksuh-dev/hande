@@ -14,13 +14,21 @@ const RoomView: Component = () => {
   const [t] = useI18n();
   const { reconnecting } = useRouteData<RoomData>();
   const [showVideo, setShowVideo] = createSignal(false);
+  const [showSocial, setSocialOpen] = createSignal(false);
 
   return (
     <Show
       when={reconnecting()}
       fallback={
         <Content
-          footer={<Footer showVideo={showVideo} setShowVideo={setShowVideo} />}
+          footer={
+            <Footer
+              showVideo={showVideo}
+              setShowVideo={setShowVideo}
+              showSocial={showSocial}
+              setShowSocial={setSocialOpen}
+            />
+          }
         >
           <div class="flex flex-col h-full w-full">
             <div class="relative flex flex-1 flex-col overflow-hidden p-4 dark:text-neutral-100  xl:flex-row xl:space-x-4 xl:space-y-0">
@@ -31,7 +39,7 @@ const RoomView: Component = () => {
                 </Show>
                 <List />
               </div>
-              <Social />
+              <Social open={showSocial} />
             </div>
           </div>
         </Content>

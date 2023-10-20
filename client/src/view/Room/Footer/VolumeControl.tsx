@@ -46,7 +46,7 @@ const VolumeControlComponent: Component<Props> = (props) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <button type="button" class="icon-button">
+      <button type="button" class="icon-button w-12 h-12 p-1">
         <AudioIcon />
       </button>
       <Show when={audioControlOpen()}>
