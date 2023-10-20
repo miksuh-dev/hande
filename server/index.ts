@@ -93,10 +93,13 @@ process.on("exit", () => {
   messages.store();
 });
 
-process.on("SIGTERM", () => {
+process.on("SIGINT", () => onExit());
+process.on("SIGTERM", () => onExit());
+
+const onExit = () => {
   wsHandler.broadcastReconnectNotification();
   wss.close();
   server.close();
-});
+};
 
 messages.load();
