@@ -1,4 +1,5 @@
 import fs from "fs";
+import { DateTime } from "luxon";
 import { Message, MessageOptions, MessageType } from "./types";
 import ee from "../../eventEmitter";
 
@@ -16,7 +17,13 @@ export const load = () => {
   try {
     const content = fs.readFileSync(HISTORY_FILE, "utf-8");
 
-    const data = JSON.parse(content) as Message[];
+    const data = JSON.parse(content, (key: unknown, value: unknown) => {
+      if (key === "createdAt") {
+        return DateTime.fromISO(value as string, { zone: "utc" }).toJSDate();
+      }
+
+      return value;
+    }) as Message[];
 
     console.log(`Loaded ${data.length} messages from ${HISTORY_FILE}`);
 
