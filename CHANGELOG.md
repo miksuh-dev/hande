@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.15.1](https://github.com/miksuh-dev/hande/compare/v2.15.0...v2.15.1) (2023-10-20)
+
+
+### Bug Fixes
+
+* Incorrect datetime from parsed message history ([9b6a09d](https://github.com/miksuh-dev/hande/commit/9b6a09dac2ab825b032d8c4cdace5945f2db9bc5))
+
 ## [2.15.0](https://github.com/miksuh-dev/hande/compare/v2.14.2...v2.15.0) (2023-10-20)
 
 
