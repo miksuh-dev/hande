@@ -34,11 +34,16 @@ const wsHandler = applyWSSHandler<AppRouter>({
 });
 
 app.use((req, res, next) => {
-  // TODO: Fix these at some point
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Request-Method", "*");
-  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET");
-  res.setHeader("Access-Control-Allow-Headers", "*");
+  if (process.env.LOCAL === "true") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Request-Method", "*");
+    res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Authorization"
+    );
+  }
 
   const proto = req.headers["x-forwarded-proto"];
   if (proto && proto === "http") {
