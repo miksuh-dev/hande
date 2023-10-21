@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.16.1](https://github.com/miksuh-dev/hande/compare/v2.16.0...v2.16.1) (2023-10-21)
+
+
+### Bug Fixes
+
+* Selected filter option updating in top 100 ([91b1e1e](https://github.com/miksuh-dev/hande/commit/91b1e1e0a46f29f590ad79e15fc7b1a3a83ac5a3))
+
 ## [2.16.0](https://github.com/miksuh-dev/hande/compare/v2.15.1...v2.16.0) (2023-10-21)
 
 
