@@ -39,7 +39,7 @@ const RoomView: Component = () => {
                 </Show>
                 <List />
               </div>
-              <Social open={showSocial} />
+              <Social showSocial={showSocial} setShowSocial={setSocialOpen} />
             </div>
           </div>
         </Content>

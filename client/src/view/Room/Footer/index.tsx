@@ -76,19 +76,7 @@ const PlayingComponent: Component<Props> = (props) => {
 
   return (
     <div class="flex">
-      <Show
-        when={room().playing}
-        fallback={
-          <div class="xl:hidden w-full flex justify-end m-2 mt-0">
-            <button
-              class="z-40 rounded-lg border border-custom-primary-700 bg-custom-primary-900 p-3 text-sm font-medium text-white hover:bg-custom-primary-800 focus:outline-none dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800"
-              onClick={() => props.setShowSocial(!props.showSocial())}
-            >
-              <ChatBubbleIcon />
-            </button>
-          </div>
-        }
-      >
+      <Show when={room().playing}>
         {(song) => (
           <div class="flex w-full flex-col bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-100">
             <Show when={song().type === "song"}>
