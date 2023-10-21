@@ -4,13 +4,19 @@ import handleMessage from "./handlers/message";
 import NoodleJS from "../../../NoodleJS";
 import ee from "../../eventEmitter";
 
+const clientOptions = !process.env.LOCAL
+  ? {
+      key: fs.readFileSync("./key.pem"),
+      cert: fs.readFileSync("./cert.pem"),
+    }
+  : {};
+
 const client = new NoodleJS({
   url: process.env.MUMBLE_ADDRESS,
   port: Number(process.env.MUMBLE_PORT),
   name: process.env.MUMBLE_USERNAME,
   password: process.env.MUMBLE_PASSWORD,
-  key: fs.readFileSync("./key.pem"),
-  cert: fs.readFileSync("./cert.pem"),
+  ...clientOptions,
 });
 
 client.on("message", handleMessage.bind(this));
