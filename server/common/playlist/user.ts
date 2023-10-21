@@ -244,10 +244,20 @@ export const volumeChange = async (
 };
 
 export const clearPlaylist = async (requester: OnlineUser) => {
+  const currentSong = getCurrentSong();
+  const ignoreCurrent = currentSong
+    ? {
+        id: {
+          not: currentSong.id,
+        },
+      }
+    : {};
+
   const songs = await prisma.song.findMany({
     where: {
       ended: false,
       skipped: false,
+      ...ignoreCurrent,
     },
   });
 
@@ -255,6 +265,7 @@ export const clearPlaylist = async (requester: OnlineUser) => {
     where: {
       ended: false,
       skipped: false,
+      ...ignoreCurrent,
     },
     data: {
       skipped: true,
