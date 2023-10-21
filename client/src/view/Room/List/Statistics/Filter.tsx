@@ -1,4 +1,4 @@
-import { Component, createSignal } from "solid-js";
+import { Component, createMemo, createSignal } from "solid-js";
 import { Accessor, Setter } from "solid-js";
 import { StatisticsInput } from "trpc/types";
 import { useI18n } from "@solid-primitives/i18n";
@@ -48,6 +48,10 @@ const FilterComponent: Component<Props> = (props) => {
     filterOptions[0]?.value,
   );
 
+  const selected = createMemo(() =>
+    filterOptions.find((option) => option.value === after()),
+  );
+
   const handleSelect = (option: Option) => {
     setAfter(option.value);
 
@@ -59,9 +63,7 @@ const FilterComponent: Component<Props> = (props) => {
     <div class="flex flex-1">
       <Select
         options={filterOptions}
-        selectedSource={filterOptions.find(
-          (option) => option.value === after(),
-        )}
+        selected={selected}
         onSelect={(option) => handleSelect(option)}
       />
     </div>

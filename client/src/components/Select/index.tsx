@@ -1,5 +1,5 @@
 import { CircularLoadingSpinner } from "components/common/icon";
-import { Component, createSignal, For, Show } from "solid-js";
+import { Accessor, Component, createSignal, For, Show } from "solid-js";
 import trackClickOutside from "utils/trackClickOutside";
 
 export type Option = {
@@ -9,7 +9,7 @@ export type Option = {
 
 type Props = {
   options: Option[];
-  selectedSource?: Option;
+  selected: Accessor<Option | undefined>;
   onSelect: (option: Option) => void;
 };
 
@@ -41,7 +41,7 @@ const SelectComponent: Component<Props> = (props) => {
               >
                 <For each={props.options}>
                   {(option) => (
-                    <Show when={option.value !== props.selectedSource?.value}>
+                    <Show when={option.value !== props.selected()?.value}>
                       <li>
                         <button
                           type="button"
@@ -69,7 +69,7 @@ const SelectComponent: Component<Props> = (props) => {
             }}
           >
             <Show
-              when={props.selectedSource}
+              when={props.selected()}
               fallback={
                 <div class="flex w-full justify-center">
                   <div class="h-5 w-5">
@@ -78,7 +78,7 @@ const SelectComponent: Component<Props> = (props) => {
                 </div>
               }
             >
-              {(selectedSource) => selectedSource().name}
+              {(selected) => <>{selected().name}</>}
             </Show>
             <svg
               aria-hidden="true"
