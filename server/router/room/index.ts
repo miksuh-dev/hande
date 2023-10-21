@@ -280,14 +280,14 @@ export const roomRouter = t.router({
         });
       }
 
-      const topTen = await prisma.song.groupBy({
+      const top = await prisma.song.groupBy({
         by: ["contentId"],
         where: {
           createdAt: {
             gte: after.toISO(),
           },
         },
-        take: 10,
+        take: 100,
         orderBy: {
           _count: {
             contentId: "desc",
@@ -301,12 +301,12 @@ export const roomRouter = t.router({
       const songs = (await prisma.song.findMany({
         where: {
           contentId: {
-            in: topTen.map((r) => r.contentId),
+            in: top.map((r) => r.contentId),
           },
         },
       })) as Song[];
 
-      return topTen.map((r) => {
+      return top.map((r) => {
         const song = songs.find((s) => s.contentId === r.contentId);
 
         if (!song) {

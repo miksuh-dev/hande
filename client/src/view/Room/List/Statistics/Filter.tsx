@@ -38,10 +38,14 @@ const FilterComponent: Component<Props> = (props) => {
       name: t("statistics.filter.lastYear"),
       value: DateTime.now().minus({ year: 1 }).setZone("utc").toISO(),
     },
+    {
+      name: t("statistics.filter.allTime"),
+      value: DateTime.now().minus({ year: 99 }).setZone("utc").toISO(),
+    },
   ];
 
   const [after, setAfter] = createSignal<string | undefined>(
-    filterOptions[0]?.value
+    filterOptions[0]?.value,
   );
 
   const handleSelect = (option: Option) => {
@@ -56,7 +60,7 @@ const FilterComponent: Component<Props> = (props) => {
       <Select
         options={filterOptions}
         selectedSource={filterOptions.find(
-          (option) => option.value === after()
+          (option) => option.value === after(),
         )}
         onSelect={(option) => handleSelect(option)}
       />

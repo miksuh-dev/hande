@@ -128,13 +128,14 @@ export default {
     text: "Title",
   },
   statistics: {
-    title: "Top 10",
+    title: "Top 100",
     playCount: "Played {{ count }} times",
     filter: {
       last7days: "Last 7 days",
       lastMonth: "Last month",
       last3months: "Last 3 months",
       lastYear: "Last year",
+      allTime: "All time",
     },
   },
   playlistDialog: {
