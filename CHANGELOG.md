@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.17.0](https://github.com/miksuh-dev/hande/compare/v2.16.1...v2.17.0) (2023-10-21)
+
+
+### Features
+
+* improve chat toggle display on small screens ([0858c7e](https://github.com/miksuh-dev/hande/commit/0858c7e3d6e10a4500c7289007c58e06c62c5493))
+
+
+### Bug Fixes
+
+* Cannot skip current song after clear playlist ([c5b1ec3](https://github.com/miksuh-dev/hande/commit/c5b1ec352ce43db6120e03d1666b995c27d8dfc0))
+
 ### [2.16.1](https://github.com/miksuh-dev/hande/compare/v2.16.0...v2.16.1) (2023-10-21)
 
 
