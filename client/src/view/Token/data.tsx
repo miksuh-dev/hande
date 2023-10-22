@@ -13,7 +13,7 @@ function TokenData({}: RouteDataFuncArgs) {
   }
 
   // Hard refresh to make sure socket connection is established
-  window.location.href = `${env.BASE_PATH}`;
+  window.location.href = `${env.BASE_PATH}/`;
 }
 
 export default TokenData;

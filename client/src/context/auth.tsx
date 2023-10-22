@@ -72,7 +72,7 @@ export const AuthProvider: Component<{
     localStorage.removeItem("token");
 
     // Hard refresh to clear socket connection
-    window.location.href = `${env.BASE_PATH}`;
+    window.location.href = `${env.BASE_PATH}/`;
   };
 
   const getTokenFromStorage = () => {
