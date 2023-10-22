@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.17.1](https://github.com/miksuh-dev/hande/compare/v2.17.0...v2.17.1) (2023-10-22)
+
+
+### Bug Fixes
+
+* incorrect redirect path on login ([d5ef524](https://github.com/miksuh-dev/hande/commit/d5ef5244e39515ec111189bb83d7048c87c06e43))
+
 ## [2.17.0](https://github.com/miksuh-dev/hande/compare/v2.16.1...v2.17.0) (2023-10-21)
 
 
