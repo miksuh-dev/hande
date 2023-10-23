@@ -2,7 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Readable } from "stream";
 import { DateTime } from "luxon";
+import { getRandomSong } from "prisma/query";
+import { MessageType } from "router/room/types";
+import { OnlineUser } from "types/auth";
 import { Options, ProcessQueueItem, ProcessQueueItemStatus } from "./types";
+import { AUTOPLAY_SONG_COUNT } from "../../constants";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { sendErrorMessage, sendMessage } from "../../router/room/message";
@@ -11,6 +15,7 @@ import { Song } from "../../types/prisma";
 import { SourceType } from "../../types/source";
 import client from "../mumble";
 import { createStream as createRadioStream } from "../radio";
+import * as room from "../room";
 import {
   createStream as createYoutubeStream,
   getVideoInfo,
@@ -264,6 +269,8 @@ async function playSong(this: ProcessQueueItem) {
 
     const options = await getSongSettings(this.song);
 
+    await handleAutoPlay();
+
     let started = false;
     stream.on("data", () => {
       if (!started) {
@@ -335,6 +342,33 @@ export const getNextSong = async () => {
   })) as Song | null;
 };
 
+export const getPlaylist = async () => {
+  const currentSong = getCurrentSong();
+  const ignoreCurrent = currentSong
+    ? {
+        id: {
+          not: currentSong.id,
+        },
+      }
+    : {};
+
+  return (await prisma.song.findMany({
+    where: {
+      ended: false,
+      skipped: false,
+      ...ignoreCurrent,
+    },
+    orderBy: [
+      {
+        position: "asc",
+      },
+      {
+        createdAt: "asc",
+      },
+    ],
+  })) as Song[];
+};
+
 export const stopCurrentSong = async (song: Song) => {
   stopStream();
 
@@ -351,4 +385,75 @@ export const stopCurrentSong = async (song: Song) => {
 export const setVolume = (volume: number) => {
   // 50 -> 0.5
   client.voiceConnection.setVolume(volume / 100);
+};
+
+export const addRandomSong = async (
+  requester: OnlineUser,
+  source: "user" | "autoplay" = "user"
+) => {
+  const song = await getRandomSong();
+
+  const addedSong = await prisma.$transaction(async (transaction) => {
+    const lastSong = await transaction.song.findFirst({
+      where: {
+        ended: false,
+        skipped: false,
+      },
+      orderBy: [
+        {
+          position: "desc",
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
+    });
+
+    const position = lastSong ? lastSong.position + 1 : 0;
+    return transaction.song.create({
+      data: {
+        url: song.url,
+        contentId: song.contentId,
+        title: song.title,
+        thumbnail: song.thumbnail,
+        requester: requester.name,
+        type: song.type,
+        position,
+        ended: false,
+        skipped: false,
+        random: true,
+      },
+    }) as Promise<Song>;
+  });
+
+  sendMessage(
+    source === "user"
+      ? "event.common.addedRandom"
+      : "event.common.addedRandomAutoplay",
+    {
+      user: requester,
+      type: MessageType.ACTION,
+      item: [addedSong],
+    }
+  );
+
+  ee.emit(`onUpdate`, { song: { add: [addedSong] } });
+
+  return addedSong;
+};
+
+export const handleAutoPlay = async () => {
+  const autoplay = room.get().autoplay;
+  if (!autoplay) return;
+
+  if (room.hasAutoplayExpired()) {
+    return sendMessage(`event.source.autoplayExpired`);
+  }
+
+  const playlist = await getPlaylist();
+
+  const songsInQueue = playlist.length;
+  for (let i = songsInQueue; i <= AUTOPLAY_SONG_COUNT; i++) {
+    await addRandomSong(autoplay.requester, "autoplay");
+  }
 };

@@ -49,6 +49,8 @@ export default {
       noSelections: "Ei valintoja",
       addRandomSong: "Lisää satunnainen kappale",
       randomSong: "Satunnaisesti lisätty kappale",
+      autoplayOn: "Aseta automaatinen toisto päälle",
+      autoplayOff: "Aseta automaatinen toisto pois päältä",
     },
     source: {
       song: {
@@ -85,6 +87,8 @@ export default {
       movedSong: "Kappaleen sijaintia vaihdettu",
       addedRandom: "Lisättiin satunnainen kappale",
       voted: "Ääni annettu",
+      autoplayOn: "Asetettiin automaattinen toisto päälle",
+      autoplayOff: "Asetettiin automaattinen toisto pois päältä",
     },
     source: {
       song: {
@@ -165,7 +169,12 @@ export default {
       shuffledPlaylist: "sekoitti soittolistan.",
       movedSong: 'vaihtoi kappaleen "{{ item }}" sijaintia jonossa.',
       addedRandom: 'lisäsi sattumanvaraisen kappaleen "{{ item }}" jonoon.',
+      addedRandomAutoplay:
+        'lisäsi sattumanvaraisen kappaleen "{{ item }}" jonoon (automaattinen toisto).',
       changedVolume: 'vaihtoi kappaleen "{{ item }}" äänenvoimakkuutta.',
+      autoplayOn: "asetti automaattisen toiston päälle.",
+      autoplayOff: "asetti automaattisen toiston pois päältä.",
+      autoplayExpired: "automaattinen toisto päättyi.",
     },
     source: {
       song: {

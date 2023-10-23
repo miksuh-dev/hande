@@ -9,10 +9,12 @@ import {
   removeSongFromQueue,
   setVolume,
   stopCurrentSong,
+  addRandomSong as addRandomSongInternal,
+  handleAutoPlay,
 } from "./internal";
+import * as room from "../../common/room";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
-import { getRandomSong } from "../../prisma/query";
 import { sendMessage } from "../../router/room/message";
 import { MessageType } from "../../router/room/types";
 import { VoteType } from "../../types/app";
@@ -283,48 +285,7 @@ export const clearPlaylist = async (requester: OnlineUser) => {
 };
 
 export const addRandomSong = async (requester: OnlineUser) => {
-  const song = await getRandomSong();
-
-  const addedSong = await prisma.$transaction(async (transaction) => {
-    const lastSong = await transaction.song.findFirst({
-      where: {
-        ended: false,
-        skipped: false,
-      },
-      orderBy: [
-        {
-          position: "desc",
-        },
-        {
-          createdAt: "desc",
-        },
-      ],
-    });
-
-    const position = lastSong ? lastSong.position + 1 : 0;
-    return transaction.song.create({
-      data: {
-        url: song.url,
-        contentId: song.contentId,
-        title: song.title,
-        thumbnail: song.thumbnail,
-        requester: requester.name,
-        type: song.type,
-        position,
-        ended: false,
-        skipped: false,
-        random: true,
-      },
-    }) as Promise<Song>;
-  });
-
-  sendMessage(`event.common.addedRandom`, {
-    user: requester,
-    type: MessageType.ACTION,
-    item: [addedSong],
-  });
-
-  ee.emit(`onUpdate`, { song: { add: [addedSong] } });
+  const song = await addRandomSongInternal(requester, "user");
 
   if (!getCurrentSong()) {
     const nextSong = await getNextSong();
@@ -333,7 +294,38 @@ export const addRandomSong = async (requester: OnlineUser) => {
     }
   }
 
-  return addedSong;
+  return song;
+};
+
+export const toggleAutoplay = async (requester: OnlineUser) => {
+  const newState = !room.get().autoplay
+    ? room.createAutoPlay(requester)
+    : undefined;
+
+  room.setOption("autoplay", newState);
+
+  sendMessage(
+    newState ? `event.common.autoplayOn` : `event.common.autoplayOff`,
+    {
+      user: requester,
+      type: MessageType.ACTION,
+    }
+  );
+
+  if (newState) {
+    await handleAutoPlay();
+
+    if (!getCurrentSong()) {
+      const nextSong = await getNextSong();
+      if (nextSong) {
+        await addSongToQueue(nextSong);
+      }
+    }
+  }
+
+  ee.emit(`onUpdate`, { room: { autoplay: newState } });
+
+  return !!newState;
 };
 
 export const shufflePlaylist = async (requester: OnlineUser) => {

@@ -1,6 +1,7 @@
 import { PlayingSong } from "types/app";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
+import { Room } from "../../common/room";
 import { SourceType } from "../../types/source";
 
 export enum MessageType {
@@ -55,6 +56,7 @@ export interface UpdateEvent {
     leave?: OnlineUser["hash"];
     update?: OnlineUser;
   };
+  room?: Room;
 }
 
 interface SourceResult {
