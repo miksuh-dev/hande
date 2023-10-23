@@ -9,10 +9,8 @@ const VideoComponent: Component = () => {
 
   return (
     <Show when={room()?.playing?.type === SourceType.SONG}>
-      <div class="flex-1 flex flex-col rounded-md bg-white dark:bg-neutral-900">
-        <div class="overflow-hidden p-4 dark:bg-neutral-800 h-full">
-          <Video playing={room().playing} />
-        </div>
+      <div class="flex-1 flex flex-col p-4 rounded-md bg-white dark:bg-neutral-900">
+        <Video playing={room().playing} />
       </div>
     </Show>
   );
