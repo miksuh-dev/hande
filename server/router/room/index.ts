@@ -15,9 +15,11 @@ import {
   playNext,
   removeSong,
   shufflePlaylist,
+  toggleAutoplay,
   volumeChange,
   voteSong,
 } from "../../common/playlist/user";
+import * as room from "../../common/room";
 import { PAGE_SIZE } from "../../constants";
 import ee from "../../eventEmitter";
 import { t } from "../../trpc";
@@ -58,6 +60,7 @@ export const roomRouter = t.router({
       playing: playingToClient(
         await enrichWithUserVote(getCurrentSong(), user)
       ),
+      room: room.getClient(),
       songs: playlist as Song[],
       messages,
       users: [...userState.users.values()].map((u) => u.user),
@@ -190,6 +193,11 @@ export const roomRouter = t.router({
     await shufflePlaylist(onlineUser);
 
     return true;
+  }),
+  autoplay: onlineUserProcedure.mutation(async ({ ctx }) => {
+    const { onlineUser } = ctx;
+
+    return await toggleAutoplay(onlineUser);
   }),
   search: authedProcedure
     .input(

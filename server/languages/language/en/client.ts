@@ -84,6 +84,8 @@ export default {
       movedSong: "Moved song",
       addedRandom: "Added random song",
       voted: "Vote given",
+      autoplayOn: "Autoplay turned on",
+      autoplayOff: "Autoplay turned off",
     },
     source: {
       song: {
@@ -164,7 +166,12 @@ export default {
       shuffledPlaylist: "shuffled playlist.",
       movedSong: 'changed song "{{ item }}" position in queue.',
       addedRandom: 'added random song "{{ item }}" to queue.',
+      addedRandomAutoplay:
+        'lisäsi sattumanvaraisen kappaleen "{{ item }}" jonoon (autoplay).',
       changedVolume: 'changed volume of song "{{ item }}".',
+      autoplayOn: "set autoplay on.",
+      autoplayOff: "set autoplay on.",
+      autoplayExpired: "Autoplay expired.",
     },
     source: {
       song: {

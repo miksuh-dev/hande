@@ -1,3 +1,4 @@
+import { RoomClient } from "common/room";
 import { PlayingSong } from "types/app";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
@@ -55,6 +56,7 @@ export interface UpdateEvent {
     leave?: OnlineUser["hash"];
     update?: OnlineUser;
   };
+  room?: RoomClient;
 }
 
 interface SourceResult {

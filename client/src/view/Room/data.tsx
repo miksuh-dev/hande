@@ -80,6 +80,16 @@ const handleUpdateEvent = (
     }
   }
 
+  if (event.room) {
+    return {
+      ...existingRoom,
+      room: {
+        ...existingRoom.room,
+        ...event.room,
+      },
+    };
+  }
+
   if (event.song) {
     if (event.song.add) {
       const songs = event.song.add;
@@ -178,6 +188,9 @@ function RoomData() {
         songs: [],
         playing: undefined,
         sources: [],
+        room: {
+          autoplay: undefined,
+        },
         version: "0.0.0",
       },
     },

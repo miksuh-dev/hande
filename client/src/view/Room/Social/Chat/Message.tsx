@@ -28,8 +28,13 @@ const Message: Component<{ message: IncomingMessage }> = (props) => {
       );
     }
 
-    if (["ACTION", "JOIN", "LEAVE"].includes(props.message.type)) {
-      return <>{t(props.message.content)}</>;
+    if (
+      ["ACTION", "JOIN", "LEAVE"].includes(props.message.type) ||
+      props.message.property.isSystem
+    ) {
+      return (
+        <>{t(props.message.content) ?? htmlDecode(props.message.content)}</>
+      );
     }
 
     return <>{htmlDecode(props.message.content)}</>;
