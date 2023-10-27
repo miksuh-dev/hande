@@ -49,6 +49,8 @@ export default {
       noSelections: "No selections",
       addRandomSong: "Add random song",
       randomSong: "Randomly added song",
+      autoplayOn: "Set autoplay on",
+      autoplayOff: "Set autoplay off",
     },
     source: {
       song: {
