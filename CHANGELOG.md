@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.18.0](https://github.com/miksuh-dev/hande/compare/v2.17.1...v2.18.0) (2023-10-27)
+
+
+### Features
+
+* Allow toggle autoplay ([44e42ef](https://github.com/miksuh-dev/hande/commit/44e42ef3f6ef9c267ac4f00112223e7c944256d9))
+
+
+### Bug Fixes
+
+* make video block use same style as rest of the blocks ([5f31ce6](https://github.com/miksuh-dev/hande/commit/5f31ce60a7974a6bdf4654a4dde5fc73c1edba8c))
+
 ### [2.17.1](https://github.com/miksuh-dev/hande/compare/v2.17.0...v2.17.1) (2023-10-22)
 
 
