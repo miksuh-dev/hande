@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.18.1](https://github.com/miksuh-dev/hande/compare/v2.18.0...v2.18.1) (2023-10-27)
+
+
+### Bug Fixes
+
+* add missing english translation ([93191db](https://github.com/miksuh-dev/hande/commit/93191db04d767c339dd5c845b3a4fa2ec4706b7d))
+
 ## [2.18.0](https://github.com/miksuh-dev/hande/compare/v2.17.1...v2.18.0) (2023-10-27)
 
 
