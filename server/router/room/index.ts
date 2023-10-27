@@ -60,7 +60,7 @@ export const roomRouter = t.router({
       playing: playingToClient(
         await enrichWithUserVote(getCurrentSong(), user)
       ),
-      room: room.get(),
+      room: room.getClient(),
       songs: playlist as Song[],
       messages,
       users: [...userState.users.values()].map((u) => u.user),

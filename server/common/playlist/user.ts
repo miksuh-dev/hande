@@ -118,7 +118,7 @@ export const removeSong = async (id: number, user: OnlineUser) => {
       });
     })) as Song;
 
-  const currentSong = removeSongFromQueue(song);
+  const currentSong = await removeSongFromQueue(song);
   if (currentSong) {
     sendMessage(`event.source.${song.type}.skipped`, {
       user,

@@ -64,7 +64,9 @@ export const addSongToQueue = async (song: Song) => {
   await processQueue(item);
 };
 
-export const removeSongFromQueue = (song: Song) => {
+export const removeSongFromQueue = async (song: Song) => {
+  await handleAutoPlay();
+
   return processingQueue.find((item, index) => {
     if (item.song.id === song.id) {
       const found = processingQueue.splice(index, 1);
@@ -90,7 +92,7 @@ const onSongEnd = async (song: Song) => {
 
   ee.emit(`onUpdate`, { song: { remove: [song.id] } });
 
-  removeSongFromQueue(song);
+  await removeSongFromQueue(song);
 
   const nextSong = await getNextSong();
   if (nextSong) {
@@ -269,8 +271,6 @@ async function playSong(this: ProcessQueueItem) {
 
     const options = await getSongSettings(this.song);
 
-    await handleAutoPlay();
-
     let started = false;
     stream.on("data", () => {
       if (!started) {
@@ -447,7 +447,9 @@ export const handleAutoPlay = async () => {
   if (!autoplay) return;
 
   if (room.hasAutoplayExpired()) {
-    return sendMessage(`event.source.autoplayExpired`);
+    sendMessage(`event.common.autoplayExpired`, { type: MessageType.MESSAGE });
+    ee.emit(`onUpdate`, { room: { autoplay: undefined } });
+    return;
   }
 
   const playlist = await getPlaylist();

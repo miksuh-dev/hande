@@ -174,7 +174,7 @@ export default {
       changedVolume: 'vaihtoi kappaleen "{{ item }}" äänenvoimakkuutta.',
       autoplayOn: "asetti automaattisen toiston päälle.",
       autoplayOff: "asetti automaattisen toiston pois päältä.",
-      autoplayExpired: "automaattinen toisto päättyi.",
+      autoplayExpired: "Automaattinen toisto päättyi.",
     },
     source: {
       song: {

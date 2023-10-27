@@ -85,6 +85,7 @@ const handleUpdateEvent = (
       ...existingRoom,
       room: {
         ...existingRoom.room,
+        ...event.room,
       },
     };
   }

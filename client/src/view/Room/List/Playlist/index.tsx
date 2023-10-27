@@ -8,9 +8,16 @@ import {
 } from "components/common/icon";
 import ConfirmDialog from "components/ConfirmDialog";
 import { TabContainer } from "components/Tabs";
+import { getTimeLeft } from "./utils";
 import Tooltip from "components/Tooltip";
 import useSnackbar from "hooks/useSnackbar";
-import { Component, createMemo, createSignal, Show } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createSignal,
+  onCleanup,
+  Show,
+} from "solid-js";
 import trpcClient from "trpc";
 import { Song } from "trpc/types";
 import { htmlDecode } from "utils/parse";
@@ -24,6 +31,7 @@ const PlaylistComponent: Component = () => {
   const [clearDialogOpen, setClearDialogOpen] = createSignal(false);
 
   const snackbar = useSnackbar();
+  const [autoplayLeft, setAutoplayLeft] = createSignal<number>();
 
   const handleSkip = async (song: Song) => {
     try {
@@ -114,7 +122,25 @@ const PlaylistComponent: Component = () => {
       }
     }
   };
-  const autoplay = createMemo(() => room().room.autoplay);
+
+  createEffect(() => {
+    const time = room().room.autoplay?.time;
+
+    if (!time) {
+      setAutoplayLeft(0);
+      return;
+    }
+
+    setAutoplayLeft(getTimeLeft(time));
+
+    const interval = setInterval(() => {
+      setAutoplayLeft(getTimeLeft(time));
+    }, 3000);
+
+    onCleanup(() => {
+      clearInterval(interval);
+    });
+  });
 
   return (
     <>
@@ -126,14 +152,22 @@ const PlaylistComponent: Component = () => {
                 <RandomIcon />
               </button>
             </Tooltip>
-            <Tooltip text={t("tooltip.common.autoplayOn")}>
+            <Tooltip
+              text={
+                room().room.autoplay
+                  ? t("tooltip.common.autoplayOff")
+                  : t("tooltip.common.autoplayOn")
+              }
+            >
               <button class="icon-button" onClick={() => handleAutoplay()}>
                 <div class="relative">
                   <RobotIcon />
-                  <Show when={autoplay()}>
-                    <span class="text-[0.5rem] rounded-md text-white dark:text-custom-primary-500 absolute left-0 right-0 -bottom-2">
-                      1m
-                    </span>
+                  <Show when={autoplayLeft()}>
+                    {(autoplay) => (
+                      <span class="text-[0.5rem] rounded-md text-white dark:text-custom-primary-500 absolute left-0 right-0 -bottom-2">
+                        {`${Math.round(autoplay())} min`}
+                      </span>
+                    )}
                   </Show>
                 </div>
               </button>

@@ -11,12 +11,25 @@ export interface Room {
   autoplay: Autoplay | undefined;
 }
 
+export type RoomClient = typeof getClient;
+
 export const room: Room = {
   autoplay: undefined,
 };
 
 export const get = () => {
   return room;
+};
+
+export const getClient = () => {
+  const autoplay = room.autoplay
+    ? {
+        ...room.autoplay,
+        time: room.autoplay.time.toISO(),
+      }
+    : undefined;
+
+  return { ...room, autoplay };
 };
 
 export const setOption = <T extends keyof Room>(option: T, value: Room[T]) => {
@@ -35,8 +48,7 @@ export const createAutoPlay = (
 export const hasAutoplayExpired = () => {
   if (!room.autoplay) return false;
 
-  const expired =
-    DateTime.utc() > room.autoplay.time.plus({ seconds: AUTOPLAY_DURATION });
+  const expired = DateTime.utc() > room.autoplay.time;
   if (expired) {
     setOption("autoplay", undefined);
   }
