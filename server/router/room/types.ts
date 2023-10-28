@@ -1,8 +1,8 @@
-import { RoomClient } from "common/room";
-import { PlayingSong } from "types/app";
-import { OnlineUser } from "types/auth";
-import { Song } from "types/prisma";
-import { SourceType } from "../../types/source";
+import { RoomClient } from "@server/common/room";
+import { PlayingSong } from "@server/types/app";
+import { OnlineUser } from "@server/types/auth";
+import { Song } from "@server/types/prisma";
+import { SourceType } from "@server/types/source";
 
 export enum MessageType {
   MESSAGE = "MESSAGE",

@@ -3,8 +3,8 @@ import { TRPCError } from "@trpc/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { DateTime } from "luxon";
-import { MumbleUser } from "types/auth";
-import { SOCKET_SESSION_TIMEOUT_HOURS } from "../constants";
+import { SOCKET_SESSION_TIMEOUT_HOURS } from "@server/constants";
+import { MumbleUser } from "@server/types/auth";
 
 const getTokenFromHeader = (headers: IncomingMessage["headers"]) => {
   const authorization = headers.authorization;

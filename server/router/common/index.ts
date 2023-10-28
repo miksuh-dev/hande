@@ -5,9 +5,9 @@ import { z } from "zod";
 import {
   getClientLanguage,
   availableLanguages as available,
-} from "../../languages";
-import { userProcedure } from "../../router/utils";
-import { t } from "../../trpc";
+} from "@server/languages";
+import { userProcedure } from "@server/router/utils";
+import { t } from "@server/trpc";
 
 const markdownIt = new MarkdownIt();
 

@@ -1,6 +1,6 @@
-import { MumbleUser, OnlineUser } from "types/auth";
-import * as room from "../../common/room";
-import ee from "../../eventEmitter";
+import * as room from "@server/common/room";
+import ee from "@server/eventEmitter";
+import { MumbleUser, OnlineUser } from "@server/types/auth";
 import { sendMessage } from "../room/message";
 import { MessageType } from "../room/types";
 

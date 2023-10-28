@@ -6,6 +6,11 @@
     "outDir": "dist",
     "lib": ["es2015", "es2016", "es2017"],
     "baseUrl": "./server",
+    "paths": {
+      "@server/*": ["./*"],
+      "@noodlejs/*": ["../NoodleJS/*"],
+      "@noodlejs": ["../NoodleJS"]
+    },
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strict": true,

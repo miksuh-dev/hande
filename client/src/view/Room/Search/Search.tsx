@@ -1,7 +1,7 @@
 import { CircularLoadingSpinner, SearchIcon } from "components/common/icon";
 import { Component, createSignal, For, Show } from "solid-js";
 import { Accessor, Setter } from "solid-js";
-import { Source } from "../../../../../server/types/source";
+import { Source } from "@server/types/source";
 import trackClickOutside from "utils/trackClickOutside";
 import { useI18n } from "@solid-primitives/i18n";
 

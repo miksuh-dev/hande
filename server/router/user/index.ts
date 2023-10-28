@@ -2,16 +2,16 @@ import crypto from "crypto";
 import { TRPCError } from "@trpc/server";
 import { DateTime } from "luxon";
 import { z } from "zod";
-import { OnlineUser } from "types/auth";
-import * as userState from "./state";
-import ee from "../../eventEmitter";
-import { t } from "../../trpc";
+import ee from "@server/eventEmitter";
+import { t } from "@server/trpc";
 import {
   createSession,
   getServerVersion,
   verifyJWTToken,
-} from "../../utils/auth";
-import { schemaForType } from "../../utils/trpc";
+} from "@server/utils/auth";
+import { schemaForType } from "@server/utils/trpc";
+import { OnlineUser } from "types/auth";
+import * as userState from "./state";
 import { userProcedure, guestProcedure, onlineUserProcedure } from "../utils";
 
 export const userRouter = t.router({

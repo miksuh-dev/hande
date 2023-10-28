@@ -1,5 +1,5 @@
 import { useContext } from "solid-js";
-import { SnackbarContext } from "../context/snackbar";
+import { SnackbarContext } from "context/snackbar";
 
 const useSnackbar = () => {
   const context = useContext(SnackbarContext);

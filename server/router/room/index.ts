@@ -2,11 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { DateTime } from "luxon";
 import { z } from "zod";
-import { OnlineUser } from "types/auth";
-import { messages, sendMessage } from "./message";
-import { searchFromPlaylist, searchFromSource } from "./sources";
-import { MessageType, UpdateEvent } from "./types";
-import { getCurrentSong, getPlaylist } from "../../common/playlist/internal";
+import { getCurrentSong, getPlaylist } from "@server/common/playlist/internal";
 import {
   addRandomSong,
   addSongs,
@@ -18,25 +14,29 @@ import {
   toggleAutoplay,
   volumeChange,
   voteSong,
-} from "../../common/playlist/user";
-import * as room from "../../common/room";
-import { PAGE_SIZE } from "../../constants";
-import ee from "../../eventEmitter";
-import { t } from "../../trpc";
-import { VoteType } from "../../types/app";
-import { Song, SongTypeSong } from "../../types/prisma";
-import { SOURCES, SourceType } from "../../types/source";
+} from "@server/common/playlist/user";
+import * as room from "@server/common/room";
+import { PAGE_SIZE } from "@server/constants";
+import ee from "@server/eventEmitter";
+import { t } from "@server/trpc";
+import { VoteType } from "@server/types/app";
+import { OnlineUser } from "@server/types/auth";
+import { Song, SongTypeSong } from "@server/types/prisma";
+import { SOURCES, SourceType } from "@server/types/source";
+import {
+  enrichUpdateMessageWithUserVote,
+  enrichWithUserVote,
+  playingToClient,
+} from "@server/utils/middleware";
+import { schemaForType } from "@server/utils/trpc";
+import { messages, sendMessage } from "./message";
+import { searchFromPlaylist, searchFromSource } from "./sources";
+import { MessageType, UpdateEvent } from "./types";
 import {
   getServerVersion,
   isExpiredSession,
   isOutDatedVersion,
 } from "../../utils/auth";
-import {
-  enrichUpdateMessageWithUserVote,
-  enrichWithUserVote,
-  playingToClient,
-} from "../../utils/middleware";
-import { schemaForType } from "../../utils/trpc";
 import * as userState from "../user/state";
 import { authedProcedure, onlineUserProcedure } from "../utils";
 

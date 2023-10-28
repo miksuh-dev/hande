@@ -1,5 +1,5 @@
 import { useRouteData } from "@solidjs/router";
-import { isLatestVersion } from "../../utils/version";
+import { isLatestVersion } from "utils/version";
 import useAuth from "hooks/useAuth";
 import { createMemo, createSignal, Show } from "solid-js";
 import trackClickOutside from "utils/trackClickOutside";
