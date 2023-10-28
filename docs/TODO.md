@@ -10,6 +10,7 @@ Common:
 - [ ] Find way to type enums (Song.type) using Prisma and SQLite
 - [x] Improve random song selection algorithm
 - [ ] Update i18n to ^2.0.0 and refactor
+- [ ] Fix absolute path imports failing only after build & run
 
 To Mumble:
 
@@ -25,7 +26,7 @@ To website:
 - [x] Statistics
 - [x] View changelog
 - [x] Disconnect timeout so refreshing page doesn't instantly send leave message
-- [ ] Make playlist show better in smaller screens
+- [x] Make playlist show better in smaller screens
 - [ ] Improve light theme
 
 ### Bugs:
