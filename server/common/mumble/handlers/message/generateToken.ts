@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
+import { serverLanguage } from "@server/languages";
+import { createSession, getServerVersion } from "@server/utils/auth";
 import { Message } from "./types";
-import { serverLanguage } from "../../../../languages";
-import { createSession, getServerVersion } from "../../../../utils/auth";
 
 const t = serverLanguage.commands.www;
 

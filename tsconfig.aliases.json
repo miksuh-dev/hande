@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./dist",
+    "paths": {
+      "@server/*": ["./server/*"],
+      "@noodlejs/*": ["./NoodleJS/*"],
+      "@noodlejs": ["./NoodleJS"]
+    }
+  }
+}

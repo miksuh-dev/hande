@@ -1,3 +1,3 @@
-import Message from "../../../../../NoodleJS/structures/TextMessage";
+import Message from "@noodlejs/structures/TextMessage";
 
 export { Message };

@@ -6,7 +6,7 @@ import useSnackbar from "hooks/useSnackbar";
 import { Component, createSignal, onMount, Show } from "solid-js";
 import trpcClient from "trpc";
 import { RoomData } from "view/Room/data";
-import { setLastVersion } from "../../utils/version";
+import { setLastVersion } from "utils/version";
 
 type Props = {
   onClose: () => void;

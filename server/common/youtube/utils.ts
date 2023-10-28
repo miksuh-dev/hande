@@ -1,10 +1,13 @@
-import { SourceResultPlaylist, SourceResultSong } from "router/room/types";
+import {
+  SourceResultPlaylist,
+  SourceResultSong,
+} from "@server/router/room/types";
+import { SourceType } from "@server/types/source";
 import {
   YoutubeItemPlaylist,
   YoutubeItemPlaylistSong,
   YoutubeItemSong,
 } from "./types";
-import { SourceType } from "../../types/source";
 
 export const parseSong = (item: YoutubeItemSong): SourceResultSong => {
   return {

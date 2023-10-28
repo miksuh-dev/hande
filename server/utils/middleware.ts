@@ -1,7 +1,7 @@
-import { UpdateEvent } from "router/room/types";
+import { UpdateEvent } from "@server/router/room/types";
+import { PlayingSong, VoteType } from "@server/types/app";
+import { MumbleUser } from "@server/types/auth";
 import prisma from "../prisma";
-import { PlayingSong, VoteType } from "../types/app";
-import { MumbleUser } from "../types/auth";
 
 const voteValueToVoteType = (vote: number) => {
   if (vote === 1) return VoteType.UP;

@@ -1,7 +1,7 @@
 import fs from "fs";
 import { DateTime } from "luxon";
+import ee from "@server/eventEmitter";
 import { Message, MessageOptions, MessageType } from "./types";
-import ee from "../../eventEmitter";
 
 const HISTORY_FILE = "message-history.json";
 

@@ -1,7 +1,7 @@
+import { serverLanguage } from "@server/languages";
 import generateToken from "./generateToken";
 import help from "./help";
 import { Message } from "./types";
-import { serverLanguage } from "../../../../languages";
 
 export default [
   {

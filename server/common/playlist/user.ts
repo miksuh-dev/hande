@@ -1,4 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import * as room from "@server/common/room";
+import ee from "@server/eventEmitter";
+import prisma from "@server/prisma";
+import { sendMessage } from "@server/router/room/message";
+import { MessageType } from "@server/router/room/types";
+import { VoteType } from "@server/types/app";
 import { OnlineUser } from "types/auth";
 import { Song } from "types/prisma";
 import {
@@ -12,12 +18,6 @@ import {
   addRandomSong as addRandomSongInternal,
   handleAutoplay,
 } from "./internal";
-import * as room from "../../common/room";
-import ee from "../../eventEmitter";
-import prisma from "../../prisma";
-import { sendMessage } from "../../router/room/message";
-import { MessageType } from "../../router/room/types";
-import { VoteType } from "../../types/app";
 
 export const addSongs = async (
   songs: {

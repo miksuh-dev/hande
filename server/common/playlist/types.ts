@@ -1,4 +1,4 @@
-import { getSongSettings } from "common/playlist/internal";
+import { getSongSettings } from "@server/common/playlist/internal";
 import { PlayingSong } from "types/app";
 import { Song } from "types/prisma";
 
