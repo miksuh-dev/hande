@@ -246,14 +246,11 @@ export const volumeChange = async (
 };
 
 export const clearPlaylist = async (requester: OnlineUser) => {
-  const currentSong = getCurrentSong();
-  const ignoreCurrent = currentSong
-    ? {
-        id: {
-          not: currentSong.id,
-        },
-      }
-    : {};
+  const ignoreCurrent = {
+    id: {
+      not: getCurrentSong()?.id,
+    },
+  };
 
   const songs = await prisma.song.findMany({
     where: {
