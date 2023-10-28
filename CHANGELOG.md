@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.18.2](https://github.com/miksuh-dev/hande/compare/v2.18.1...v2.18.2) (2023-10-28)
+
+
+### Bug Fixes
+
+* Autoplay stopped after playlist clear ([00ae01c](https://github.com/miksuh-dev/hande/commit/00ae01cf2e556fb355a177f9f2a8eb7463f49c6e))
+* Ignore radio stations when adding random song ([c43a634](https://github.com/miksuh-dev/hande/commit/c43a6345254cd923cab49e2dac6d3667a0396d34))
+* inconsistent autoplay song count ([565d8da](https://github.com/miksuh-dev/hande/commit/565d8dabdf7d36064622f549e48664dd4f32086f))
+* Song Requester not updating between song changes ([9d660f2](https://github.com/miksuh-dev/hande/commit/9d660f2a8711a985ec9d8dbb1e6ffbdb97cfe746))
+
 ### [2.18.1](https://github.com/miksuh-dev/hande/compare/v2.18.0...v2.18.1) (2023-10-27)
 
 
