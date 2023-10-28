@@ -342,11 +342,18 @@ export const getNextSong = async () => {
   })) as Song | null;
 };
 
-export const getPlaylist = async () => {
+export const getPlaylist = async (ignoreCurrent: boolean) => {
+  const ignored = ignoreCurrent
+    ? {
+        id: { not: getCurrentSong()?.id },
+      }
+    : {};
+
   return (await prisma.song.findMany({
     where: {
       ended: false,
       skipped: false,
+      ...ignored,
     },
     orderBy: [
       {
@@ -442,7 +449,7 @@ export const handleAutoPlay = async () => {
     return;
   }
 
-  const playlist = await getPlaylist();
+  const playlist = await getPlaylist(false);
 
   const songsInQueue = playlist.length;
   for (let i = songsInQueue; i < AUTOPLAY_SONG_COUNT; i++) {

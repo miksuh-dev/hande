@@ -6,7 +6,7 @@ import { OnlineUser } from "types/auth";
 import { messages, sendMessage } from "./message";
 import { searchFromPlaylist, searchFromSource } from "./sources";
 import { MessageType, UpdateEvent } from "./types";
-import { getCurrentSong } from "../../common/playlist/internal";
+import { getCurrentSong, getPlaylist } from "../../common/playlist/internal";
 import {
   addRandomSong,
   addSongs,
@@ -38,30 +38,14 @@ import { authedProcedure, onlineUserProcedure } from "../utils";
 
 export const roomRouter = t.router({
   get: authedProcedure.query(async ({ ctx }) => {
-    const { prisma, user } = ctx;
-
-    const playlist = await prisma.song.findMany({
-      where: {
-        ended: false,
-        skipped: false,
-        id: { not: getCurrentSong()?.id },
-      },
-      orderBy: [
-        {
-          position: "asc",
-        },
-        {
-          createdAt: "asc",
-        },
-      ],
-    });
+    const { user } = ctx;
 
     return {
       playing: playingToClient(
         await enrichWithUserVote(getCurrentSong(), user)
       ),
       room: room.getClient(),
-      songs: playlist as Song[],
+      songs: await getPlaylist(true),
       messages,
       users: [...userState.users.values()].map((u) => u.user),
       sources: SOURCES,
