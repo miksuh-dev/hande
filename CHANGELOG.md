@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.20.0](https://github.com/miksuh-dev/hande/compare/v2.19.0...v2.20.0) (2023-10-28)
+
+
+### Features
+
+* Set autoplay off when room is empty ([e70f987](https://github.com/miksuh-dev/hande/commit/e70f987e35254b6c726ea79d38b921e33be600ce))
+
 ## [2.19.0](https://github.com/miksuh-dev/hande/compare/v2.18.2...v2.19.0) (2023-10-28)
 
 
