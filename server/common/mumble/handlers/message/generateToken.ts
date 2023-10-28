@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { Message } from "./types";
 import { serverLanguage } from "../../../../languages";
-import { createSession, getSessionVersion } from "../../../../utils/auth";
+import { createSession, getServerVersion } from "../../../../utils/auth";
 
 const t = serverLanguage.commands.www;
 
@@ -21,7 +21,7 @@ const handleGenerateToken = async (message: Message) => {
         session: sender.session,
         name: sender.name,
         hash: sender.hash,
-        version: getSessionVersion().major,
+        version: getServerVersion().major,
         property: {
           isGuest: false,
           isMumbleUser: true,
@@ -31,7 +31,7 @@ const handleGenerateToken = async (message: Message) => {
         session: DateTime.utc().toMillis(),
         name: "Guest",
         hash: "",
-        version: getSessionVersion().major,
+        version: getServerVersion().major,
         property: {
           isGuest: true,
           isMumbleUser: false,

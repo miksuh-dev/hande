@@ -8,7 +8,7 @@ const Loading: Component<{ title?: string }> = (props) => {
         <CircularLoadingSpinner />
       </span>
       <Show when={props.title}>
-        <div class="text-center text-neutral-200 dark:text-neutral-200">
+        <div class="text-center text-neutral-900 dark:text-neutral-200">
           {props.title}
         </div>
       </Show>

@@ -13,6 +13,8 @@ import useAuth from "hooks/useAuth";
 import { generateId } from "utils/auth";
 import useTheme from "hooks/useTheme";
 import { useI18n } from "@solid-primitives/i18n";
+import { DateTime } from "luxon";
+import { TRPCClientError } from "@trpc/client";
 
 const playListCompare = (a: Song, b: Song) => {
   if (a.position !== b.position) {
@@ -177,6 +179,9 @@ function RoomData() {
   const auth = useAuth();
   const theme = useTheme();
   const [reconnecting, setReconnecting] = createSignal(false);
+  const [error, setError] = createSignal<
+    { title: string; description: string } | undefined
+  >();
 
   const [room, { mutate }] = createResource<Room>(
     () => trpcClient.room.get.query(),
@@ -202,12 +207,37 @@ function RoomData() {
     }
   });
 
+  const onPingError = (err: Error, onClose: () => void) => {
+    if (err instanceof TRPCClientError) {
+      const message = t(err.message);
+
+      if (message) {
+        setError({
+          title: message,
+          description: t("common.refreshPage"),
+        });
+
+        onClose();
+      }
+
+      return;
+    }
+
+    console.error(err);
+    snackbar.error(t("error.common", { error: err.message }));
+  };
+
   const initRoomSocket = () => {
-    const clientId = generateId(auth.user());
+    const session = {
+      clientId: generateId(auth.user()),
+      joined: DateTime.utc().toISO(),
+      version: room().version,
+    };
+
     let timeout: NodeJS.Timeout;
 
     const pongListen = trpcClient.room.onPong.subscribe(
-      { clientId },
+      { clientId: session.clientId },
       {
         onStarted: () => {
           setReconnecting(false);
@@ -215,7 +245,9 @@ function RoomData() {
         onData: (message) => {
           console.log(message);
           timeout = setTimeout(async () => {
-            trpcClient.room.ping.mutate(clientId);
+            trpcClient.room.ping
+              .mutate(session)
+              .catch((err) => onPingError(err, onClose));
           }, 1000 * 30);
         },
         onError: () => {
@@ -227,13 +259,12 @@ function RoomData() {
       },
     );
 
-    trpcClient.room.ping.mutate(clientId).catch((err) => {
-      console.error(err);
-      snackbar.error(t("error.common", { error: err.message }));
-    });
+    trpcClient.room.ping
+      .mutate(session)
+      .catch((err) => onPingError(err, onClose));
 
     const lobbyUpdate = trpcClient.room.onUpdate.subscribe(
-      { clientId, state: { theme: theme.current() } },
+      { clientId: session.clientId, state: { theme: theme.current() } },
       {
         onData(event) {
           mutate((existingRoom) => {
@@ -247,14 +278,18 @@ function RoomData() {
       },
     );
 
-    onCleanup(() => {
+    const onClose = () => {
       lobbyUpdate.unsubscribe();
       pongListen.unsubscribe();
       clearTimeout(timeout);
+    };
+
+    onCleanup(() => {
+      onClose();
     });
   };
 
-  return { room, reconnecting };
+  return { room, reconnecting, error };
 }
 
 interface Ready<T> {

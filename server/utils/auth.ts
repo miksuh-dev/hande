@@ -2,7 +2,9 @@ import { IncomingMessage } from "http";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { DateTime } from "luxon";
 import { MumbleUser } from "types/auth";
+import { SOCKET_SESSION_TIMEOUT_HOURS } from "../constants";
 
 const getTokenFromHeader = (headers: IncomingMessage["headers"]) => {
   const authorization = headers.authorization;
@@ -85,9 +87,7 @@ export const comparePassword = (plaintextPassword: string, hash: string) => {
   return bcrypt.compare(plaintextPassword, hash);
 };
 
-export const getSessionVersion = () => {
-  const version = process.env.npm_package_version ?? "0.0.0";
-
+export const parseVersion = (version: string) => {
   const [major = 0, minor = 0, patch = 0] = version.split(".").map(Number);
 
   return {
@@ -96,4 +96,33 @@ export const getSessionVersion = () => {
     minor,
     patch,
   };
+};
+
+export const getServerVersion = () => {
+  const version = process.env.npm_package_version ?? "0.0.0";
+
+  return parseVersion(version);
+};
+
+export const isOutDatedVersion = (versionString: string) => {
+  const latestVersion = getServerVersion();
+
+  const version = parseVersion(versionString);
+
+  if (latestVersion.major > version.major) return true;
+  if (latestVersion.minor > version.minor) return true;
+  if (latestVersion.patch > version.patch) return true;
+
+  return false;
+};
+
+export const isExpiredSession = (joinTime: string) => {
+  const parsedTime = DateTime.fromISO(joinTime, { zone: "utc" });
+
+  if (!parsedTime.isValid) return true;
+
+  const expired =
+    parsedTime.plus({ hours: SOCKET_SESSION_TIMEOUT_HOURS }) < DateTime.utc();
+
+  return expired;
 };

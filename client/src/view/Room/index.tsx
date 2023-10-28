@@ -1,9 +1,10 @@
-import { Component, createSignal, Show } from "solid-js";
+import { Component, createSignal, Match, Show, Switch } from "solid-js";
 import Content from "components/Content";
 import List from "./List";
 import Social from "./Social";
 import Search from "./Search";
 import Loading from "components/Loading";
+import Error from "components/Error";
 import { useRouteData } from "@solidjs/router";
 import { RoomData } from "./data";
 import { useI18n } from "@solid-primitives/i18n";
@@ -12,14 +13,25 @@ import Video from "view/Room/Video";
 
 const RoomView: Component = () => {
   const [t] = useI18n();
-  const { reconnecting } = useRouteData<RoomData>();
+  const { reconnecting, error } = useRouteData<RoomData>();
   const [showVideo, setShowVideo] = createSignal(false);
   const [showSocial, setSocialOpen] = createSignal(false);
 
   return (
-    <Show
-      when={reconnecting()}
-      fallback={
+    <Switch>
+      <Match when={reconnecting()}>
+        <Content>
+          <Loading title={t("error.socketReconnecting")} />
+        </Content>
+      </Match>
+      <Match when={error()}>
+        {(text) => (
+          <Content>
+            <Error title={text().title} description={text().description} />
+          </Content>
+        )}
+      </Match>
+      <Match when={true}>
         <Content
           footer={
             <Footer
@@ -43,12 +55,8 @@ const RoomView: Component = () => {
             </div>
           </div>
         </Content>
-      }
-    >
-      <Content>
-        <Loading title={t("error.socketReconnecting")} />
-      </Content>
-    </Show>
+      </Match>
+    </Switch>
   );
 };
 

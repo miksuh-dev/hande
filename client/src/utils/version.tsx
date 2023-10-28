@@ -3,7 +3,7 @@ import { createSignal } from "solid-js";
 const STORAGE_ITEM = "latestVersion";
 
 const [getVersion, setVersion] = createSignal(
-  localStorage.getItem(STORAGE_ITEM)
+  localStorage.getItem(STORAGE_ITEM),
 );
 
 export const setLastVersion = (version: string) => {
@@ -14,3 +14,5 @@ export const setLastVersion = (version: string) => {
 export const isLatestVersion = (version: string) => {
   return version === getVersion();
 };
+
+export { getVersion };

@@ -8,7 +8,7 @@ import ee from "../../eventEmitter";
 import { t } from "../../trpc";
 import {
   createSession,
-  getSessionVersion,
+  getServerVersion,
   verifyJWTToken,
 } from "../../utils/auth";
 import { schemaForType } from "../../utils/trpc";
@@ -29,7 +29,7 @@ export const userRouter = t.router({
       });
     }
 
-    if (!user.version || user.version < getSessionVersion().major) {
+    if (!user.version || user.version < getServerVersion().major) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "error.oldVersion",
@@ -58,7 +58,7 @@ export const userRouter = t.router({
           isGuest: false,
           isMumbleUser: false,
         },
-        version: getSessionVersion().major,
+        version: getServerVersion().major,
       };
 
       return createSession(session);

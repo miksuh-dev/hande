@@ -39,6 +39,7 @@ export default {
     clearSelections: "Tyhjennä valinnat",
     continue: "Jatka",
     cancel: "Peruuta",
+    refreshPage: "Päivitä sivu",
   },
   tooltip: {
     common: {
@@ -75,7 +76,8 @@ export default {
       "Soittolista on liian pitkä (max 50 kappaletta on sallittu)",
     youtubeEmbeddingScript: "Virhe haettaessa Youtube-embed-koodia",
     tokenExpired: "Kirjautumisesi on vanhentunut",
-    oldVersion: "Istuntosi versio on vanhentunut",
+    oldVersion: "Vanhentunut versio",
+    stillListening: "Kuunteletko vielä?",
     socketReconnecting: "Yhteys palvelimeen katkesi. Yhdistetään uudelleen...",
     alreadyVoted: "Olet jo äänestänyt tätä kappaletta",
     songNotFound: "Kappaletta ei löytynyt",
@@ -112,6 +114,7 @@ export default {
     requestedAt: "Toivottu",
     inQueue: "Jonossa",
     connectionClosed: "Yhteys huoneeseen päätettiin",
+    refreshPage: "Päivitä sivu muodostaaksesi yhteys uudelleen",
   },
   datetime: {
     today: "Tänään",

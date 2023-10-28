@@ -15,6 +15,10 @@
     @apply disabled:cursor-not-allowed disabled:opacity-50;
   }
 
+  button.contained {
+    @apply rounded-lg border border-custom-primary-700 bg-custom-primary-900 p-2.5 text-sm font-medium text-white hover:bg-custom-primary-800 focus:outline-none dark:bg-custom-primary-900 dark:hover:bg-custom-primary-800;
+  }
+
   .icon-button {
     @apply flex cursor-pointer justify-center items-center p-2 h-10 w-10 rounded-full text-custom-primary-800 hover:bg-neutral-100 dark:text-custom-primary-800 dark:hover:bg-neutral-700;
   }

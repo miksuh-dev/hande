@@ -26,7 +26,11 @@ import { t } from "../../trpc";
 import { VoteType } from "../../types/app";
 import { Song, SongTypeSong } from "../../types/prisma";
 import { SOURCES, SourceType } from "../../types/source";
-import { getSessionVersion } from "../../utils/auth";
+import {
+  getServerVersion,
+  isExpiredSession,
+  isOutDatedVersion,
+} from "../../utils/auth";
 import {
   enrichUpdateMessageWithUserVote,
   enrichWithUserVote,
@@ -49,7 +53,7 @@ export const roomRouter = t.router({
       messages,
       users: [...userState.users.values()].map((u) => u.user),
       sources: SOURCES,
-      version: getSessionVersion().version,
+      version: getServerVersion().version,
     };
   }),
   addSong: onlineUserProcedure
@@ -315,13 +319,35 @@ export const roomRouter = t.router({
         };
       });
     }),
-  ping: authedProcedure.input(z.string().min(10)).mutation(({ input }) => {
-    const pingTarget = input;
+  ping: authedProcedure
+    .input(
+      z.object({
+        clientId: z.string().min(10),
+        version: z.string().min(1),
+        joined: z.string().min(1),
+      })
+    )
+    .mutation(({ input }) => {
+      const { clientId, version, joined } = input;
 
-    ee.emit(`onPing-${pingTarget}`, "pong");
+      if (isOutDatedVersion(version)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "error.oldVersion",
+        });
+      }
 
-    return "pong";
-  }),
+      if (isExpiredSession(joined)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "error.stillListening",
+        });
+      }
+
+      ee.emit(`onPing-${clientId}`, "pong");
+
+      return "pong";
+    }),
   message: onlineUserProcedure
     .input(
       z.object({

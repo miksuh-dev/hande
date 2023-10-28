@@ -39,6 +39,7 @@ export default {
     clearSelections: "Clear selections",
     continue: "Continue",
     cancel: "Cancel",
+    refreshPage: "Refresh page",
   },
   tooltip: {
     common: {
@@ -74,6 +75,7 @@ export default {
     playlistTooLong: "Playlist is too long (max 50 songs allowed)",
     youtubeEmbeddingScript: "Error loading Youtube embedding script",
     tokenExpired: "Token expired",
+    stillListening: "Still listening?",
     oldVersion: "Your session is outdated",
     socketReconnecting: "Socket connection lost. Reconnecting...",
     alreadyVoted: "You have already voted",
@@ -111,6 +113,7 @@ export default {
     requestedAt: "Requested at",
     inQueue: "In queue",
     connectionClosed: "Connection closed",
+    refreshPage: "Please refresh page to reconnect",
   },
   datetime: {
     today: "Today",
