@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.19.0](https://github.com/miksuh-dev/hande/compare/v2.18.2...v2.19.0) (2023-10-28)
+
+
+### Features
+
+* Version mismatch screen and socket timeout ([82637e5](https://github.com/miksuh-dev/hande/commit/82637e57baddc28537e031aa8e07b1e51a50284b))
+
 ### [2.18.2](https://github.com/miksuh-dev/hande/compare/v2.18.1...v2.18.2) (2023-10-28)
 
 
