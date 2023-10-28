@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Readable } from "stream";
 import { DateTime } from "luxon";
-import { getRandomSong } from "prisma/query";
-import { MessageType } from "router/room/types";
 import { OnlineUser } from "types/auth";
 import { Options, ProcessQueueItem, ProcessQueueItemStatus } from "./types";
 import { AUTOPLAY_SONG_COUNT } from "../../constants";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
+import { getRandomSong } from "../../prisma/query";
 import { sendErrorMessage, sendMessage } from "../../router/room/message";
+import { MessageType } from "../../router/room/types";
 import { PlayingSong, PlayState } from "../../types/app";
 import { Song } from "../../types/prisma";
 import { SourceType } from "../../types/source";
