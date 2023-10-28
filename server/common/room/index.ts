@@ -1,8 +1,8 @@
 import { DateTime } from "luxon";
-import ee from "eventEmitter";
-import { sendMessage } from "router/room/message";
 import { OnlineUser } from "types/auth";
 import { AUTOPLAY_DURATION_HOURS } from "../../constants";
+import ee from "../../eventEmitter";
+import { sendMessage } from "../../router/room/message";
 
 export interface Autoplay {
   requester: OnlineUser;
