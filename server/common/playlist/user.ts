@@ -281,6 +281,8 @@ export const clearPlaylist = async (requester: OnlineUser) => {
 
   ee.emit(`onUpdate`, { song: { remove: songs.map((s) => s.id) } });
 
+  await handleAutoPlay();
+
   return songs;
 };
 
