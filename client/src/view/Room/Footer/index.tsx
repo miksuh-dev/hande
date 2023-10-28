@@ -101,17 +101,12 @@ const PlayingComponent: Component<Props> = (props) => {
                 <div>
                   <h1 class="whitespace-nowrap">{htmlDecode(song().title)}</h1>
                   <p class="whitespace-nowrap">
-                    <Show
-                      when={song().originalRequester}
-                      fallback={`${t("common.requester")}: ${song().requester}`}
-                    >
-                      {(originalRequester) =>
-                        t("common.requesterWithOriginal", {
+                    {song().originalRequester
+                      ? t("common.requesterWithOriginal", {
                           requester: song().requester,
-                          original: originalRequester(),
+                          original: song().originalRequester ?? "",
                         })
-                      }
-                    </Show>
+                      : `${t("common.requester")}: ${song().requester}`}
                   </p>
                 </div>
               </div>
