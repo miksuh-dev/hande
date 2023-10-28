@@ -10,7 +10,7 @@ Common:
 - [ ] Find way to type enums (Song.type) using Prisma and SQLite
 - [x] Improve random song selection algorithm
 - [ ] Update i18n to ^2.0.0 and refactor
-- [ ] Fix absolute path imports failing only after build & run
+- [x] Fix absolute path imports failing only after build & run
 
 To Mumble:
 
