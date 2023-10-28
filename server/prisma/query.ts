@@ -14,6 +14,7 @@ export const getRandomSong = async () => {
         FROM
           Song s
         LEFT JOIN (select ra.contentId, sum(ra.vote) as song_votes from SongRating ra Group by contentId) ra on ra.contentId = s.contentId
+        WHERE s.type = 'song'
         GROUP BY
           s.contentId
       )
