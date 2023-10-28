@@ -10,7 +10,7 @@ import {
   setVolume,
   stopCurrentSong,
   addRandomSong as addRandomSongInternal,
-  handleAutoPlay,
+  handleAutoplay,
 } from "./internal";
 import * as room from "../../common/room";
 import ee from "../../eventEmitter";
@@ -278,7 +278,7 @@ export const clearPlaylist = async (requester: OnlineUser) => {
 
   ee.emit(`onUpdate`, { song: { remove: songs.map((s) => s.id) } });
 
-  await handleAutoPlay();
+  await handleAutoplay();
 
   return songs;
 };
@@ -312,7 +312,7 @@ export const toggleAutoplay = async (requester: OnlineUser) => {
   );
 
   if (newState) {
-    await handleAutoPlay();
+    await handleAutoplay();
 
     if (!getCurrentSong()) {
       const nextSong = await getNextSong();

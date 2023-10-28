@@ -65,7 +65,7 @@ export const addSongToQueue = async (song: Song) => {
 };
 
 export const removeSongFromQueue = async (song: Song) => {
-  await handleAutoPlay();
+  await handleAutoplay();
 
   return processingQueue.find((item, index) => {
     if (item.song.id === song.id) {
@@ -439,13 +439,13 @@ export const addRandomSong = async (
   return addedSong;
 };
 
-export const handleAutoPlay = async () => {
+export const handleAutoplay = async () => {
   const autoplay = room.get().autoplay;
   if (!autoplay) return;
 
   if (room.hasAutoplayExpired()) {
-    sendMessage(`event.common.autoplayExpired`, { type: MessageType.MESSAGE });
-    ee.emit(`onUpdate`, { room: { autoplay: undefined } });
+    room.onAutoplayExpire();
+
     return;
   }
 

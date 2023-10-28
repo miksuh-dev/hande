@@ -1,4 +1,5 @@
 import { MumbleUser, OnlineUser } from "types/auth";
+import * as room from "../../common/room";
 import ee from "../../eventEmitter";
 import { sendMessage } from "../room/message";
 import { MessageType } from "../room/types";
@@ -10,6 +11,8 @@ interface OnlineUserState {
 
 // session id -> clientIds
 export const users = new Map<string, OnlineUserState>();
+
+const isEmptyRoom = () => users.size === 0;
 
 export const join = (user: OnlineUser, clientId: string) => {
   const existing = users.get(user.hash);
@@ -48,6 +51,8 @@ const handleLeaveTimeout = (user: OnlineUser) => {
     });
 
     users.delete(user.hash);
+
+    if (isEmptyRoom()) onEmptyRoom();
   }
 };
 
@@ -91,3 +96,9 @@ export function setState<T extends keyof OnlineUser["state"]>(
 
   return users.get(user.hash)?.user;
 }
+
+const onEmptyRoom = () => {
+  if (room.get().autoplay) {
+    room.onAutoplayExpire("emptyRoom");
+  }
+};

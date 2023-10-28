@@ -176,7 +176,10 @@ export default {
       changedVolume: 'changed volume of song "{{ item }}".',
       autoplayOn: "set autoplay on.",
       autoplayOff: "set autoplay on.",
-      autoplayExpired: "Autoplay expired.",
+      autoplayExpired: {
+        timeout: "Autoplay expired (out of time).",
+        emptyRoom: "Autoplay expired (room is empty).",
+      },
     },
     source: {
       song: {
