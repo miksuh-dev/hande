@@ -142,8 +142,7 @@ const PlayingComponent: Component<Props> = (props) => {
                       )
                     }
                     classList={{
-                      "text-green-500 dark:text-green-500":
-                        song()?.vote === VoteType.UP,
+                      "text-green-500": song()?.vote === VoteType.UP,
                       "text-custom-primary-800 dark:text-custom-primary-800":
                         song()?.vote !== VoteType.UP,
                     }}
@@ -154,9 +153,9 @@ const PlayingComponent: Component<Props> = (props) => {
                   <span
                     class="text-xl bold"
                     classList={{
-                      "dark:text-green-500": song().rating > 0,
-                      "dark:text-red-500": song().rating < 0,
-                      "dark:text-white": song().rating === 0,
+                      "text-green-500": song().rating > 0,
+                      "text-red-500": song().rating < 0,
+                      "text-neutral-700 dark:text-white": song().rating === 0,
                     }}
                   >
                     {song().rating}
@@ -171,8 +170,7 @@ const PlayingComponent: Component<Props> = (props) => {
                       )
                     }
                     classList={{
-                      "text-red-500 dark:text-red-500":
-                        song()?.vote === VoteType.DOWN,
+                      "text-red-500": song()?.vote === VoteType.DOWN,
                       "text-custom-primary-800 dark:text-custom-primary-800":
                         song()?.vote !== VoteType.DOWN,
                     }}

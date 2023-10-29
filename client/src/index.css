@@ -36,11 +36,11 @@
   }
 
   .card {
-    @apply border border-neutral-200 bg-neutral-200 shadow-md dark:border-neutral-700 dark:bg-neutral-800;
+    @apply border border-neutral-300 bg-neutral-100 shadow-md dark:border-neutral-700 dark:bg-neutral-800;
   }
 
   button.card {
-    @apply cursor-pointer text-white hover:bg-neutral-300 disabled:cursor-default disabled:hover:bg-neutral-200 dark:hover:bg-neutral-750 dark:disabled:hover:bg-neutral-800;
+    @apply cursor-pointer text-white hover:bg-neutral-200 disabled:cursor-default disabled:hover:bg-neutral-100 dark:hover:bg-neutral-750 dark:disabled:hover:bg-neutral-800;
   }
 
   .markdown h1 {

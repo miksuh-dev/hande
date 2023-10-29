@@ -34,7 +34,7 @@ const SongThumbnail: Component<Props> = (props) => {
         </Tooltip>
       </Match>
       <Match when={props.song.type === "radio"}>
-        <div class="border-1 flex h-10 w-12  items-center justify-center rounded-full bg-neutral-100 text-custom-primary-700 dark:bg-neutral-700">
+        <div class="border-1 flex h-10 w-12 items-center justify-center rounded-full bg-neutral-100 text-custom-primary-700 dark:bg-neutral-700">
           <div class="flex h-4 w-4 justify-center">
             <RadioIcon />
           </div>

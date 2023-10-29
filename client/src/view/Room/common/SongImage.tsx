@@ -18,7 +18,7 @@ const SongImage: Component<Props> = (props) => {
         "w-72": size() === "large",
       }}
     >
-      <div>
+      <div class="flex items-center">
         <Switch>
           <Match when={props.song().type === "song"}>
             <Show when={props.song().thumbnail}>

@@ -53,7 +53,7 @@ const ChatMessageItem: Component<Props> = (props) => {
                     {htmlDecode(item.title ?? "")}
                   </h3>
                   <div class="flex flex-col text-xs font-medium items-start space-y-1">
-                    <p class="text-neutral-300">
+                    <p class="dark:text-neutral-300">
                       {t("common.requestedAt")}
                       {": "}
                       {item.requester}
@@ -80,7 +80,7 @@ const ChatMessageItem: Component<Props> = (props) => {
         }
       >
         <span
-          class="hover:bg-neutral-800"
+          class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
           style={{ "white-space": "break-spaces" }}
         >
           {message().item}
