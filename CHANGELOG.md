@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.21.0](https://github.com/miksuh-dev/hande/compare/v2.20.1...v2.21.0) (2023-10-29)
+
+
+### Features
+
+* format autoplay timeleft in hours and minutes ([40a7cb5](https://github.com/miksuh-dev/hande/commit/40a7cb502d20b8930b1d0b16c1161a02ab2f113e))
+* light theme improvements ([50bb5bc](https://github.com/miksuh-dev/hande/commit/50bb5bcb548ea8f463461a74aafe409a4fc63c29))
+
 ### [2.20.1](https://github.com/miksuh-dev/hande/compare/v2.20.0...v2.20.1) (2023-10-28)
 
 ## [2.20.0](https://github.com/miksuh-dev/hande/compare/v2.19.0...v2.20.0) (2023-10-28)
