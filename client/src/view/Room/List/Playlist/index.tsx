@@ -8,7 +8,7 @@ import {
 } from "components/common/icon";
 import ConfirmDialog from "components/ConfirmDialog";
 import { TabContainer } from "components/Tabs";
-import { getTimeLeft } from "./utils";
+import { formatTimeLeft, getTimeLeft, TimeLeft } from "./utils";
 import Tooltip from "components/Tooltip";
 import useSnackbar from "hooks/useSnackbar";
 import {
@@ -31,7 +31,7 @@ const PlaylistComponent: Component = () => {
   const [clearDialogOpen, setClearDialogOpen] = createSignal(false);
 
   const snackbar = useSnackbar();
-  const [autoplayLeft, setAutoplayLeft] = createSignal<number>();
+  const [autoplayLeft, setAutoplayLeft] = createSignal<TimeLeft>();
 
   const handleSkip = async (song: Song) => {
     try {
@@ -127,7 +127,7 @@ const PlaylistComponent: Component = () => {
     const time = room().room.autoplay?.time;
 
     if (!time) {
-      setAutoplayLeft(0);
+      setAutoplayLeft(undefined);
       return;
     }
 
@@ -164,8 +164,8 @@ const PlaylistComponent: Component = () => {
                   <RobotIcon />
                   <Show when={autoplayLeft()}>
                     {(autoplay) => (
-                      <span class="text-[0.5rem] rounded-md text-white dark:text-custom-primary-500 absolute left-0 right-0 -bottom-2">
-                        {`${Math.round(autoplay())} min`}
+                      <span class="text-[0.5rem] whitespace-nowrap rounded-md text-custom-primary-500 absolute left-0 right-0 -bottom-2">
+                        {formatTimeLeft(autoplay())}
                       </span>
                     )}
                   </Show>
