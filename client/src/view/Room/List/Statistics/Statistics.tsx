@@ -24,7 +24,7 @@ const StatisticsComponent: Component<Props> = (props) => {
   };
 
   return (
-    <div class="space-y h-full max-h-full space-y-2 overflow-y-auto pr-4">
+    <div class="space-y h-full max-h-full space-y-2 overflow-y-auto pr-4 scrollbar">
       <Show
         when={!props.loading()}
         fallback={
