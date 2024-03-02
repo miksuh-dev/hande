@@ -19,15 +19,11 @@ import * as room from "@server/common/room";
 import { PAGE_SIZE } from "@server/constants";
 import ee from "@server/eventEmitter";
 import { t } from "@server/trpc";
-import { VoteType } from "@server/types/app";
+import { Server, VoteType } from "@server/types/app";
 import { OnlineUser } from "@server/types/auth";
-import { Song, SongTypeSong } from "@server/types/prisma";
-import { SOURCES, SourceType } from "@server/types/source";
-import {
-  enrichUpdateMessageWithUserVote,
-  enrichWithUserVote,
-  playingToClient,
-} from "@server/utils/middleware";
+import { Song } from "@server/types/prisma";
+import { SongType, SOURCES, SourceType } from "@server/types/source";
+import { enrichUpdateMessage, playingToClient } from "@server/utils/middleware";
 import { schemaForType } from "@server/utils/trpc";
 import { messages, sendMessage } from "./message";
 import { searchFromPlaylist, searchFromSource } from "./sources";
@@ -45,9 +41,7 @@ export const roomRouter = t.router({
     const { user } = ctx;
 
     return {
-      playing: playingToClient(
-        await enrichWithUserVote(getCurrentSong(), user)
-      ),
+      playing: await playingToClient(getCurrentSong(), user),
       room: room.getClient(),
       songs: await getPlaylist(true),
       messages,
@@ -64,7 +58,7 @@ export const roomRouter = t.router({
           contentId: z.string().min(1),
           title: z.string().min(1),
           thumbnail: z.string().nullable(),
-          type: z.enum([SourceType.SONG, SourceType.RADIO]),
+          type: z.enum([SongType.SONG, SongType.RADIO]),
         })
       )
     )
@@ -239,7 +233,7 @@ export const roomRouter = t.router({
         },
       };
 
-      const result = await prisma.$transaction([
+      const [total, list] = await prisma.$transaction([
         prisma.song.count({ where }),
         prisma.song.findMany({
           where,
@@ -254,9 +248,9 @@ export const roomRouter = t.router({
       ]);
 
       return {
-        total: result[0],
+        total,
         pageSize: PAGE_SIZE,
-        list: result[1] as SongTypeSong[],
+        list: list as Song<SongType.SONG>[],
       };
     }),
   getStatistics: authedProcedure
@@ -380,12 +374,10 @@ export const roomRouter = t.router({
       const { user } = ctx;
       const { clientId, state } = input;
 
-      return observable<Partial<UpdateEvent>>((emit) => {
-        const onUpdate = (updatedLobby: Partial<UpdateEvent>) => {
+      return observable<Partial<UpdateEvent<"client">>>((emit) => {
+        const onUpdate = (updatedLobby: Partial<UpdateEvent<Server>>) => {
           void (async () => {
-            emit.next(
-              await enrichUpdateMessageWithUserVote(updatedLobby, user)
-            );
+            emit.next(await enrichUpdateMessage(updatedLobby, user));
           })();
         };
 

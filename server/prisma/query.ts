@@ -1,4 +1,5 @@
-import { SourceType } from "@server/types/source";
+import { Song } from "@server/types/prisma";
+import { SongType } from "@server/types/source";
 import prisma from "./";
 
 export const getRandomSong = async () => {
@@ -37,10 +38,10 @@ export const getRandomSong = async () => {
   }
   const { contentId } = row;
 
-  return prisma.song.findFirstOrThrow({
+  return (await prisma.song.findFirstOrThrow({
     where: {
-      type: SourceType.SONG,
+      type: SongType.SONG,
       contentId,
     },
-  });
+  })) as Song<SongType.SONG>;
 };

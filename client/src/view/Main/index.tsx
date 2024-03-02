@@ -8,11 +8,13 @@ const MainView: Component = () => {
   const navigate = useNavigate();
 
   createEffect(() => {
-    if (!auth.user()) {
+    const user = auth.user();
+
+    if (!user) {
       return;
     }
 
-    if (auth.user().property.isGuest) {
+    if (user.property.isGuest) {
       return navigate("/room/guest");
     }
 

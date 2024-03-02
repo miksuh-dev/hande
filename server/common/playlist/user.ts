@@ -5,8 +5,6 @@ import prisma from "@server/prisma";
 import { sendMessage } from "@server/router/room/message";
 import { MessageType } from "@server/router/room/types";
 import { VoteType } from "@server/types/app";
-import { OnlineUser } from "types/auth";
-import { Song } from "types/prisma";
 import {
   addSongToQueue,
   getCurrentSong,
@@ -18,6 +16,8 @@ import {
   addRandomSong as addRandomSongInternal,
   handleAutoplay,
 } from "./internal";
+import { OnlineUser } from "../../types/auth";
+import { Song } from "../../types/prisma";
 
 export const addSongs = async (
   songs: {
@@ -453,13 +453,7 @@ export const movePosition = async (
       });
     }
 
-    if (newSong.id !== oldSong.id) {
-      return true;
-    }
-
-    if (newSong.position !== oldSong.position) {
-      return true;
-    }
+    return newSong.id !== oldSong.id || newSong.position !== oldSong.position;
   });
 
   ee.emit(`onUpdate`, { song: { update: changedSongs } }); //   // ee.emit(`onUpdate`, { song: { update: updatedSongs } });

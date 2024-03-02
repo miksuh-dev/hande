@@ -1,15 +1,15 @@
 import { JSX, createContext, onMount, createSignal, Accessor } from "solid-js";
 import trpcClient from "trpc";
 import { TRPCClientError } from "@trpc/client";
-import { User } from "trpc/types";
 import type { Component } from "solid-js";
 import { UserLoginInput } from "trpc/types";
 import env from "config";
 import useSnackbar from "hooks/useSnackbar";
 import { useI18n } from "@solid-primitives/i18n";
+import { MumbleUser } from "@server/types/auth";
 
 type AuthStoreProps = {
-  user: Accessor<User | null>;
+  user: Accessor<MumbleUser | null>;
   authenticated: Accessor<boolean>;
   ready: Accessor<boolean>;
 };
@@ -42,12 +42,12 @@ export const AuthProvider: Component<{
 
   const snackbar = useSnackbar();
   const [authenticated, setAuthenticated] = createSignal<boolean>(false);
-  const [user, setUser] = createSignal<User | null>(null);
+  const [user, setUser] = createSignal<MumbleUser | null>(null);
   const [ready, setReady] = createSignal<boolean>(false);
 
   const login = async (token: UserLoginInput) => {
     try {
-      const user: User = await trpcClient.user.login.mutate(token);
+      const user = await trpcClient.user.login.mutate(token);
 
       localStorage.setItem("token", token);
 

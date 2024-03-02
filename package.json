@@ -7,6 +7,7 @@
     "dev": "LOCAL=true NODE_PATH=./server NODE_OPTIONS='--tls-min-v1.0' nodemon --exec ts-node -r tsconfig-paths/register server/index.ts",
     "client": "npm run dev --prefix client",
     "server": "npm run dev",
+    "watch": "tsc --noEmit --watch",
     "lint": "eslint ./src",
     "build": "tsc && tsc-alias -p tsconfig.aliases.json && npm run build --prefix client && npm run copy-files",
     "generate-changelog": "npx marked ./CHANGELOG.md -o ./client/public/changelog.html",

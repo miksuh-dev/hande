@@ -11,7 +11,9 @@
     "noEmit": true,
     "isolatedModules": true,
     "paths": {
-      "@server/*": ["../../server/*"]
+      "@server/*": ["../../server/*"],
+      "@noodlejs/*": ["../../NoodleJS/*"],
+      "@noodlejs": ["../../NoodleJS"]
     },
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -31,5 +33,5 @@
     "useDefineForClassFields": true
   },
   "include": ["src/**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "../../NoodleJS"]
 }

@@ -2,7 +2,7 @@ import { Component, createEffect, createSignal, Show } from "solid-js";
 import trpcClient from "trpc";
 import Result from "./Result";
 import Search from "./Search";
-import { AddSongInput, SearchResult, SearchResultPlaylist } from "trpc/types";
+import { SearchResult, SearchResultPlaylist } from "trpc/types";
 import useSnackbar from "hooks/useSnackbar";
 import { htmlDecode } from "utils/parse";
 import { RoomData } from "../data";
@@ -11,7 +11,8 @@ import trackClickOutside from "utils/trackClickOutside";
 import { Source } from "trpc/types";
 import { useI18n } from "@solid-primitives/i18n";
 import PlaylistViewDialog from "components/PlaylistViewDialog";
-import { hasSearchChanged } from "./utils";
+import { hasSearchChanged, sourceToSongType } from "./utils";
+import { SourceResultSongOrRadio } from "@server/router/room/types";
 
 export interface SearchTerms {
   text: string;
@@ -44,7 +45,7 @@ const SearchComponent: Component = () => {
 
   const onSearch = async (
     searchText: string,
-    selectedSource: Source | undefined
+    selectedSource: Source | undefined,
   ) => {
     if (!searchText || !selectedSource) return;
 
@@ -83,7 +84,7 @@ const SearchComponent: Component = () => {
     }
   };
 
-  const handleAdd = async (result: AddSongInput) => {
+  const handleAdd = async (result: SourceResultSongOrRadio[]) => {
     try {
       const songs = await trpcClient.room.addSong.mutate(
         result.map((r) => ({
@@ -91,15 +92,15 @@ const SearchComponent: Component = () => {
           url: r.url,
           title: r.title,
           thumbnail: r.thumbnail ?? null,
-          type: r.type,
-        }))
+          type: sourceToSongType(r.type),
+        })),
       );
 
       if (songs.length > 1) {
         snackbar.success(
           t(`snackbar.source.song.addedManyToQueue`, {
             count: songs.length.toString(),
-          })
+          }),
         );
       } else if (songs[0]) {
         const song = songs[0];
@@ -107,7 +108,7 @@ const SearchComponent: Component = () => {
         snackbar.success(
           t(`snackbar.source.${song.type}.addedToQueue`, {
             item: htmlDecode(song.title),
-          })
+          }),
         );
       }
     } catch (error) {

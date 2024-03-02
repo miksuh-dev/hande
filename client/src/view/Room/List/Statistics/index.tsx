@@ -51,22 +51,24 @@ const StatisticsComponent: Component = () => {
 
   const handleAdd = async (result: StatisticItem[]) => {
     try {
-      const songs = await trpcClient.room.addSong.mutate(
+      const [song] = await trpcClient.room.addSong.mutate(
         result.map((r) => ({
           contentId: r.contentId,
           url: r.url,
           title: r.title,
           thumbnail: r.thumbnail ?? null,
           type: r.type,
-        }))
+        })),
       );
 
-      const song = songs[0];
+      if (!song) {
+        throw new Error("Failed to add song to queue");
+      }
 
       snackbar.success(
         t(`snackbar.source.${song.type}.addedToQueue`, {
           item: htmlDecode(song.title),
-        })
+        }),
       );
     } catch (error) {
       if (error instanceof Error) {

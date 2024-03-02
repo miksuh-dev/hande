@@ -1,5 +1,5 @@
 import { RoomClient } from "@server/common/room";
-import { PlayingSong } from "@server/types/app";
+import { Location, PlayingSong } from "@server/types/app";
 import { OnlineUser } from "@server/types/auth";
 import { Song } from "@server/types/prisma";
 import { SourceType } from "@server/types/source";
@@ -40,18 +40,18 @@ export interface UserMessage extends Omit<SystemMessage, "property"> {
 
 export type Message = SystemMessage | UserMessage;
 
-export interface UpdateEvent {
-  song: {
+export interface UpdateEvent<T extends Location> {
+  song?: {
     add?: Song[];
     remove?: Song["id"][];
-    setPlaying?: PlayingSong;
+    setPlaying?: PlayingSong<T>;
     update?: Song[];
     skip?: Song["id"];
   };
-  message: {
+  message?: {
     add?: Message;
   };
-  user: {
+  user?: {
     join?: OnlineUser;
     leave?: OnlineUser["hash"];
     update?: OnlineUser;
@@ -81,3 +81,5 @@ export interface SourceResultRadio extends SourceResult {
   thumbnail: null;
   type: SourceType.RADIO;
 }
+
+export type SourceResultSongOrRadio = SourceResultSong | SourceResultRadio;

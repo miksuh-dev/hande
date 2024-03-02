@@ -14,12 +14,14 @@ const AuthGate: Component = () => {
 
   createEffect(() => {
     if (auth.ready()) {
-      if (!auth.authenticated() || !auth.user()) {
+      const user = auth.user();
+
+      if (!auth.authenticated() || !user) {
         snackbar.error(t("error.notLoggedIn"));
         return navigate("/main");
       }
 
-      if (auth.user().property.isGuest) {
+      if (user.property.isGuest) {
         return navigate("/room/guest");
       }
 

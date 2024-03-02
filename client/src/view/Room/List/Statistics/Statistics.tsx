@@ -1,14 +1,14 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { CircularLoadingSpinner } from "components/common/icon";
 import { Accessor, Component, For, Show } from "solid-js";
-import { PlayingSong, Song, StatisticItem } from "trpc/types";
+import { PlayingSongClient, Song, StatisticItem } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 
 type Props = {
   statistics: Accessor<StatisticItem[]>;
   songs: Song[];
-  playing: PlayingSong | undefined;
+  playing: PlayingSongClient | undefined;
   onAdd: (song: StatisticItem[]) => void;
   loading: Accessor<boolean>;
 };

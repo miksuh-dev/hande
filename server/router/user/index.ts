@@ -10,8 +10,8 @@ import {
   verifyJWTToken,
 } from "@server/utils/auth";
 import { schemaForType } from "@server/utils/trpc";
-import { OnlineUser } from "types/auth";
 import * as userState from "./state";
+import { OnlineUser } from "../../types/auth";
 import { userProcedure, guestProcedure, onlineUserProcedure } from "../utils";
 
 export const userRouter = t.router({

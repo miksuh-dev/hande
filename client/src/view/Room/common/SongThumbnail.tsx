@@ -1,13 +1,13 @@
 import { RadioIcon } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Component, Match, Switch } from "solid-js";
-import { Source } from "trpc/types";
+import { SongType, SourceType } from "trpc/types";
 
 type Props = {
   song: {
     thumbnail: string | null;
     title: string;
-    type: Source["value"];
+    type: SourceType | SongType;
   };
 };
 
