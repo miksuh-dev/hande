@@ -130,7 +130,7 @@ const Tooltip: Component<Props> = (props) => {
                 }}
               >
                 <div
-                  class="h-full space-y-3 overflow-y-auto"
+                  class="h-full space-y-3 overflow-y-auto scrollbar"
                   ref={(tooltipRef) =>
                     trackMoveOutside(tooltipRef, () => {
                       setVisible(false);
