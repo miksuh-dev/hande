@@ -1,9 +1,9 @@
 import { DateTime } from "luxon";
 import { Accessor, Component, createEffect, onCleanup, Setter } from "solid-js";
-import { PlayingTypeSong, PlayState } from "trpc/types";
+import { PlayingSongClient, PlayState, SongType } from "trpc/types";
 
 type Props = {
-  playing: Accessor<NonNullable<PlayingTypeSong>>;
+  playing: Accessor<PlayingSongClient<SongType.SONG>>;
   progress: Accessor<number>;
   setProgress: Setter<number>;
 };
@@ -31,13 +31,15 @@ const ProgressComponent: Component<Props> = (props) => {
 
     const interval = setInterval(() => {
       props.setProgress((previousProgress) => {
-        if (previousProgress >= props.playing().duration) {
+        const duration = props.playing().duration;
+
+        if (previousProgress >= duration) {
           return props.playing().duration;
         }
 
         const currentProgress = onTick();
 
-        if (currentProgress >= props.playing().duration) {
+        if (currentProgress >= duration) {
           return props.playing().duration;
         }
 

@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { Accessor, Component, onMount } from "solid-js";
-import { PlayingTypeSong } from "trpc/types";
+import { PlayingSongClient, SongType } from "trpc/types";
 import { CustomWindow } from "./types";
 import useSnackbar from "hooks/useSnackbar";
 import { useI18n } from "@solid-primitives/i18n";
@@ -8,7 +8,7 @@ import { useI18n } from "@solid-primitives/i18n";
 declare let window: CustomWindow;
 
 type Props = {
-  song: Accessor<PlayingTypeSong>;
+  song: Accessor<PlayingSongClient<SongType.SONG>>;
   rect: Accessor<DOMRect | undefined>;
 };
 

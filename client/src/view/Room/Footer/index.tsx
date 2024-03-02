@@ -10,7 +10,7 @@ import {
 } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Accessor, Component, Show, Setter, createSignal } from "solid-js";
-import { Song, PlayingTypeSong, SourceType, PlayState } from "trpc/types";
+import { Song, PlayState, SongType, PlayingSongClient } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import { VoteType } from "trpc/types";
 import Progress from "./Progress";
@@ -79,11 +79,11 @@ const PlayingComponent: Component<Props> = (props) => {
       <Show when={room().playing}>
         {(song) => (
           <div class="flex w-full flex-col bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-100">
-            <Show when={song().type === "song"}>
+            <Show when={song().type === SongType.SONG}>
               <Progress
                 progress={progress}
                 setProgress={setProgress}
-                playing={song as Accessor<PlayingTypeSong>}
+                playing={song as Accessor<PlayingSongClient<SongType.SONG>>}
               />
             </Show>
             <div class="flex justify-between px-3 py-2 items-center space-x-4 flex-col sm:flex-row">
@@ -101,12 +101,17 @@ const PlayingComponent: Component<Props> = (props) => {
                 <div>
                   <h1 class="whitespace-nowrap">{htmlDecode(song().title)}</h1>
                   <p class="whitespace-nowrap">
-                    {song().originalRequester
-                      ? t("common.requesterWithOriginal", {
-                          requester: song().requester,
-                          original: song().originalRequester ?? "",
-                        })
-                      : `${t("common.requester")}: ${song().requester}`}
+                    <Show
+                      when={"originalRequester" in song()}
+                      fallback={`${t("common.requester")}: ${song().requester}`}
+                    >
+                      {t("common.requesterWithOriginal", {
+                        requester: song().requester,
+                        original:
+                          (song() as Song<SongType.SONG>).originalRequester ??
+                          "",
+                      })}
+                    </Show>
                   </p>
                 </div>
               </div>
@@ -121,9 +126,9 @@ const PlayingComponent: Component<Props> = (props) => {
                   <button
                     class="icon-button w-12 h-12 p-1"
                     onClick={() => props.setShowVideo((current) => !current)}
-                    disabled={song().type === SourceType.RADIO}
+                    disabled={song().type === SongType.RADIO}
                   >
-                    {props.showVideo() && song().type === SourceType.SONG ? (
+                    {props.showVideo() && song().type === SongType.SONG ? (
                       <EyeSlashIcon />
                     ) : (
                       <EyeIcon />
@@ -190,14 +195,16 @@ const PlayingComponent: Component<Props> = (props) => {
                 </Tooltip>
               </div>
               <div class="flex flex-1 justify-end space-x-2">
-                <Show when={song().duration}>
-                  {(duration) => (
-                    <div class="space-x-1 self-center">
-                      <span>{secondsToTime(progress())}</span>
-                      <span>/</span>
-                      <span>{secondsToTime(duration())}</span>
-                    </div>
-                  )}
+                <Show when={"duration" in song()}>
+                  <div class="space-x-1 self-center">
+                    <span>{secondsToTime(progress())}</span>
+                    <span>/</span>
+                    <span>
+                      {secondsToTime(
+                        (song() as PlayingSongClient<SongType.SONG>).duration,
+                      )}
+                    </span>
+                  </div>
                 </Show>
                 <div class="xl:hidden">
                   <button

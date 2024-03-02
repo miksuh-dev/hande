@@ -3,10 +3,10 @@ import { AudioIcon } from "components/common/icon";
 import useSnackbar from "hooks/useSnackbar";
 import { Component, createSignal, Show } from "solid-js";
 import trpcClient from "trpc";
-import { PlayingSong } from "trpc/types";
+import { PlayingSongClient } from "trpc/types";
 
 type Props = {
-  playing: NonNullable<PlayingSong>;
+  playing: NonNullable<PlayingSongClient>;
 };
 
 const VolumeControlComponent: Component<Props> = (props) => {

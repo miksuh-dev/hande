@@ -15,6 +15,7 @@ import useTheme from "hooks/useTheme";
 import { useI18n } from "@solid-primitives/i18n";
 import { DateTime } from "luxon";
 import { TRPCClientError } from "@trpc/client";
+import { MumbleUser } from "@server/types/auth";
 
 const playListCompare = (a: Song, b: Song) => {
   if (a.position !== b.position) {
@@ -202,8 +203,10 @@ function RoomData() {
   );
 
   onMount(() => {
-    if (auth.user()) {
-      initRoomSocket();
+    const user = auth.user();
+
+    if (user) {
+      initRoomSocket(user);
     }
   });
 
@@ -227,9 +230,9 @@ function RoomData() {
     snackbar.error(t("error.common", { error: err.message }));
   };
 
-  const initRoomSocket = () => {
+  const initRoomSocket = (user: MumbleUser) => {
     const session = {
-      clientId: generateId(auth.user()),
+      clientId: generateId(user),
       joined: DateTime.utc().toISO(),
       version: room().version,
     };
@@ -254,7 +257,7 @@ function RoomData() {
           setReconnecting(true);
 
           // Retry connection
-          initRoomSocket();
+          initRoomSocket(user);
         },
       },
     );

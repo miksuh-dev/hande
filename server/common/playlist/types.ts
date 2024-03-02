@@ -1,6 +1,6 @@
 import { getSongSettings } from "@server/common/playlist/internal";
-import { PlayingSong } from "types/app";
-import { Song } from "types/prisma";
+import { PlayingSong, Server } from "../../types/app";
+import { Song } from "../../types/prisma";
 
 export interface PlayError {
   id: number;
@@ -25,7 +25,7 @@ interface NonActiveItem {
 
 interface ActiveItem {
   status: ProcessQueueItemStatus.processing;
-  song: PlayingSong;
+  song: PlayingSong<Server>;
 }
 
 export type ProcessQueueItem = (NonActiveItem | ActiveItem) & {

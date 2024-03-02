@@ -4,6 +4,11 @@ export enum SourceType {
   RADIO = "radio",
 }
 
+export enum SongType {
+  SONG = "song",
+  RADIO = "radio",
+}
+
 export const SOURCES = [
   {
     id: 1,
@@ -19,4 +24,4 @@ export const SOURCES = [
   },
 ];
 
-export type Source = typeof SOURCES[number];
+export type Source = (typeof SOURCES)[number];

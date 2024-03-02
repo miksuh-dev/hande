@@ -1,10 +1,10 @@
 import { Accessor, Component, Show, createMemo, createSignal } from "solid-js";
-import { PlayingSong, PlayingTypeSong } from "trpc/types";
+import { PlayingSongClient, SongType } from "trpc/types";
 import SongImage from "../common/SongImage";
 import YoutubeEmbedding from "./YoutubeEmbedding";
 
 type Props = {
-  playing: PlayingSong | undefined;
+  playing: PlayingSongClient | undefined;
 };
 
 const VideoComponent: Component<Props> = (props) => {
@@ -26,12 +26,12 @@ const VideoComponent: Component<Props> = (props) => {
             }}
           >
             <Show
-              when={song().type === "song"}
+              when={song().type === SongType.SONG}
               fallback={<SongImage song={song} />}
             >
               <YoutubeEmbedding
                 rect={rect}
-                song={song as Accessor<PlayingTypeSong>}
+                song={song as Accessor<PlayingSongClient<SongType.SONG>>}
               />
             </Show>
           </div>

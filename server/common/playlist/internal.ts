@@ -4,15 +4,15 @@ import { Readable } from "stream";
 import { DateTime } from "luxon";
 import { sendErrorMessage, sendMessage } from "@server/router/room/message";
 import { MessageType } from "@server/router/room/types";
-import { PlayingSong, PlayState } from "@server/types/app";
+import { PlayingSong, PlayState, Server } from "@server/types/app";
 import { Song } from "@server/types/prisma";
-import { SourceType } from "@server/types/source";
-import { OnlineUser } from "types/auth";
+import { SongType } from "@server/types/source";
 import { Options, ProcessQueueItem, ProcessQueueItemStatus } from "./types";
 import { AUTOPLAY_SONG_COUNT } from "../../constants";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
 import { getRandomSong } from "../../prisma/query";
+import { OnlineUser } from "../../types/auth";
 import client from "../mumble";
 import { createStream as createRadioStream } from "../radio";
 import * as room from "../room";
@@ -69,10 +69,12 @@ export const removeSongFromQueue = async (song: Song) => {
 
   return processingQueue.find((item, index) => {
     if (item.song.id === song.id) {
-      const found = processingQueue.splice(index, 1);
+      processingQueue.splice(index, 1);
 
-      return found[0];
+      return true;
     }
+
+    return false;
   });
 };
 
@@ -135,11 +137,12 @@ const createStream = async (song: Song) => {
   // Make sure we stop any previous streams
   stopStream();
 
-  if (song.type === SourceType.SONG) {
+  if (song.type === SongType.SONG) {
     return createYoutubeStream(song);
   }
 
-  if (song.type === SourceType.RADIO) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (song.type === SongType.RADIO) {
     return await createRadioStream(song);
   }
 
@@ -159,7 +162,7 @@ export const getSongRating = async (contentId: string) => {
   return rating._sum.vote ?? 0;
 };
 
-export const getSongOriginalRequester = async (song: Song) => {
+export const getSongOriginalRequester = async (song: Song<SongType.SONG>) => {
   if (!song.random) return undefined;
 
   return prisma.song
@@ -201,16 +204,18 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
       item: [this.song],
     });
 
-    if (this.song.type === SourceType.SONG) {
+    if (this.song.type === SongType.SONG) {
       const videoInfo = await getVideoInfo(this.song);
       if (!videoInfo) {
         throw new Error("Failed to get video info");
       }
 
-      this.song.startedAt = DateTime.now();
+      const startedAt = DateTime.utc();
+
+      this.song.startedAt = startedAt.toISO();
       this.song.duration = videoInfo.duration;
 
-      const secondsLeft = this.song.startedAt
+      const secondsLeft = startedAt
         .plus({ seconds: videoInfo.duration })
         .diffNow("seconds").seconds;
 
@@ -222,12 +227,11 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
         });
       }, secondsLeft * 1000);
     } else {
-      this.song.startedAt = DateTime.now();
+      this.song.startedAt = DateTime.utc().toISO();
     }
 
-    const [rating, originalRequester] = await Promise.all([
+    const [rating] = await Promise.all([
       getSongRating(this.song.contentId),
-      getSongOriginalRequester(this.song),
       prisma.song.update({
         where: {
           id: this.song.id,
@@ -239,7 +243,14 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
     ]);
 
     this.song.rating = rating;
-    if (originalRequester) this.song.originalRequester = originalRequester;
+
+    if (this.song.type === SongType.SONG) {
+      const originalRequester = await getSongOriginalRequester(this.song);
+
+      if (originalRequester) {
+        this.song.originalRequester = originalRequester;
+      }
+    }
 
     this.song.volume = options.volume;
 
@@ -256,8 +267,6 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
     ee.emit(`onUpdate`, {
       song: { setPlaying: this.song },
     });
-
-    return this.song;
   } catch (e) {
     if (e instanceof Error) {
       void onSongError.call(this, e.message);
@@ -302,7 +311,7 @@ async function playSong(this: ProcessQueueItem) {
   }
 }
 
-export const getCurrentSong = (): PlayingSong | undefined => {
+export const getCurrentSong = (): PlayingSong<Server> | undefined => {
   const item = processingQueue.at(0);
 
   if (!item || item.status !== ProcessQueueItemStatus.processing) {
@@ -407,20 +416,23 @@ export const addRandomSong = async (
     });
 
     const position = lastSong ? lastSong.position + 1 : 0;
-    return transaction.song.create({
-      data: {
-        url: song.url,
-        contentId: song.contentId,
-        title: song.title,
-        thumbnail: song.thumbnail,
-        requester: requester.name,
-        type: song.type,
-        position,
-        ended: false,
-        skipped: false,
-        random: true,
-      },
-    }) as Promise<Song>;
+    return {
+      ...(await transaction.song.create({
+        data: {
+          url: song.url,
+          contentId: song.contentId,
+          title: song.title,
+          thumbnail: song.thumbnail,
+          requester: requester.name,
+          type: song.type,
+          position,
+          ended: false,
+          skipped: false,
+          random: true,
+        },
+      })),
+      originalRequester: song.requester,
+    } as Song<SongType.SONG>;
   });
 
   sendMessage(

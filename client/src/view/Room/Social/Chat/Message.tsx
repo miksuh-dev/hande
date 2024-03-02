@@ -2,6 +2,7 @@ import { useI18n } from "@solid-primitives/i18n";
 import { Component, createMemo } from "solid-js";
 import { IncomingMessage } from "trpc/types";
 import { htmlDecode } from "utils/parse";
+import { isSystemMessage } from "utils/user";
 import ChatMessageItem from "view/Room/Social/Chat/ChatMessageItem";
 
 const Message: Component<{ message: IncomingMessage }> = (props) => {
@@ -30,7 +31,7 @@ const Message: Component<{ message: IncomingMessage }> = (props) => {
 
     if (
       ["ACTION", "JOIN", "LEAVE"].includes(props.message.type) ||
-      props.message.property.isSystem
+      isSystemMessage(props.message)
     ) {
       return (
         <>{t(props.message.content) ?? htmlDecode(props.message.content)}</>

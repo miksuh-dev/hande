@@ -21,7 +21,7 @@ const client = new NoodleJS({
 
 client.on("message", handleMessage.bind(this));
 
-client.on("data", (data) => {
+client.on("data", (data: unknown) => {
   console.log(data);
 });
 
@@ -34,7 +34,7 @@ client.connection.on("close", () => {
   throw new Error("Mumble client closed connection");
 });
 
-client.connect().catch((e) => {
+client.connect().catch((e: unknown) => {
   console.log("e", e);
 });
 

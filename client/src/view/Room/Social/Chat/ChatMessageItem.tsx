@@ -1,11 +1,11 @@
 import { Component, createMemo, For } from "solid-js";
 import { Show } from "solid-js";
-import { DateTime } from "luxon";
 import { htmlDecode } from "utils/parse";
 import { useI18n } from "@solid-primitives/i18n";
 import { Song } from "trpc/types";
 import Tooltip from "components/Tooltip";
 import SongThumbnail from "view/Room/common/SongThumbnail";
+import { DateTime } from "luxon";
 
 type Props = {
   content: string;
@@ -46,18 +46,24 @@ const ChatMessageItem: Component<Props> = (props) => {
         content={
           <For each={props.item}>
             {(item) => (
-              <div class="flex flex-row items-center space-x-2">
+              <div class="flex flex-row items-center space-x-2 border-b-neutral-600 border-b last:border-none px-1 py-1 pb-2 last:pb-1">
                 <SongThumbnail song={item} />
-                <div class="flex flex-col">
-                  <h3 class="text-md text-left font-medium">
-                    {htmlDecode(item.title ?? "")}
-                  </h3>
+                <div class="flex flex-col space-y-2">
+                  <div>
+                    <h3 class="text-md text-left font-medium">
+                      {htmlDecode(item.title ?? "")}
+                    </h3>
+                  </div>
                   <div class="flex flex-col text-xs font-medium items-start space-y-1">
-                    <p class="dark:text-neutral-300">
-                      {t("common.requestedAt")}
-                      {": "}
-                      {item.requester}
-                      {", "}
+                    <p>
+                      {"originalRequester" in item
+                        ? t("common.requesterWithOriginal", {
+                            requester: item.requester,
+                            original: item.originalRequester ?? "",
+                          })
+                        : `${t("common.requester")}: ${item.requester}`}
+                    </p>
+                    <p>
                       {DateTime.fromJSDate(item.createdAt, {
                         zone: "utc",
                       })

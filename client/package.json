@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "watch": "tsc --noEmit --watch",
     "serve": "vite preview"
   },
   "license": "MIT",

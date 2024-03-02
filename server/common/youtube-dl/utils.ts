@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Readable } from "stream";
-import { Song } from "types/prisma";
 import { VideoInfo } from "./types";
+import { Song } from "../../types/prisma";
 const YoutubeDlWrap = require("youtube-dl-wrap");
 const youtubeDlWrap = new YoutubeDlWrap(process.env.YOUTUBE_DL_LOCATION);
 
@@ -24,4 +24,6 @@ export const getVideoInfo = async (song: Song) => {
   } catch (e) {
     console.log("e", e);
   }
+
+  return undefined;
 };
