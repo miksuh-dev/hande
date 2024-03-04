@@ -204,6 +204,14 @@ export const volumeChange = async (
   volume: number,
   user: OnlineUser
 ) => {
+  const currentSong = getCurrentSong();
+  if (!currentSong || currentSong.contentId !== contentId) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "error.songNotFound",
+    });
+  }
+
   const settings = await prisma.songSettings.upsert({
     create: {
       contentId,
@@ -217,29 +225,19 @@ export const volumeChange = async (
     },
   });
 
-  const song = (await prisma.song.findFirstOrThrow({
-    where: { contentId },
-    orderBy: {
-      createdAt: "asc",
-    },
-  })) as Song<Server>;
+  setVolume(settings.volume);
 
-  const currentSong = getCurrentSong();
-  if (currentSong && currentSong.contentId === contentId) {
-    const updatedSong = {
-      ...currentSong,
-      volume: settings.volume,
-    };
+  const updatedSong = {
+    ...currentSong,
+    volume: settings.volume,
+  };
 
-    ee.emit(`onUpdate`, { song: { setPlaying: updatedSong } });
-
-    setVolume(settings.volume);
-  }
+  ee.emit(`onUpdate`, { song: { setPlaying: updatedSong } });
 
   sendMessage(`event.common.changedVolume`, {
     user,
     type: MessageType.ACTION,
-    item: [song],
+    item: [updatedSong],
   });
 
   return settings;
