@@ -2,14 +2,14 @@ import { Component, createMemo, For } from "solid-js";
 import { Show } from "solid-js";
 import { htmlDecode } from "utils/parse";
 import { useI18n } from "@solid-primitives/i18n";
-import { Song } from "trpc/types";
+import { SongClient } from "trpc/types";
 import Tooltip from "components/Tooltip";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 import { DateTime } from "luxon";
 
 type Props = {
   content: string;
-  item: Song[];
+  item: SongClient[];
   error?: string;
 };
 
@@ -64,7 +64,7 @@ const ChatMessageItem: Component<Props> = (props) => {
                         : `${t("common.requester")}: ${item.requester}`}
                     </p>
                     <p>
-                      {DateTime.fromJSDate(item.createdAt, {
+                      {DateTime.fromISO(item.createdAt, {
                         zone: "utc",
                       })
                         .setZone("local")

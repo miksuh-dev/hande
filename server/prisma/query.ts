@@ -1,3 +1,4 @@
+import { Server } from "@server/types/app";
 import { Song } from "@server/types/prisma";
 import { SongType } from "@server/types/source";
 import prisma from "./";
@@ -43,5 +44,5 @@ export const getRandomSong = async () => {
       type: SongType.SONG,
       contentId,
     },
-  })) as Song<SongType.SONG>;
+  })) as Song<Server, SongType.SONG>;
 };

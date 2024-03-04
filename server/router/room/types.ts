@@ -12,18 +12,18 @@ export enum MessageType {
   ERROR = "ERROR",
 }
 
-export interface MessageOptions {
+export interface MessageOptions<L extends Location> {
   user?: OnlineUser;
   type?: MessageType;
-  item?: Song[];
+  item?: Song<L>[];
   error?: string;
 }
 
-interface SystemMessage {
+interface SystemMessage<L extends Location> {
   id: string;
   name: string;
   content: string;
-  item?: Song[];
+  item?: Song<L>[];
   error?: string;
   timestamp: number;
   type: MessageType;
@@ -32,24 +32,28 @@ interface SystemMessage {
   };
 }
 
-export interface UserMessage extends Omit<SystemMessage, "property"> {
+export type UserMessage<L extends Location> = Omit<
+  SystemMessage<L>,
+  "property"
+> & {
+  // extends SystemMessage<L>{}
   userHash: string;
   property: OnlineUser["property"];
   state: OnlineUser["state"];
-}
+};
 
-export type Message = SystemMessage | UserMessage;
+export type Message<L extends Location> = SystemMessage<L> | UserMessage<L>;
 
-export interface UpdateEvent<T extends Location> {
+export interface UpdateEvent<L extends Location> {
   song?: {
-    add?: Song[];
-    remove?: Song["id"][];
-    setPlaying?: PlayingSong<T>;
-    update?: Song[];
-    skip?: Song["id"];
+    add?: Song<L>[];
+    remove?: Song<L>["id"][];
+    setPlaying?: PlayingSong<L>;
+    update?: Song<L>[];
+    skip?: Song<L>["id"];
   };
   message?: {
-    add?: Message;
+    add?: Message<L>;
   };
   user?: {
     join?: OnlineUser;

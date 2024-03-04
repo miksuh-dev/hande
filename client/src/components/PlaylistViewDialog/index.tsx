@@ -10,15 +10,15 @@ import {
 } from "solid-js";
 import trpcClient from "trpc";
 import { htmlDecode } from "utils/parse";
-import { SearchResultPlaylist, SearchResultSong, Song } from "trpc/types";
+import { SearchResultPlaylist, SearchResultSong, SongClient } from "trpc/types";
 import Tooltip from "components/Tooltip";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 import Dialog from "components/Dialog";
 
 type Props = {
   playlist: Accessor<SearchResultPlaylist>;
-  playing: Song | undefined;
-  songs: Song[];
+  playing: SongClient | undefined;
+  songs: SongClient[];
   onSongAdd: (songs: SearchResultSong[]) => Promise<void>;
   onClose: () => void;
 };

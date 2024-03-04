@@ -2,10 +2,10 @@ import { useI18n } from "@solid-primitives/i18n";
 import Pagination from "components/Pagination";
 import Tooltip from "components/Tooltip";
 import { Accessor, Component } from "solid-js";
-import { Song } from "trpc/types";
+import { SongClient } from "trpc/types";
 
 type Props = {
-  selected: Accessor<Song[]>;
+  selected: Accessor<SongClient[]>;
   page: number;
   onPageChange: (page: number) => void;
   pageCount: number;

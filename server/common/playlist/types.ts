@@ -20,7 +20,7 @@ interface NonActiveItem {
     | ProcessQueueItemStatus.pending
     | ProcessQueueItemStatus.error
     | ProcessQueueItemStatus.skipped;
-  song: Song;
+  song: Song<Server>;
 }
 
 interface ActiveItem {

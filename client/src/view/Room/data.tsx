@@ -5,7 +5,7 @@ import {
   Signal,
   createSignal,
 } from "solid-js";
-import { Room, RoomUpdateEvent, Song } from "trpc/types";
+import { Room, RoomUpdateEvent, SongClient } from "trpc/types";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import trpcClient from "trpc";
 import useSnackbar from "hooks/useSnackbar";
@@ -17,7 +17,7 @@ import { DateTime } from "luxon";
 import { TRPCClientError } from "@trpc/client";
 import { MumbleUser } from "@server/types/auth";
 
-const playListCompare = (a: Song, b: Song) => {
+const playListCompare = (a: SongClient, b: SongClient) => {
   if (a.position !== b.position) {
     return a.position - b.position;
   }

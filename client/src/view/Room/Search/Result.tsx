@@ -3,7 +3,7 @@ import {
   PlayingSongClient,
   SearchResult,
   SearchResultPlaylist,
-  Song,
+  SongClient,
   SourceType,
 } from "trpc/types";
 import { Accessor } from "solid-js";
@@ -18,7 +18,7 @@ import {
 
 type Props = {
   results: Accessor<SearchResult[]>;
-  songs: Song[];
+  songs: SongClient[];
   playing: PlayingSongClient | undefined;
   onAdd: (data: SourceResultSongOrRadio[]) => void;
   onPlaylistView: (data: SearchResultPlaylist) => void;

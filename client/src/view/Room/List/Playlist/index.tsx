@@ -19,7 +19,7 @@ import {
   Show,
 } from "solid-js";
 import trpcClient from "trpc";
-import { Song } from "trpc/types";
+import { SongClient } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import type { RoomData } from "../../data";
 import Playlist from "./Playlist";
@@ -33,7 +33,7 @@ const PlaylistComponent: Component = () => {
   const snackbar = useSnackbar();
   const [autoplayLeft, setAutoplayLeft] = createSignal<TimeLeft>();
 
-  const handleSkip = async (song: Song) => {
+  const handleSkip = async (song: SongClient) => {
     try {
       const skippedSong = await trpcClient.room.removeSong.mutate({
         id: song.id,
@@ -53,7 +53,7 @@ const PlaylistComponent: Component = () => {
     }
   };
 
-  const handlePlayNext = async (song: Song) => {
+  const handlePlayNext = async (song: SongClient) => {
     try {
       await trpcClient.room.playNext.mutate({
         id: song.id,
