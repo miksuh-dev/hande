@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.21.1](https://github.com/miksuh-dev/hande/compare/v2.21.0...v2.21.1) (2024-03-04)
+
+
+### Bug Fixes
+
+* prevent song actions when song has ended ([faefa13](https://github.com/miksuh-dev/hande/commit/faefa130a5a427e48062fca0eca53372210c2d10))
+
 ## [2.21.0](https://github.com/miksuh-dev/hande/compare/v2.20.1...v2.21.0) (2023-10-29)
 
 
