@@ -2,7 +2,7 @@
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "outDir": "dist",
     "lib": ["es2015", "es2016", "es2017"],
     "baseUrl": "./server",
