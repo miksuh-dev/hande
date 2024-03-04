@@ -10,7 +10,7 @@ import {
 } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Accessor, Component, Show, Setter, createSignal } from "solid-js";
-import { Song, PlayState, SongType, PlayingSongClient } from "trpc/types";
+import { SongClient, PlayState, SongType, PlayingSongClient } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import { VoteType } from "trpc/types";
 import Progress from "./Progress";
@@ -38,7 +38,7 @@ const PlayingComponent: Component<Props> = (props) => {
 
   const [progress, setProgress] = createSignal<number>(0);
 
-  const handleSkip = async (song: Song) => {
+  const handleSkip = async (song: SongClient) => {
     try {
       const skippedSong = await trpcClient.room.skipCurrent.mutate({
         id: song.id,
@@ -58,7 +58,7 @@ const PlayingComponent: Component<Props> = (props) => {
     }
   };
 
-  const handleVote = async (song: Song, vote: VoteType) => {
+  const handleVote = async (song: SongClient, vote: VoteType) => {
     try {
       await trpcClient.room.voteSong.mutate({
         songId: song.id,
@@ -108,7 +108,7 @@ const PlayingComponent: Component<Props> = (props) => {
                       {t("common.requesterWithOriginal", {
                         requester: song().requester,
                         original:
-                          (song() as Song<SongType.SONG>).originalRequester ??
+                          (song() as SongClient<SongType.SONG>).originalRequester ??
                           "",
                       })}
                     </Show>

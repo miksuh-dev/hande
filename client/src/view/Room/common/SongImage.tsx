@@ -1,9 +1,9 @@
 import { RadioIcon } from "components/common/icon";
 import { Accessor, Component, createMemo, Match, Show, Switch } from "solid-js";
-import { Song } from "trpc/types";
+import { SongClient } from "trpc/types";
 
 type Props = {
-  song: Accessor<Song>;
+  song: Accessor<SongClient>;
   size?: "small" | "large";
 };
 

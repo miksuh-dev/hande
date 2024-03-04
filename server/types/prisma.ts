@@ -1,16 +1,19 @@
 import { Song as PrismaSong } from "@prisma/client";
+import { Location, ServerClient } from "@server/types/app";
 import { SongType } from "./source";
 
-export type SongProperties<
-  S extends PrismaSong,
-  T extends SongType
-> = T extends SongType.SONG
-  ? Omit<S, "type"> & {
+export type SongProperties<T extends SongType> = T extends SongType.SONG
+  ? {
       type: T;
       originalRequester?: string;
     }
-  : Omit<S, "type"> & {
+  : {
       type: T;
     };
 
-export type Song<T extends SongType = SongType> = SongProperties<PrismaSong, T>;
+export type Song<L extends Location, T extends SongType = SongType> = Omit<
+  PrismaSong,
+  "createdAt"
+> & {
+  createdAt: ServerClient<L, PrismaSong["createdAt"], string>;
+} & SongProperties<T>;

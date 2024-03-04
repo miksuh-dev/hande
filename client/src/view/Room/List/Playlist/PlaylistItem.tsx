@@ -3,15 +3,15 @@ import { createSortable, useDragDropContext } from "@thisbeyond/solid-dnd";
 import { CrossIcon, RandomIcon, UpArrowIcon } from "components/common/icon";
 import Tooltip from "components/Tooltip";
 import { Accessor, Component, Show, createMemo } from "solid-js";
-import { Song } from "trpc/types";
+import { SongClient } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongImage from "../../common/SongImage";
 
 type Props = {
-  song: Song;
+  song: SongClient;
   index: Accessor<number>;
-  onPlayNext: (song: Song) => void;
-  onSkip: (song: Song) => void;
+  onPlayNext: (song: SongClient) => void;
+  onSkip: (song: SongClient) => void;
 };
 
 declare module "solid-js" {

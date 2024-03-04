@@ -23,7 +23,12 @@ import { Server, VoteType } from "@server/types/app";
 import { OnlineUser } from "@server/types/auth";
 import { Song } from "@server/types/prisma";
 import { SongType, SOURCES, SourceType } from "@server/types/source";
-import { enrichUpdateMessage, playingToClient } from "@server/utils/middleware";
+import {
+  enrichUpdateMessage,
+  messageToClient,
+  playingToClient,
+  songToClient,
+} from "@server/utils/middleware";
 import { schemaForType } from "@server/utils/trpc";
 import { messages, sendMessage } from "./message";
 import { searchFromPlaylist, searchFromSource } from "./sources";
@@ -43,8 +48,8 @@ export const roomRouter = t.router({
     return {
       playing: await playingToClient(getCurrentSong(), user),
       room: room.getClient(),
-      songs: await getPlaylist(true),
-      messages,
+      songs: (await getPlaylist(true)).map(songToClient),
+      messages: messages.map(messageToClient),
       users: [...userState.users.values()].map((u) => u.user),
       sources: SOURCES,
       version: getServerVersion().version,
@@ -233,24 +238,28 @@ export const roomRouter = t.router({
         },
       };
 
-      const [total, list] = await prisma.$transaction([
-        prisma.song.count({ where }),
-        prisma.song.findMany({
-          where,
-          take: PAGE_SIZE,
-          skip: PAGE_SIZE * (input.page - 1),
-          orderBy: [
-            {
-              createdAt: "desc",
-            },
-          ],
-        }),
-      ]);
+      const result = await prisma
+        .$transaction([
+          prisma.song.count({ where }),
+          prisma.song.findMany({
+            where,
+            take: PAGE_SIZE,
+            skip: PAGE_SIZE * (input.page - 1),
+            orderBy: [
+              {
+                createdAt: "desc",
+              },
+            ],
+          }),
+        ])
+        .then(([total, list]) => ({
+          total,
+          list: (list as Song<Server, SongType.SONG>[]).map(songToClient),
+        }));
 
       return {
-        total,
+        ...result,
         pageSize: PAGE_SIZE,
-        list: list as Song<SongType.SONG>[],
       };
     }),
   getStatistics: authedProcedure
@@ -294,7 +303,7 @@ export const roomRouter = t.router({
             in: top.map((r) => r.contentId),
           },
         },
-      })) as Song[];
+      })) as Song<Server>[];
 
       return top.map((r) => {
         const song = songs.find((s) => s.contentId === r.contentId);

@@ -1,6 +1,7 @@
 import fs from "fs";
 import { DateTime } from "luxon";
 import ee from "@server/eventEmitter";
+import { Server } from "@server/types/app";
 import { Message, MessageOptions, MessageType } from "./types";
 
 const HISTORY_FILE = "message-history.json";
@@ -23,7 +24,7 @@ export const load = () => {
       }
 
       return value;
-    }) as Message[];
+    }) as Message<Server>[];
 
     console.log(`Loaded ${data.length} messages from ${HISTORY_FILE}`);
 
@@ -33,9 +34,12 @@ export const load = () => {
   }
 };
 
-export const messages = new Array<Message>();
+export const messages = new Array<Message<Server>>();
 
-const createMessage = (content: string, options?: MessageOptions): Message => {
+const createMessage = (
+  content: string,
+  options?: MessageOptions<Server>
+): Message<Server> => {
   // User message
   if (options?.user) {
     const { property, state } = options.user;
@@ -68,7 +72,10 @@ const createMessage = (content: string, options?: MessageOptions): Message => {
   };
 };
 
-export const sendMessage = (content: string, options?: MessageOptions) => {
+export const sendMessage = (
+  content: string,
+  options?: MessageOptions<Server>
+) => {
   const message = createMessage(content, options);
 
   const messageLimit = process.env.CHAT_MESSAGE_LIMIT ?? 100;
@@ -83,7 +90,7 @@ export const sendMessage = (content: string, options?: MessageOptions) => {
 
 export const sendErrorMessage = (
   content: string,
-  options: MessageOptions = {}
+  options: MessageOptions<Server> = {}
 ) => {
   sendMessage(content, { type: MessageType.ERROR, ...options });
 };

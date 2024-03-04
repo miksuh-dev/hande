@@ -4,7 +4,7 @@ import ee from "@server/eventEmitter";
 import prisma from "@server/prisma";
 import { sendMessage } from "@server/router/room/message";
 import { MessageType } from "@server/router/room/types";
-import { VoteType } from "@server/types/app";
+import { Server, VoteType } from "@server/types/app";
 import {
   addSongToQueue,
   getCurrentSong,
@@ -65,7 +65,7 @@ export const addSongs = async (
           },
         });
       })
-  )) as Song[];
+  )) as Song<Server>[];
 
   const firstSong = addedSongs[0];
 
@@ -116,7 +116,7 @@ export const removeSong = async (id: number, user: OnlineUser) => {
         code: "INTERNAL_SERVER_ERROR",
         message: "error.songNotFound",
       });
-    })) as Song;
+    })) as Song<Server>;
 
   const currentSong = await removeSongFromQueue(song);
   if (currentSong) {
@@ -222,7 +222,7 @@ export const volumeChange = async (
     orderBy: {
       createdAt: "asc",
     },
-  })) as Song;
+  })) as Song<Server>;
 
   const currentSong = getCurrentSong();
   if (currentSong && currentSong.contentId === contentId) {
@@ -375,7 +375,7 @@ export const playNext = async (id: number, requester: OnlineUser) => {
     data: {
       position,
     },
-  })) as Song;
+  })) as Song<Server>;
 
   sendMessage(`event.source.${song.type}.setAsNext`, {
     user: requester,
@@ -407,7 +407,7 @@ export const movePosition = async (
         createdAt: "asc",
       },
     ],
-  })) as Song[];
+  })) as Song<Server>[];
 
   const selectedSong = songs.find((s) => s.id === id);
   if (!selectedSong) {
@@ -436,7 +436,7 @@ export const movePosition = async (
         },
       });
     })
-  )) as Song[];
+  )) as Song<Server>[];
 
   sendMessage(`event.common.movedSong`, {
     user: requester,

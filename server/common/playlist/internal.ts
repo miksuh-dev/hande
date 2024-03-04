@@ -41,7 +41,7 @@ const processQueue = async (caller: ProcessQueueItem) => {
   processingQueue.splice(1);
 };
 
-export const addSongToQueue = async (song: Song) => {
+export const addSongToQueue = async (song: Song<Server>) => {
   const item: ProcessQueueItem = {
     status: ProcessQueueItemStatus.pending,
     song,
@@ -64,7 +64,7 @@ export const addSongToQueue = async (song: Song) => {
   await processQueue(item);
 };
 
-export const removeSongFromQueue = async (song: Song) => {
+export const removeSongFromQueue = async (song: Song<Server>) => {
   await handleAutoplay();
 
   return processingQueue.find((item, index) => {
@@ -78,7 +78,7 @@ export const removeSongFromQueue = async (song: Song) => {
   });
 };
 
-const onSongEnd = async (song: Song) => {
+const onSongEnd = async (song: Song<Server>) => {
   await prisma.song.update({
     where: {
       id: song.id,
@@ -133,7 +133,7 @@ async function onSongError(this: ProcessQueueItem, error: string) {
   }
 }
 
-const createStream = async (song: Song) => {
+const createStream = async (song: Song<Server>) => {
   // Make sure we stop any previous streams
   stopStream();
 
@@ -162,7 +162,9 @@ export const getSongRating = async (contentId: string) => {
   return rating._sum.vote ?? 0;
 };
 
-export const getSongOriginalRequester = async (song: Song<SongType.SONG>) => {
+export const getSongOriginalRequester = async (
+  song: Song<Server, SongType.SONG>
+) => {
   if (!song.random) return undefined;
 
   return prisma.song
@@ -177,7 +179,7 @@ export const getSongOriginalRequester = async (song: Song<SongType.SONG>) => {
     .then((result) => result?.requester);
 };
 
-export const getSongSettings = async (song: Song) => {
+export const getSongSettings = async (song: Song<Server>) => {
   return (
     (await prisma.songSettings.findFirst({
       where: {
@@ -348,7 +350,7 @@ export const getNextSong = async () => {
         createdAt: "asc",
       },
     ],
-  })) as Song | null;
+  })) as Song<Server> | null;
 };
 
 export const getPlaylist = async (ignoreCurrent: boolean) => {
@@ -372,16 +374,14 @@ export const getPlaylist = async (ignoreCurrent: boolean) => {
         createdAt: "asc",
       },
     ],
-  })) as Song[];
+  })) as Song<Server>[];
 };
 
-export const stopCurrentSong = async (song: Song) => {
+export const stopCurrentSong = async (song: Song<Server>) => {
   stopStream();
 
   const nextSong = await getNextSong();
-  const state = nextSong
-    ? { contentId: song.contentId, state: PlayState.ENDED }
-    : undefined;
+  const state = nextSong ? { ...song, state: PlayState.ENDED } : undefined;
 
   ee.emit(`onUpdate`, {
     song: { setPlaying: state },
@@ -432,7 +432,7 @@ export const addRandomSong = async (
         },
       })),
       originalRequester: song.requester,
-    } as Song<SongType.SONG>;
+    } as Song<Server, SongType.SONG>;
   });
 
   sendMessage(

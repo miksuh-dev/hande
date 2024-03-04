@@ -2,22 +2,19 @@ import type { inferProcedureInput, inferProcedureOutput } from "@trpc/server";
 import { inferObservableValue } from "@trpc/server/observable";
 import type { AppRouter } from "@server/router";
 import { SongType, SourceType } from "@server/types/source";
-import { VoteType, PlayState, PlayingSong } from "@server/types/app";
-import { SongProperties } from "@server/types/prisma";
+import { VoteType, PlayState, PlayingSong, Client } from "@server/types/app";
+import { Song } from "@server/types/prisma";
 
 export type Room = inferProcedureOutput<AppRouter["room"]["get"]>;
 
 export type Source = Room["sources"][number];
 
-export type Song<T extends SongType = SongType> = SongProperties<
-  Room["songs"][number],
+export type SongClient<T extends SongType = SongType> = Song<
+  Client,
   T
 >;
 
-export type PlayingSongClient<T extends SongType = SongType> = SongProperties<
-  PlayingSong<"client", T>,
-  T
->;
+export type PlayingSongClient<T extends SongType = SongType> = PlayingSong<Client, T >;
 
 export type User = Room["users"][number];
 export type IncomingMessage = Room["messages"][number];

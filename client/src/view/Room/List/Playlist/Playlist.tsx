@@ -10,20 +10,20 @@ import {
 import useSnackbar from "hooks/useSnackbar";
 import { Component, createMemo, createSignal, For } from "solid-js";
 import trpcClient from "trpc";
-import { Song } from "trpc/types";
+import { SongClient } from "trpc/types";
 import PlayListItem from "./PlaylistItem";
 
 type Props = {
-  songs: Song[];
-  onSkip: (song: Song) => void;
-  onPlayNext: (song: Song) => void;
+  songs: SongClient[];
+  onSkip: (song: SongClient) => void;
+  onPlayNext: (song: SongClient) => void;
 };
 
 const PlaylistComponent: Component<Props> = (props) => {
   const [t] = useI18n();
   const snackbar = useSnackbar();
 
-  const [tempItems, setTempItems] = createSignal<Song[]>([]);
+  const [tempItems, setTempItems] = createSignal<SongClient[]>([]);
 
   const items = createMemo(() =>
     tempItems().length ? tempItems() : props.songs,

@@ -2,15 +2,15 @@ import { useI18n } from "@solid-primitives/i18n";
 import { CircularLoadingSpinner } from "components/common/icon";
 import { DateTime } from "luxon";
 import { Accessor, Component, For, Show } from "solid-js";
-import { HistoryItem, Song } from "trpc/types";
+import { HistoryItem, SongClient } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 
 type Props = {
   history: HistoryItem[];
-  songs: Song[];
-  playing: Song | undefined;
-  selected: Accessor<Song[]>;
+  songs: SongClient[];
+  playing: SongClient | undefined;
+  selected: Accessor<SongClient[]>;
   onSongSelect: (song: HistoryItem) => void;
   isInQueue: (song: HistoryItem) => boolean;
   loading: Accessor<boolean>;
@@ -19,7 +19,7 @@ type Props = {
 const HistoryComponent: Component<Props> = (props) => {
   const [t] = useI18n();
 
-  const isSelected = (song: Song) => {
+  const isSelected = (song: SongClient) => {
     return props.selected().some((s) => s.contentId === song.contentId);
   };
 
@@ -64,7 +64,7 @@ const HistoryComponent: Component<Props> = (props) => {
                       {t("common.requestedAt")}: {song.requester}
                       {", "}
                       {htmlDecode(
-                        DateTime.fromJSDate(song.createdAt, { zone: "utc" })
+                        DateTime.fromISO(song.createdAt, { zone: "utc" })
                           .setZone("local")
                           .toFormat("dd.MM.yyyy HH:mm"),
                       )}
