@@ -152,6 +152,7 @@ const PlayingComponent: Component<Props> = (props) => {
                         song()?.vote !== VoteType.UP,
                     }}
                     class="icon-button w-12 h-12 p-1"
+                    disabled={song().state === PlayState.ENDED}
                   >
                     <ThumbUpIcon />
                   </button>
@@ -180,6 +181,7 @@ const PlayingComponent: Component<Props> = (props) => {
                         song()?.vote !== VoteType.DOWN,
                     }}
                     class="icon-button w-12 h-12 p-1"
+                    disabled={song().state === PlayState.ENDED}
                   >
                     <ThumbDownIcon />
                   </button>
