@@ -1,6 +1,6 @@
 {
   "name": "hande-server",
-  "version": "2.21.1",
+  "version": "2.21.2",
   "description": "",
   "main": "index.ts",
   "scripts": {
@@ -43,6 +43,7 @@
     "zod": "^3.19.0"
   },
   "devDependencies": {
+    "@tsconfig/node16": "^16.1.1",
     "@types/bcrypt": "^5.0.0",
     "@types/bluebird": "^3.5.36",
     "@types/cors": "^2.8.12",
