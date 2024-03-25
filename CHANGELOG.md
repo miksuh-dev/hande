@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.1](https://github.com/miksuh-dev/hande/compare/v2.22.0...v2.22.1) (2024-03-25)
+
+
+### Bug Fixes
+
+* lyrics scrollbar style ([b5a91a0](https://github.com/miksuh-dev/hande/commit/b5a91a0f45a3ec92bcbdce62e7e2080cbb856055))
+* Playing song not clearing if no next song ([8a7fbcd](https://github.com/miksuh-dev/hande/commit/8a7fbcd429b7d651443a467582204fbbdd1c22b2))
+
 ## [2.22.0](https://github.com/miksuh-dev/hande/compare/v2.21.2...v2.22.0) (2024-03-25)
 
 
