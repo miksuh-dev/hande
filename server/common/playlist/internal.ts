@@ -19,6 +19,7 @@ import * as room from "../room";
 import {
   createStream as createYoutubeStream,
   getVideoInfo,
+  guessSongArtistAndTrack,
 } from "../youtube-dl";
 
 const MAX_RETRIES = 3;
@@ -112,7 +113,7 @@ async function onSongError(this: ProcessQueueItem, error: string) {
         {
           item: [this.song],
           error,
-        }
+        },
       );
     }
 
@@ -163,7 +164,7 @@ export const getSongRating = async (contentId: string) => {
 };
 
 export const getSongOriginalRequester = async (
-  song: Song<Server, SongType.SONG>
+  song: Song<Server, SongType.SONG>,
 ) => {
   if (!song.random) return undefined;
 
@@ -215,7 +216,12 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
       const startedAt = DateTime.utc();
 
       this.song.startedAt = startedAt.toISO();
+
       this.song.duration = videoInfo.duration;
+
+      const { artist, track } = guessSongArtistAndTrack(videoInfo);
+      this.song.artist = artist;
+      this.song.track = track;
 
       const secondsLeft = startedAt
         .plus({ seconds: videoInfo.duration })
@@ -257,7 +263,7 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
     this.song.volume = options.volume;
 
     const index = processingQueue.findIndex(
-      (item) => item.song.id === this.song.id
+      (item) => item.song.id === this.song.id,
     );
 
     if (index === -1) {
@@ -395,7 +401,7 @@ export const setVolume = (volume: number) => {
 
 export const addRandomSong = async (
   requester: OnlineUser,
-  source: "user" | "autoplay" = "user"
+  source: "user" | "autoplay" = "user",
 ) => {
   const song = await getRandomSong();
 
@@ -443,7 +449,7 @@ export const addRandomSong = async (
       user: requester,
       type: MessageType.ACTION,
       item: [addedSong],
-    }
+    },
   );
 
   ee.emit(`onUpdate`, { song: { add: [addedSong] } });

@@ -36,6 +36,7 @@
     "luxon": "^3.2.1",
     "m3u8stream": "^0.8.6",
     "markdown-it": "^14.0.0",
+    "node-html-parser": "^6.1.12",
     "protobufjs": "^7.2.6",
     "superjson": "^1.11.0",
     "ws": "^8.8.1",

@@ -47,6 +47,9 @@ export default {
       clearPlaylist: "Tyhjennä soittolista",
       showVideo: "Näytä video",
       hideVideo: "Piilota video",
+      showLyrics: "Näytä sanat",
+      hideLyrics: "Piilota sanat",
+      noSongDetails: "Kappaleen tietoja ei saatavilla",
       noSelections: "Ei valintoja",
       addRandomSong: "Lisää satunnainen kappale",
       randomSong: "Satunnaisesti lisätty kappale",
@@ -81,6 +84,8 @@ export default {
     socketReconnecting: "Yhteys palvelimeen katkesi. Yhdistetään uudelleen...",
     alreadyVoted: "Olet jo äänestänyt tätä kappaletta",
     songNotFound: "Kappaletta ei löytynyt",
+    lyricsNotFound: "Sanoja kappaleelle ei löytynyt",
+    lyricsApiError: "Virhe haettaessa sanoja",
   },
   snackbar: {
     common: {

@@ -47,6 +47,9 @@ export default {
       clearPlaylist: "Clear playlist",
       showVideo: "Show video",
       hideVideo: "Hide video",
+      showLyrics: "Show video",
+      hideLyrics: "Hide video",
+      noSongDetails: "No song details available",
       noSelections: "No selections",
       addRandomSong: "Add random song",
       randomSong: "Randomly added song",
@@ -80,6 +83,8 @@ export default {
     socketReconnecting: "Socket connection lost. Reconnecting...",
     alreadyVoted: "You have already voted",
     songNotFound: "Song not found",
+    lyricsNotFound: "Lyrics not found",
+    lyricsApiError: "Error getting lyrics",
   },
   snackbar: {
     common: {

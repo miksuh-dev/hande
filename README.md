@@ -75,5 +75,6 @@ Copy `.env.example` to `.env` and fill in the values. The following variables ar
 | `YOUTUBE_API_KEY` | Bot uses youtube data API to fetch search results, obtain your api key [here](https://developers.google.com/youtube/registering_an_application) |
 | `YOUTUBE_DL_LOCATION` | Bot uses yt-dlp to stream videos on youtube. |
 | `RADIO_SEARCH_URL` | Bot searches radio stations from [radio-browser.info](https://radio-browser.info). Insert desired API endpoint URL here |
+| `GENIUS_ACCESS_TOKEN` | Bot uses Genius data API to fetch lyrics for songs, obtain your api key [here](https://docs.genius.com/) |
 | `SERVER_LANGUAGE` | Currently supported languages are: `en` (English) and `fi` (Finnish) |
 | `CHAT_MESSAGE_LIMIT` | Maximum number of chat messages stored on exit and sent visible to user |

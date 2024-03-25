@@ -18,6 +18,8 @@ type PlayingSongProperty<T extends SongType> = T extends SongType.SONG
   ? {
       type: T;
       duration: number;
+      artist: string | null;
+      track: string | null;
     }
   : {
       type: T;
@@ -25,7 +27,7 @@ type PlayingSongProperty<T extends SongType> = T extends SongType.SONG
 
 export type PlayingSong<
   L extends Location,
-  T extends SongType = SongType
+  T extends SongType = SongType,
 > = Song<L, T> &
   PlayingSongProperty<T> & {
     startedAt: string;

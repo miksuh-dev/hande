@@ -7,6 +7,7 @@ import {
   addRandomSong,
   addSongs,
   clearPlaylist,
+  getCurrentSongLyrics,
   movePosition,
   playNext,
   removeSong,
@@ -64,8 +65,8 @@ export const roomRouter = t.router({
           title: z.string().min(1),
           thumbnail: z.string().nullable(),
           type: z.enum([SongType.SONG, SongType.RADIO]),
-        })
-      )
+        }),
+      ),
     )
     .mutation(async ({ input, ctx }) => {
       const { onlineUser } = ctx;
@@ -83,7 +84,7 @@ export const roomRouter = t.router({
     .input(
       z.object({
         id: z.number().min(1),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { onlineUser } = ctx;
@@ -102,7 +103,7 @@ export const roomRouter = t.router({
     .input(
       z.object({
         id: z.number().min(1),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { onlineUser } = ctx;
@@ -116,7 +117,7 @@ export const roomRouter = t.router({
       z.object({
         id: z.number().min(1),
         position: z.number(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { onlineUser } = ctx;
@@ -129,7 +130,7 @@ export const roomRouter = t.router({
     .input(
       z.object({
         id: z.number(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { onlineUser } = ctx;
@@ -142,7 +143,7 @@ export const roomRouter = t.router({
         songId: z.number().min(1),
         contentId: z.string().min(1),
         vote: z.enum([VoteType.UP, VoteType.DOWN, VoteType.NONE]),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { onlineUser } = ctx;
@@ -157,7 +158,7 @@ export const roomRouter = t.router({
       z.object({
         contentId: z.string().min(1),
         volume: z.number().min(0).max(100),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { onlineUser } = ctx;
@@ -195,18 +196,29 @@ export const roomRouter = t.router({
           SourceType.PLAYLIST,
           SourceType.RADIO,
         ]),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const { text, source } = input;
 
       return await searchFromSource(text, source);
     }),
+  getCurrentLyrics: authedProcedure
+    .input(
+      z.object({
+        songId: z.string().min(1),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { songId } = input;
+
+      return await getCurrentSongLyrics(songId);
+    }),
   listPlaylist: authedProcedure
     .input(
       z.object({
         playlistId: z.string().min(1),
-      })
+      }),
     )
     .query(({ input }) => {
       const { playlistId } = input;
@@ -219,7 +231,7 @@ export const roomRouter = t.router({
         text: z.string(),
         user: z.string(),
         page: z.number().min(1),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { prisma } = ctx;
@@ -266,7 +278,7 @@ export const roomRouter = t.router({
     .input(
       z.object({
         after: z.string(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { prisma } = ctx;
@@ -328,7 +340,7 @@ export const roomRouter = t.router({
         clientId: z.string().min(10),
         version: z.string().min(1),
         joined: z.string().min(1),
-      })
+      }),
     )
     .mutation(({ input }) => {
       const { clientId, version, joined } = input;
@@ -355,7 +367,7 @@ export const roomRouter = t.router({
     .input(
       z.object({
         content: z.string().min(1),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const { onlineUser } = ctx;
@@ -375,9 +387,9 @@ export const roomRouter = t.router({
           z.object({
             isVideoOn: z.boolean().optional(),
             theme: z.string().optional(),
-          })
+          }),
         ),
-      })
+      }),
     )
     .subscription(({ ctx, input }) => {
       const { user } = ctx;
@@ -406,7 +418,7 @@ export const roomRouter = t.router({
     .input(
       z.object({
         clientId: z.string().min(1),
-      })
+      }),
     )
     .subscription(({ input }) => {
       const { clientId } = input;

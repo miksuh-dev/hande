@@ -1,10 +1,12 @@
 import { TRPCError } from "@trpc/server";
+import { searchSongLyrics } from "@server/common/genius";
 import * as room from "@server/common/room";
 import ee from "@server/eventEmitter";
 import prisma from "@server/prisma";
 import { sendMessage } from "@server/router/room/message";
 import { MessageType } from "@server/router/room/types";
 import { Server, VoteType } from "@server/types/app";
+import { SongType } from "@server/types/source";
 import {
   addSongToQueue,
   getCurrentSong,
@@ -27,7 +29,7 @@ export const addSongs = async (
     thumbnail: string | null;
     type: string;
   }[],
-  requester: OnlineUser
+  requester: OnlineUser,
 ) => {
   const lastSong = await prisma.song.findFirst({
     where: {
@@ -50,7 +52,7 @@ export const addSongs = async (
   const addedSongs = (await prisma.$transaction(
     songs
       .filter(
-        ({ contentId }, index) => !contentIds.includes(contentId, index + 1)
+        ({ contentId }, index) => !contentIds.includes(contentId, index + 1),
       )
       .map((song, index) => {
         return prisma.song.create({
@@ -64,7 +66,7 @@ export const addSongs = async (
             position: position + index,
           },
         });
-      })
+      }),
   )) as Song<Server>[];
 
   const firstSong = addedSongs[0];
@@ -161,7 +163,7 @@ export const voteSong = async (
   songId: number,
   contentId: string,
   vote: VoteType,
-  user: OnlineUser
+  user: OnlineUser,
 ) => {
   const voteValue = getVoteValue(vote);
 
@@ -202,7 +204,7 @@ export const voteSong = async (
 export const volumeChange = async (
   contentId: string,
   volume: number,
-  user: OnlineUser
+  user: OnlineUser,
 ) => {
   const currentSong = getCurrentSong();
   if (!currentSong || currentSong.contentId !== contentId) {
@@ -306,7 +308,7 @@ export const toggleAutoplay = async (requester: OnlineUser) => {
     {
       user: requester,
       type: MessageType.ACTION,
-    }
+    },
   );
 
   if (newState) {
@@ -348,7 +350,7 @@ export const shufflePlaylist = async (requester: OnlineUser) => {
           position: positions[index],
         },
       });
-    })
+    }),
   );
 
   sendMessage(`event.common.shuffledPlaylist`, {
@@ -389,7 +391,7 @@ export const playNext = async (id: number, requester: OnlineUser) => {
 export const movePosition = async (
   id: number,
   position: number,
-  requester: OnlineUser
+  requester: OnlineUser,
 ) => {
   const songs = (await prisma.song.findMany({
     where: {
@@ -433,7 +435,7 @@ export const movePosition = async (
           position: index,
         },
       });
-    })
+    }),
   )) as Song<Server>[];
 
   sendMessage(`event.common.movedSong`, {
@@ -457,4 +459,27 @@ export const movePosition = async (
   ee.emit(`onUpdate`, { song: { update: changedSongs } }); //   // ee.emit(`onUpdate`, { song: { update: updatedSongs } });
 
   return changedSongs;
+};
+
+export const getCurrentSongLyrics = async (songId: string) => {
+  const currentSong = getCurrentSong();
+  if (!currentSong || songId !== currentSong.contentId) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "error.songNotFound",
+    });
+  }
+
+  if (
+    currentSong.type !== SongType.SONG ||
+    !currentSong.artist ||
+    !currentSong.track
+  ) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "error.lyricsNotFound",
+    });
+  }
+
+  return searchSongLyrics(currentSong.artist, currentSong.track);
 };

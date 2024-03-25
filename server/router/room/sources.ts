@@ -9,18 +9,18 @@ import {
 
 export const searchFromSource = async (
   text: string,
-  source: SourceType
+  source: SourceType,
 ): Promise<(SourceResultSong | SourceResultPlaylist | SourceResultRadio)[]> => {
   switch (source) {
-    case "song":
+    case SourceType.SONG:
       return youtube
         .searchListSong(text)
         .then((res) => res.map(youtube.parseSong));
-    case "playlist":
+    case SourceType.PLAYLIST:
       return youtube
         .searchListPlaylist(text)
         .then((res) => res.map(youtube.parsePlaylist));
-    case "radio":
+    case SourceType.RADIO:
       return radio
         .searchList(text)
         .then((res) => res.map(radio.parseSearchListItem));
@@ -30,7 +30,7 @@ export const searchFromSource = async (
 };
 
 export const searchFromPlaylist = async (
-  playlistId: string
+  playlistId: string,
 ): Promise<SourceResultSong[]> => {
   const result = await youtube.playlistItems(playlistId);
 

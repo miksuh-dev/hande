@@ -75,4 +75,7 @@ export interface VideoInfo {
   http_headers: Record<string, number>;
   fulltitle: string;
   _filename: string;
+  artist: string | null;
+  track: string | null;
+  creator: string;
 }

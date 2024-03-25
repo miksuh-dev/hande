@@ -3,20 +3,37 @@ import {
   ChatBubbleIcon,
   EyeIcon,
   EyeSlashIcon,
+  LyricsIcon,
+  LyricsSlashIcon,
   RandomIcon,
   SkipSongIcon,
   ThumbDownIcon,
   ThumbUpIcon,
 } from "components/common/icon";
 import Tooltip from "components/Tooltip";
-import { Accessor, Component, Show, Setter, createSignal } from "solid-js";
-import { SongClient, PlayState, SongType, PlayingSongClient } from "trpc/types";
+import {
+  Accessor,
+  Component,
+  Show,
+  Setter,
+  createSignal,
+  createEffect,
+  on,
+  createMemo,
+} from "solid-js";
+import {
+  SongClient,
+  PlayState,
+  SongType,
+  PlayingSongClient,
+  LyricsItem,
+} from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import { VoteType } from "trpc/types";
 import Progress from "./Progress";
 import VolumeControl from "./VolumeControl";
 import SongThumbnail from "view/Room/common/SongThumbnail";
-import { secondsToTime } from "./utils";
+import { hasSongDetails, secondsToTime } from "./utils";
 import type { RoomData } from "view/Room/data";
 import { useRouteData } from "@solidjs/router";
 import useSnackbar from "hooks/useSnackbar";
@@ -26,6 +43,8 @@ type Props = {
   showVideo: Accessor<boolean>;
   showSocial: Accessor<boolean>;
   setShowVideo: Setter<boolean>;
+  setLyrics: Setter<LyricsItem | undefined>;
+  lyrics: Accessor<LyricsItem | undefined>;
   setShowSocial: Setter<boolean>;
 };
 
@@ -38,7 +57,15 @@ const PlayingComponent: Component<Props> = (props) => {
 
   const [progress, setProgress] = createSignal<number>(0);
 
-  const handleSkip = async (song: SongClient) => {
+  const contentId = createMemo(() => room()?.playing?.contentId);
+
+  createEffect(
+    on(contentId, () => {
+      props.setLyrics(undefined);
+    }),
+  );
+
+  const handleSkip = async (song: PlayingSongClient) => {
     try {
       const skippedSong = await trpcClient.room.skipCurrent.mutate({
         id: song.id,
@@ -71,6 +98,24 @@ const PlayingComponent: Component<Props> = (props) => {
       if (err instanceof Error) {
         snackbar.error(t(err.message) ?? err.message);
       }
+    }
+  };
+
+  const handleGetLyrics = async (song: PlayingSongClient<SongType.SONG>) => {
+    try {
+      const result = await trpcClient.room.getCurrentLyrics.query({
+        songId: song.contentId,
+      });
+
+      props.setLyrics(result);
+    } catch (err) {
+      if (err instanceof Error) {
+        snackbar.error(
+          t("error.common", { error: t(err.message) || err.message }),
+        );
+      }
+
+      props.setLyrics(undefined);
     }
   };
 
@@ -108,14 +153,46 @@ const PlayingComponent: Component<Props> = (props) => {
                       {t("common.requesterWithOriginal", {
                         requester: song().requester,
                         original:
-                          (song() as SongClient<SongType.SONG>).originalRequester ??
-                          "",
+                          (song() as SongClient<SongType.SONG>)
+                            .originalRequester ?? "",
                       })}
                     </Show>
                   </p>
                 </div>
               </div>
               <div class="space-x-2 flex justify-center">
+                <Show when={song().type === SongType.SONG}>
+                  <Tooltip
+                    text={
+                      !hasSongDetails(
+                        song() as PlayingSongClient<SongType.SONG>,
+                      )
+                        ? t("tooltip.common.noSongDetails")
+                        : props.lyrics()
+                          ? t("tooltip.common.hideLyrics")
+                          : t("tooltip.common.showLyrics")
+                    }
+                  >
+                    <button
+                      class="icon-button w-12 h-12 p-1"
+                      onClick={() => {
+                        !props.lyrics()
+                          ? handleGetLyrics(
+                              song() as PlayingSongClient<SongType.SONG>,
+                            )
+                          : props.setLyrics(undefined);
+                      }}
+                      disabled={
+                        song().state === PlayState.ENDED ||
+                        !hasSongDetails(
+                          song() as PlayingSongClient<SongType.SONG>,
+                        )
+                      }
+                    >
+                      {props.lyrics() ? <LyricsSlashIcon /> : <LyricsIcon />}
+                    </button>
+                  </Tooltip>
+                </Show>
                 <Tooltip
                   text={
                     props.showVideo()

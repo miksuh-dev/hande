@@ -9,12 +9,12 @@ export type Room = inferProcedureOutput<AppRouter["room"]["get"]>;
 
 export type Source = Room["sources"][number];
 
-export type SongClient<T extends SongType = SongType> = Song<
+export type SongClient<T extends SongType = SongType> = Song<Client, T>;
+
+export type PlayingSongClient<T extends SongType = SongType> = PlayingSong<
   Client,
   T
 >;
-
-export type PlayingSongClient<T extends SongType = SongType> = PlayingSong<Client, T >;
 
 export type User = Room["users"][number];
 export type IncomingMessage = Room["messages"][number];
@@ -39,6 +39,10 @@ export type RoomUpdateEvent = inferObservableValue<
 >;
 
 export type Language = inferProcedureOutput<AppRouter["common"]["language"]>;
+
+export type LyricsItem = inferProcedureOutput<
+  AppRouter["room"]["getCurrentLyrics"]
+>;
 
 export type ListHistory = inferProcedureOutput<
   AppRouter["room"]["listHistory"]
