@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.22.0](https://github.com/miksuh-dev/hande/compare/v2.21.2...v2.22.0) (2024-03-25)
+
+
+### Features
+
+* Add get lyrics button and functionality ([6d4edb7](https://github.com/miksuh-dev/hande/commit/6d4edb743ee075affc23e3d9e4dd4f7b0ce631cf))
+
 ### [2.21.2](https://github.com/miksuh-dev/hande/compare/v2.21.0...v2.21.2) (2024-03-08)
 
 
