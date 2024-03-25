@@ -26,7 +26,7 @@ const PlaylistComponent: Component<Props> = (props) => {
   const [tempItems, setTempItems] = createSignal<SongClient[]>([]);
 
   const items = createMemo(() =>
-    tempItems().length ? tempItems() : props.songs,
+    tempItems().length ? tempItems() : props.songs
   );
 
   const ids = () => items().map((song) => song.id);
@@ -56,7 +56,7 @@ const PlaylistComponent: Component<Props> = (props) => {
     } catch (err) {
       if (err instanceof Error) {
         snackbar.error(
-          t("error.common", { error: t(err.message) || err.message }),
+          t("error.common", { error: t(err.message) || err.message })
         );
       }
     } finally {

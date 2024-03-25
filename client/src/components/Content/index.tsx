@@ -3,7 +3,7 @@ import type { Component } from "solid-js";
 import Navbar from "components/Navbar";
 
 const Content: Component<{ children: JSX.Element; footer?: JSX.Element }> = (
-  props,
+  props
 ) => (
   <div class="flex h-full max-h-screen flex-col overflow-hidden">
     <Navbar />

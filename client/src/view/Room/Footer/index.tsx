@@ -62,7 +62,7 @@ const PlayingComponent: Component<Props> = (props) => {
   createEffect(
     on(contentId, () => {
       props.setLyrics(undefined);
-    }),
+    })
   );
 
   const handleSkip = async (song: PlayingSongClient) => {
@@ -74,12 +74,12 @@ const PlayingComponent: Component<Props> = (props) => {
       snackbar.success(
         t(`snackbar.source.${skippedSong.type}.skipped`, {
           item: htmlDecode(skippedSong.title),
-        }),
+        })
       );
     } catch (err) {
       if (err instanceof Error) {
         snackbar.error(
-          t("error.common", { error: t(err.message) || err.message }),
+          t("error.common", { error: t(err.message) || err.message })
         );
       }
     }
@@ -111,7 +111,7 @@ const PlayingComponent: Component<Props> = (props) => {
     } catch (err) {
       if (err instanceof Error) {
         snackbar.error(
-          t("error.common", { error: t(err.message) || err.message }),
+          t("error.common", { error: t(err.message) || err.message })
         );
       }
 
@@ -165,7 +165,7 @@ const PlayingComponent: Component<Props> = (props) => {
                   <Tooltip
                     text={
                       !hasSongDetails(
-                        song() as PlayingSongClient<SongType.SONG>,
+                        song() as PlayingSongClient<SongType.SONG>
                       )
                         ? t("tooltip.common.noSongDetails")
                         : props.lyrics()
@@ -178,14 +178,14 @@ const PlayingComponent: Component<Props> = (props) => {
                       onClick={() => {
                         !props.lyrics()
                           ? handleGetLyrics(
-                              song() as PlayingSongClient<SongType.SONG>,
+                              song() as PlayingSongClient<SongType.SONG>
                             )
                           : props.setLyrics(undefined);
                       }}
                       disabled={
                         song().state === PlayState.ENDED ||
                         !hasSongDetails(
-                          song() as PlayingSongClient<SongType.SONG>,
+                          song() as PlayingSongClient<SongType.SONG>
                         )
                       }
                     >
@@ -220,7 +220,7 @@ const PlayingComponent: Component<Props> = (props) => {
                         song(),
                         song()?.vote === VoteType.UP
                           ? VoteType.NONE
-                          : VoteType.UP,
+                          : VoteType.UP
                       )
                     }
                     classList={{
@@ -249,7 +249,7 @@ const PlayingComponent: Component<Props> = (props) => {
                         song(),
                         song()?.vote === VoteType.DOWN
                           ? VoteType.NONE
-                          : VoteType.DOWN,
+                          : VoteType.DOWN
                       )
                     }
                     classList={{
@@ -280,7 +280,7 @@ const PlayingComponent: Component<Props> = (props) => {
                     <span>/</span>
                     <span>
                       {secondsToTime(
-                        (song() as PlayingSongClient<SongType.SONG>).duration,
+                        (song() as PlayingSongClient<SongType.SONG>).duration
                       )}
                     </span>
                   </div>

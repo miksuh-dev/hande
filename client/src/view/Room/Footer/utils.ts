@@ -14,7 +14,7 @@ export const secondsToTime = (seconds: number): string => {
 };
 
 export const hasSongDetails = (
-  song: PlayingSongClient<SongType.SONG>,
+  song: PlayingSongClient<SongType.SONG>
 ): boolean => {
   return song.artist !== null && song.track !== null;
 };

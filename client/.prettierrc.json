@@ -1,1 +1,9 @@
-{}
+{
+  "arrowParens": "always",
+  "printWidth": 80,
+  "singleQuote": false,
+  "jsxSingleQuote": false,
+  "semi": true,
+  "tabWidth": 2,
+  "trailingComma": "es5"
+}

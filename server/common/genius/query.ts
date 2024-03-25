@@ -10,7 +10,7 @@ let lyricsCache:
 const setLyricsCache = (
   artist: string,
   track: string,
-  lyrics: string | undefined,
+  lyrics: string | undefined
 ) => {
   lyricsCache = { artist, track, lyrics };
 };
@@ -36,7 +36,7 @@ const getLyricsCache = () => {
 
 export const searchSongLyrics = async (
   artist: string,
-  track: string,
+  track: string
 ): Promise<string | undefined> => {
   try {
     if (hasCachedLyrics(artist, track)) {
@@ -68,7 +68,7 @@ export const searchSongLyrics = async (
 
 export const getSongId = async (
   artist: string,
-  track: string,
+  track: string
 ): Promise<string | undefined> => {
   if (!process.env.GENIUS_ACCESS_TOKEN) {
     throw new Error("GENIUS_ACCESS_TOKEN is not set");

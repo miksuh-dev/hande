@@ -18,7 +18,7 @@ const ProgressComponent: Component<Props> = (props) => {
       DateTime.fromISO(startedAt, {
         zone: "utc",
       }),
-      "seconds",
+      "seconds"
     ).seconds;
 
     if (diff < 0) return 0;

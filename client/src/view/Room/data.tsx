@@ -27,7 +27,7 @@ const playListCompare = (a: SongClient, b: SongClient) => {
 
 const handleUpdateEvent = (
   existingRoom: Room,
-  event: RoomUpdateEvent,
+  event: RoomUpdateEvent
 ): Room => {
   if (!existingRoom) {
     return existingRoom;
@@ -66,7 +66,7 @@ const handleUpdateEvent = (
       return {
         ...existingRoom,
         users: existingRoom.users.map((u) =>
-          u.hash === updatedUser.hash ? updatedUser : u,
+          u.hash === updatedUser.hash ? updatedUser : u
         ),
       };
     }
@@ -199,7 +199,7 @@ function RoomData() {
         },
         version: "0.0.0",
       },
-    },
+    }
   );
 
   onMount(() => {
@@ -259,7 +259,7 @@ function RoomData() {
           // Retry connection
           initRoomSocket(user);
         },
-      },
+      }
     );
 
     trpcClient.room.ping
@@ -278,7 +278,7 @@ function RoomData() {
             return handleUpdateEvent(existingRoom, event);
           });
         },
-      },
+      }
     );
 
     const onClose = () => {

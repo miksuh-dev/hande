@@ -66,7 +66,7 @@ const HistoryComponent: Component<Props> = (props) => {
                       {htmlDecode(
                         DateTime.fromISO(song.createdAt, { zone: "utc" })
                           .setZone("local")
-                          .toFormat("dd.MM.yyyy HH:mm"),
+                          .toFormat("dd.MM.yyyy HH:mm")
                       )}
                     </span>
                   </div>

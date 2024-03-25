@@ -29,7 +29,7 @@ export const addSongs = async (
     thumbnail: string | null;
     type: string;
   }[],
-  requester: OnlineUser,
+  requester: OnlineUser
 ) => {
   const lastSong = await prisma.song.findFirst({
     where: {
@@ -52,7 +52,7 @@ export const addSongs = async (
   const addedSongs = (await prisma.$transaction(
     songs
       .filter(
-        ({ contentId }, index) => !contentIds.includes(contentId, index + 1),
+        ({ contentId }, index) => !contentIds.includes(contentId, index + 1)
       )
       .map((song, index) => {
         return prisma.song.create({
@@ -66,7 +66,7 @@ export const addSongs = async (
             position: position + index,
           },
         });
-      }),
+      })
   )) as Song<Server>[];
 
   const firstSong = addedSongs[0];
@@ -163,7 +163,7 @@ export const voteSong = async (
   songId: number,
   contentId: string,
   vote: VoteType,
-  user: OnlineUser,
+  user: OnlineUser
 ) => {
   const voteValue = getVoteValue(vote);
 
@@ -204,7 +204,7 @@ export const voteSong = async (
 export const volumeChange = async (
   contentId: string,
   volume: number,
-  user: OnlineUser,
+  user: OnlineUser
 ) => {
   const currentSong = getCurrentSong();
   if (!currentSong || currentSong.contentId !== contentId) {
@@ -308,7 +308,7 @@ export const toggleAutoplay = async (requester: OnlineUser) => {
     {
       user: requester,
       type: MessageType.ACTION,
-    },
+    }
   );
 
   if (newState) {
@@ -350,7 +350,7 @@ export const shufflePlaylist = async (requester: OnlineUser) => {
           position: positions[index],
         },
       });
-    }),
+    })
   );
 
   sendMessage(`event.common.shuffledPlaylist`, {
@@ -391,7 +391,7 @@ export const playNext = async (id: number, requester: OnlineUser) => {
 export const movePosition = async (
   id: number,
   position: number,
-  requester: OnlineUser,
+  requester: OnlineUser
 ) => {
   const songs = (await prisma.song.findMany({
     where: {
@@ -435,7 +435,7 @@ export const movePosition = async (
           position: index,
         },
       });
-    }),
+    })
   )) as Song<Server>[];
 
   sendMessage(`event.common.movedSong`, {

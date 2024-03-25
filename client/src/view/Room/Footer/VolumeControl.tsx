@@ -46,10 +46,16 @@ const VolumeControlComponent: Component<Props> = (props) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <button disabled={props.playing.state === PlayState.ENDED } type="button" class="icon-button w-12 h-12 p-1">
+      <button
+        disabled={props.playing.state === PlayState.ENDED}
+        type="button"
+        class="icon-button w-12 h-12 p-1"
+      >
         <AudioIcon />
       </button>
-      <Show when={props.playing.state === PlayState.ENDED && audioControlOpen()}>
+      <Show
+        when={props.playing.state === PlayState.ENDED && audioControlOpen()}
+      >
         <div class="absolute top-0 z-50">
           <div class="absolute bottom-1">
             <input

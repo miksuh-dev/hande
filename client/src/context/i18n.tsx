@@ -26,7 +26,7 @@ type LanguageContext = {
 export const I18nSetterContext = createContext<LanguageContext>();
 
 export const I18nSetterProvider: Component<{ children: JSX.Element }> = (
-  props,
+  props
 ) => {
   const [, { add, locale, dict }] = useI18n();
   const [currentLanguage, setCurrentLanguage] =
@@ -37,7 +37,7 @@ export const I18nSetterProvider: Component<{ children: JSX.Element }> = (
   const [language] = createResource<Language>(() =>
     trpcClient.common.language.query({
       language: localStorage.getItem("language") ?? undefined,
-    }),
+    })
   );
 
   createEffect(
@@ -53,7 +53,7 @@ export const I18nSetterProvider: Component<{ children: JSX.Element }> = (
       if (selectedLanguage?.available) {
         setAvailable(selectedLanguage.available);
       }
-    }),
+    })
   );
 
   const handleLanguageChange = async (language: string) => {

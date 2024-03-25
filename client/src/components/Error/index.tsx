@@ -2,7 +2,7 @@ import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 
 const ErrorComponent: Component<{ title: string; description: string }> = (
-  props,
+  props
 ) => {
   const [t] = useI18n();
 

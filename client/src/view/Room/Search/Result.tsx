@@ -65,7 +65,7 @@ const Result: Component<Props> = (props) => {
                         <Match
                           when={
                             props.songs.some(
-                              (s) => s.contentId === result.contentId,
+                              (s) => s.contentId === result.contentId
                             ) || props.playing?.contentId === result.contentId
                           }
                         >
@@ -100,7 +100,7 @@ const Result: Component<Props> = (props) => {
                             onClick={(event) => {
                               event.stopPropagation();
                               props.onPlaylistView(
-                                result as SourceResultPlaylist,
+                                result as SourceResultPlaylist
                               );
                               props.onClose();
                             }}

@@ -45,7 +45,7 @@ const SearchComponent: Component = () => {
 
   const onSearch = async (
     searchText: string,
-    selectedSource: Source | undefined,
+    selectedSource: Source | undefined
   ) => {
     if (!searchText || !selectedSource) return;
 
@@ -93,14 +93,14 @@ const SearchComponent: Component = () => {
           title: r.title,
           thumbnail: r.thumbnail ?? null,
           type: sourceToSongType(r.type),
-        })),
+        }))
       );
 
       if (songs.length > 1) {
         snackbar.success(
           t(`snackbar.source.song.addedManyToQueue`, {
             count: songs.length.toString(),
-          }),
+          })
         );
       } else if (songs[0]) {
         const song = songs[0];
@@ -108,7 +108,7 @@ const SearchComponent: Component = () => {
         snackbar.success(
           t(`snackbar.source.${song.type}.addedToQueue`, {
             item: htmlDecode(song.title),
-          }),
+          })
         );
       }
     } catch (error) {

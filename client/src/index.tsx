@@ -24,5 +24,5 @@ render(
       </BaseProvider>
     </Router>
   ),
-  root,
+  root
 );

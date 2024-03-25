@@ -58,7 +58,7 @@ const StatisticsComponent: Component = () => {
           title: r.title,
           thumbnail: r.thumbnail ?? null,
           type: r.type,
-        })),
+        }))
       );
 
       if (!song) {
@@ -68,7 +68,7 @@ const StatisticsComponent: Component = () => {
       snackbar.success(
         t(`snackbar.source.${song.type}.addedToQueue`, {
           item: htmlDecode(song.title),
-        }),
+        })
       );
     } catch (error) {
       if (error instanceof Error) {

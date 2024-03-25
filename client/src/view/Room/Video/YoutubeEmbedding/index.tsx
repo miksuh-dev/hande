@@ -36,7 +36,7 @@ const onYoutubeScriptReady = (contentId: string, startedAt: string) => {
 const getStartTime = (startedAt: string) => {
   return DateTime.utc().diff(
     DateTime.fromISO(startedAt, { zone: "utc" }),
-    "seconds",
+    "seconds"
   ).seconds;
 };
 

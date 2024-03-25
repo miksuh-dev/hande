@@ -42,12 +42,12 @@ const PlaylistComponent: Component = () => {
       snackbar.success(
         t(`snackbar.source.${skippedSong.type}.skippedInPlaylist`, {
           item: htmlDecode(skippedSong.title),
-        }),
+        })
       );
     } catch (err) {
       if (err instanceof Error) {
         snackbar.error(
-          t("error.common", { error: t(err.message) || err.message }),
+          t("error.common", { error: t(err.message) || err.message })
         );
       }
     }
@@ -62,7 +62,7 @@ const PlaylistComponent: Component = () => {
       snackbar.success(
         t(`snackbar.source.${song.type}.setAsNext`, {
           item: htmlDecode(song.title),
-        }),
+        })
       );
     } catch (err) {
       if (err instanceof Error) {
@@ -114,7 +114,7 @@ const PlaylistComponent: Component = () => {
       snackbar.success(
         autoPlayOn
           ? t(`snackbar.common.autoplayOn`)
-          : t(`snackbar.common.autoplayOff`),
+          : t(`snackbar.common.autoplayOff`)
       );
     } catch (err) {
       if (err instanceof Error) {

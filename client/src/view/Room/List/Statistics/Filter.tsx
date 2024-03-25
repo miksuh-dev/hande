@@ -45,11 +45,11 @@ const FilterComponent: Component<Props> = (props) => {
   ];
 
   const [after, setAfter] = createSignal<string | undefined>(
-    filterOptions[0]?.value,
+    filterOptions[0]?.value
   );
 
   const selected = createMemo(() =>
-    filterOptions.find((option) => option.value === after()),
+    filterOptions.find((option) => option.value === after())
   );
 
   const handleSelect = (option: Option) => {

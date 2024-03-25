@@ -3,7 +3,7 @@ import { SearchTerms } from ".";
 
 export const hasSearchChanged = (
   prevSearch: SearchTerms | undefined,
-  newSearch: SearchTerms,
+  newSearch: SearchTerms
 ) => {
   if (!prevSearch) return true;
 

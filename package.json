@@ -44,7 +44,7 @@
     "zod": "^3.19.0"
   },
   "devDependencies": {
-    "@tsconfig/node16": "^16.1.1",
+    "@tsconfig/node16": "^16.1.2",
     "@types/bcrypt": "^5.0.0",
     "@types/bluebird": "^3.5.36",
     "@types/cors": "^2.8.12",

@@ -9,7 +9,7 @@ import {
 
 export const searchFromSource = async (
   text: string,
-  source: SourceType,
+  source: SourceType
 ): Promise<(SourceResultSong | SourceResultPlaylist | SourceResultRadio)[]> => {
   switch (source) {
     case SourceType.SONG:
@@ -30,7 +30,7 @@ export const searchFromSource = async (
 };
 
 export const searchFromPlaylist = async (
-  playlistId: string,
+  playlistId: string
 ): Promise<SourceResultSong[]> => {
   const result = await youtube.playlistItems(playlistId);
 

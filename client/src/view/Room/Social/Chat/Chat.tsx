@@ -41,7 +41,7 @@ const RoomChat: Component<Props> = (props) => {
                   <div class="flex space-x-2">
                     <div>
                       {DateTime.fromSeconds(message.timestamp / 1000).toFormat(
-                        "HH:mm:ss",
+                        "HH:mm:ss"
                       )}
                     </div>
                     <div class="flex space-x-1">
