@@ -7,7 +7,7 @@ type Props = {
 
 const LyricsComponent: Component<Props> = (props) => {
   return (
-    <div class="overflow-y-auto h-full items-center justify-center">
+    <div class="overflow-y-auto h-full items-center justify-center scrollbar">
       <p class="whitespace-pre-line">{props.lyrics()}</p>
     </div>
   );
