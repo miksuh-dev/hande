@@ -64,23 +64,21 @@ const processSongEvent = async (
 ): Promise<UpdateEvent<Client>["song"]> => {
   if (!event) return undefined;
 
-  const { add, remove, setPlaying, update, skip } = event;
-
   return {
-    ...(add && {
-      add: add.map((song) => songToClient(song)),
+    ...("setPlaying" in event && {
+      setPlaying: await playingToClient(event.setPlaying, user),
     }),
-    ...(remove && {
-      remove,
+    ...("skip" in event && {
+      skip: event.skip,
     }),
-    ...(setPlaying && {
-      setPlaying: await playingToClient(setPlaying, user),
+    ...(event.add && {
+      add: event.add.map((song) => songToClient(song)),
     }),
-    ...(update && {
-      update: update.map((song) => songToClient(song)),
+    ...(event.remove && {
+      remove: event.remove,
     }),
-    ...(skip && {
-      skip,
+    ...(event.update && {
+      update: event.update.map((song) => songToClient(song)),
     }),
   };
 };
