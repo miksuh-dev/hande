@@ -177,7 +177,7 @@ export default {
       movedSong: 'changed song "{{ item }}" position in queue.',
       addedRandom: 'added random song "{{ item }}" to queue.',
       addedRandomAutoplay:
-        'lisäsi sattumanvaraisen kappaleen "{{ item }}" jonoon (autoplay).',
+        'added random song "{{ item }}" to queue (autoplay).',
       changedVolume: 'changed volume of song "{{ item }}".',
       autoplayOn: "set autoplay on.",
       autoplayOff: "set autoplay on.",
