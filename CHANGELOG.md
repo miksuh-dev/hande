@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.2](https://github.com/miksuh-dev/hande/compare/v2.22.1...v2.22.2) (2024-04-07)
+
+
+### Bug Fixes
+
+* incorrect english translation for `addedRandomAutoplay` ([d2408f1](https://github.com/miksuh-dev/hande/commit/d2408f154068a1e45ecb870f9b9ee80c9d865f8c))
+
 ### [2.22.1](https://github.com/miksuh-dev/hande/compare/v2.22.0...v2.22.1) (2024-03-25)
 
 
