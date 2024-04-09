@@ -106,8 +106,6 @@ export const removeSong = async (id: number, user: OnlineUser) => {
     .update({
       where: {
         id,
-        skipped: false,
-        ended: false,
       },
       data: {
         skipped: true,
