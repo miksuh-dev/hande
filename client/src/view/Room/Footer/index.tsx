@@ -63,7 +63,7 @@ const PlayingComponent: Component<Props> = (props) => {
     on(title, () => {
       props.setLyrics(undefined);
 
-      document.title = title() ? `Hande - ${title()}` : "Hande";
+      document.title = title() ? `${title()} | Hande` : "Hande";
     })
   );
 
