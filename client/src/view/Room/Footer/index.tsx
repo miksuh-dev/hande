@@ -57,11 +57,13 @@ const PlayingComponent: Component<Props> = (props) => {
 
   const [progress, setProgress] = createSignal<number>(0);
 
-  const contentId = createMemo(() => room()?.playing?.contentId);
+  const title = createMemo(() => room()?.playing?.title);
 
   createEffect(
-    on(contentId, () => {
+    on(title, () => {
       props.setLyrics(undefined);
+
+      document.title = title() ? `Hande - ${title()}` : "Hande";
     })
   );
 
@@ -169,8 +171,8 @@ const PlayingComponent: Component<Props> = (props) => {
                       )
                         ? t("tooltip.common.noSongDetails")
                         : props.lyrics()
-                          ? t("tooltip.common.hideLyrics")
-                          : t("tooltip.common.showLyrics")
+                        ? t("tooltip.common.hideLyrics")
+                        : t("tooltip.common.showLyrics")
                     }
                   >
                     <button
