@@ -195,25 +195,26 @@ const PlayingComponent: Component<Props> = (props) => {
                     </button>
                   </Tooltip>
                 </Show>
-                <Tooltip
-                  text={
-                    props.showVideo()
-                      ? t("tooltip.common.hideVideo")
-                      : t("tooltip.common.showVideo")
-                  }
-                >
-                  <button
-                    class="icon-button w-12 h-12 p-1"
-                    onClick={() => props.setShowVideo((current) => !current)}
-                    disabled={song().type === SongType.RADIO}
+                <Show when={song().type === SongType.SONG}>
+                  <Tooltip
+                    text={
+                      props.showVideo()
+                        ? t("tooltip.common.hideVideo")
+                        : t("tooltip.common.showVideo")
+                    }
                   >
-                    {props.showVideo() && song().type === SongType.SONG ? (
-                      <EyeSlashIcon />
-                    ) : (
-                      <EyeIcon />
-                    )}
-                  </button>
-                </Tooltip>
+                    <button
+                      class="icon-button w-12 h-12 p-1"
+                      onClick={() => props.setShowVideo((current) => !current)}
+                    >
+                      {props.showVideo() && song().type === SongType.SONG ? (
+                        <EyeSlashIcon />
+                      ) : (
+                        <EyeIcon />
+                      )}
+                    </button>
+                  </Tooltip>
+                </Show>
                 <VolumeControl playing={song()} />
                 <div class="space-x-2 w-max flex items-center ">
                   <button
