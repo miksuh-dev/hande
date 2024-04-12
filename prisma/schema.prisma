@@ -21,6 +21,7 @@ model Song {
   position   Int @default(0)
   type       String
   random     Boolean @default(false)
+  duration   Int?
 }
 
 model SongRating {

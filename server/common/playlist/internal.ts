@@ -234,6 +234,23 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
           console.log("e", e);
         });
       }, secondsLeft * 1000);
+
+      const [originalRequester] = await Promise.all([
+        getSongOriginalRequester(this.song),
+        prisma.song.updateMany({
+          where: {
+            contentId: this.song.contentId,
+            duration: null,
+          },
+          data: {
+            duration: videoInfo.duration,
+          },
+        }),
+      ]);
+
+      if (originalRequester) {
+        this.song.originalRequester = originalRequester;
+      }
     } else {
       this.song.startedAt = DateTime.utc().toISO();
     }
@@ -251,15 +268,6 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
     ]);
 
     this.song.rating = rating;
-
-    if (this.song.type === SongType.SONG) {
-      const originalRequester = await getSongOriginalRequester(this.song);
-
-      if (originalRequester) {
-        this.song.originalRequester = originalRequester;
-      }
-    }
-
     this.song.volume = options.volume;
 
     const index = processingQueue.findIndex(

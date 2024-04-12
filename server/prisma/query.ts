@@ -1,3 +1,4 @@
+import { MAX_SONG_DURATION_FOR_RANDOM_SONG } from "@server/constants";
 import { Server } from "@server/types/app";
 import { Song } from "@server/types/prisma";
 import { SongType } from "@server/types/source";
@@ -12,7 +13,8 @@ export const getRandomSong = async () => {
           s.title AS song_title,
           coalesce(ra.song_votes+1, 1) * 1.0 as song_rating,
           sum(ra.song_votes) OVER() * 1.0  as total_ratings,
-          count(s.contentId) OVER() * 1.0  as total_songs
+          count(s.contentId) OVER() * 1.0  as total_songs,
+          duration
         FROM
           Song s
         LEFT JOIN (select ra.contentId, sum(ra.vote) as song_votes from SongRating ra Group by contentId) ra on ra.contentId = s.contentId
@@ -28,7 +30,7 @@ export const getRandomSong = async () => {
         END AS random_weight
       FROM
         SongVotes
-      WHERE song_rating >= 0
+      WHERE song_rating >= 0 AND (duration is null OR duration <= ${MAX_SONG_DURATION_FOR_RANDOM_SONG})
       ORDER BY
         random_weight desc
       LIMIT 1
