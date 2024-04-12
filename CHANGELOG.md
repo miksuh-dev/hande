@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.24.2](https://github.com/miksuh-dev/hande/compare/v2.24.1...v2.24.2) (2024-04-12)
+
+
+### Bug Fixes
+
+* **window title:** htmlDecode title ([1619551](https://github.com/miksuh-dev/hande/commit/1619551c50f4aa5c8f4d742fec9cbf50f662ac47))
+
 ### [2.24.1](https://github.com/miksuh-dev/hande/compare/v2.24.0...v2.24.1) (2024-04-12)
 
 
