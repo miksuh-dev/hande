@@ -54,7 +54,7 @@ const VolumeControlComponent: Component<Props> = (props) => {
         <AudioIcon />
       </button>
       <Show
-        when={props.playing.state === PlayState.ENDED && audioControlOpen()}
+        when={props.playing.state !== PlayState.ENDED && audioControlOpen()}
       >
         <div class="absolute top-0 z-50">
           <div class="absolute bottom-1">
