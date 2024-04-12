@@ -63,7 +63,8 @@ const PlayingComponent: Component<Props> = (props) => {
     on(title, () => {
       props.setLyrics(undefined);
 
-      document.title = title() ? `${title()} | Hande` : "Hande";
+      const titleRaw = title();
+      document.title = titleRaw ? `${htmlDecode(titleRaw)} | Hande` : "Hande";
     })
   );
 
