@@ -2,6 +2,7 @@ import { SongType } from "@server/types/source";
 import { Song } from "./prisma";
 
 export enum PlayState {
+  STARTING = "STARTING",
   PLAYING = "PLAYING",
   ENDED = "ENDED",
 }
@@ -25,17 +26,20 @@ type PlayingSongProperty<T extends SongType> = T extends SongType.SONG
       type: T;
     };
 
+export type ExtendedSongProperties = {
+  volume: number;
+  rating: number;
+  vote?: VoteType;
+  startedAt: string | null;
+};
+
 export type PlayingSong<
   L extends Location,
   T extends SongType = SongType,
 > = Song<L, T> &
   PlayingSongProperty<T> & {
-    startedAt: string;
-    rating: number;
-    volume: number;
-    vote?: VoteType | undefined;
     state: PlayState;
-  };
+  } & ExtendedSongProperties;
 
 export enum VoteType {
   UP = "UP",

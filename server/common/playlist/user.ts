@@ -126,7 +126,7 @@ export const removeSong = async (id: number, user: OnlineUser) => {
       type: MessageType.ACTION,
       item: [song],
     });
-    await stopCurrentSong(song);
+    await stopCurrentSong();
 
     if (!getCurrentSong()) {
       const nextSong = await getNextSong();
@@ -205,8 +205,13 @@ export const volumeChange = async (
   volume: number,
   user: OnlineUser
 ) => {
-  const currentSong = getCurrentSong();
-  if (!currentSong || currentSong.contentId !== contentId) {
+  const song = (await prisma.song.findFirst({
+    where: {
+      contentId,
+    },
+  })) as Song<Server> | null;
+
+  if (!song) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "error.songNotFound",
@@ -226,19 +231,22 @@ export const volumeChange = async (
     },
   });
 
-  setVolume(settings.volume);
+  const currentSong = getCurrentSong();
+  if (currentSong && currentSong.contentId === contentId) {
+    setVolume(settings.volume);
 
-  const updatedSong = {
-    ...currentSong,
-    volume: settings.volume,
-  };
+    const updatedSong = {
+      ...currentSong,
+      volume: settings.volume,
+    };
 
-  ee.emit(`onUpdate`, { song: { setPlaying: updatedSong } });
+    ee.emit(`onUpdate`, { song: { setPlaying: updatedSong } });
+  }
 
   sendMessage(`event.common.changedVolume`, {
     user,
     type: MessageType.ACTION,
-    item: [updatedSong],
+    item: [song],
   });
 
   return settings;
@@ -365,7 +373,7 @@ export const shufflePlaylist = async (requester: OnlineUser) => {
 export const playNext = async (id: number, requester: OnlineUser) => {
   const nextSong = await getNextSong();
 
-  const position = (nextSong?.position ?? 0) - 1;
+  const position = (nextSong?.song?.position ?? 0) - 1;
 
   const song = (await prisma.song.update({
     where: {

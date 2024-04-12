@@ -1,5 +1,12 @@
 import { DateTime } from "luxon";
-import { Accessor, Component, createEffect, onCleanup, Setter } from "solid-js";
+import {
+  Accessor,
+  Component,
+  createEffect,
+  onCleanup,
+  Setter,
+  Show,
+} from "solid-js";
 import { PlayingSongClient, PlayState, SongType } from "trpc/types";
 
 type Props = {
@@ -59,12 +66,14 @@ const ProgressComponent: Component<Props> = (props) => {
   return (
     <div class="flex w-full flex-row items-center space-x-2">
       <div class="block h-[8px] max-h-full w-full flex-1 bg-neutral-500">
-        <div
-          class="h-full w-full bg-custom-primary-700"
-          style={{
-            width: `${(props.progress() / props.playing().duration) * 100}%`,
-          }}
-        />
+        <Show when={props.progress()}>
+          <div
+            class="h-full w-full bg-custom-primary-700"
+            style={{
+              width: `${(props.progress() / props.playing().duration) * 100}%`,
+            }}
+          />
+        </Show>
       </div>
     </div>
   );

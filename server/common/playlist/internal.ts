@@ -7,7 +7,11 @@ import { MessageType } from "@server/router/room/types";
 import { PlayingSong, PlayState, Server } from "@server/types/app";
 import { Song } from "@server/types/prisma";
 import { SongType } from "@server/types/source";
-import { Options, ProcessQueueItem, ProcessQueueItemStatus } from "./types";
+import {
+  NonActiveItem,
+  ProcessQueueItem,
+  ProcessQueueItemStatus,
+} from "./types";
 import { AUTOPLAY_SONG_COUNT } from "../../constants";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
@@ -42,7 +46,7 @@ const processQueue = async (caller: ProcessQueueItem) => {
   processingQueue.splice(1);
 };
 
-export const addSongToQueue = async (song: Song<Server>) => {
+export const addSongToQueue = async ({ song }: NonActiveItem) => {
   const item: ProcessQueueItem = {
     status: ProcessQueueItemStatus.pending,
     song,
@@ -91,7 +95,7 @@ const onSongEnd = async (song: Song<Server>) => {
 
   sendMessage(`event.source.${song.type}.end`, { item: [song] });
 
-  await stopCurrentSong(song);
+  await stopCurrentSong();
 
   ee.emit(`onUpdate`, { song: { remove: [song.id] } });
 
@@ -163,9 +167,8 @@ export const getSongRating = async (contentId: string) => {
   return rating._sum.vote ?? 0;
 };
 
-export const getSongOriginalRequester = async (
-  song: Song<Server, SongType.SONG>
-) => {
+export const getSongOriginalRequester = async (song: Song<Server>) => {
+  if (song.type !== SongType.SONG) return undefined;
   if (!song.random) return undefined;
 
   return prisma.song
@@ -180,20 +183,20 @@ export const getSongOriginalRequester = async (
     .then((result) => result?.requester);
 };
 
-export const getSongSettings = async (song: Song<Server>) => {
+export const getSongSettings = async (contentId: string) => {
   return (
     (await prisma.songSettings.findFirst({
       where: {
-        contentId: song.contentId,
+        contentId: contentId,
       },
     })) ?? {
-      contentId: song.contentId,
+      contentId: contentId,
       volume: 50,
     }
   );
 };
 
-async function onPlayStart(this: ProcessQueueItem, options: Options) {
+async function onPlayStart(this: ProcessQueueItem) {
   try {
     this.status = ProcessQueueItemStatus.processing;
 
@@ -255,20 +258,14 @@ async function onPlayStart(this: ProcessQueueItem, options: Options) {
       this.song.startedAt = DateTime.utc().toISO();
     }
 
-    const [rating] = await Promise.all([
-      getSongRating(this.song.contentId),
-      prisma.song.update({
-        where: {
-          id: this.song.id,
-        },
-        data: {
-          started: true,
-        },
-      }),
-    ]);
-
-    this.song.rating = rating;
-    this.song.volume = options.volume;
+    await prisma.song.update({
+      where: {
+        id: this.song.id,
+      },
+      data: {
+        started: true,
+      },
+    });
 
     const index = processingQueue.findIndex(
       (item) => item.song.id === this.song.id
@@ -294,16 +291,14 @@ async function playSong(this: ProcessQueueItem) {
   try {
     stream = await createStream(this.song);
 
-    const options = await getSongSettings(this.song);
-
     let started = false;
     stream.on("data", () => {
       if (!started) {
         started = true;
 
-        setVolume(options.volume);
+        setVolume(this.song.volume);
 
-        onPlayStart.call(this, options).catch((e) => {
+        onPlayStart.call(this).catch((e) => {
           console.log("e", e);
         });
       }
@@ -350,8 +345,8 @@ const stopStream = () => {
   }
 };
 
-export const getNextSong = async () => {
-  return (await prisma.song.findFirst({
+export const getNextSong = async (): Promise<NonActiveItem | null> => {
+  const song = (await prisma.song.findFirst({
     where: {
       ended: false,
       skipped: false,
@@ -365,6 +360,25 @@ export const getNextSong = async () => {
       },
     ],
   })) as Song<Server> | null;
+
+  if (!song) return null;
+
+  const [rating, options, originalRequester] = await Promise.all([
+    getSongRating(song.contentId),
+    getSongSettings(song.contentId),
+    getSongOriginalRequester(song),
+  ]);
+
+  return {
+    status: ProcessQueueItemStatus.pending,
+    song: {
+      ...song,
+      rating,
+      volume: options.volume,
+      startedAt: null,
+      ...(song.type === SongType.SONG && { originalRequester }),
+    },
+  };
 };
 
 export const getPlaylist = async (ignoreCurrent: boolean) => {
@@ -391,11 +405,13 @@ export const getPlaylist = async (ignoreCurrent: boolean) => {
   })) as Song<Server>[];
 };
 
-export const stopCurrentSong = async (song: Song<Server>) => {
+export const stopCurrentSong = async () => {
   stopStream();
 
   const nextSong = await getNextSong();
-  const state = nextSong ? { ...song, state: PlayState.ENDED } : undefined;
+  const state = nextSong
+    ? { ...nextSong.song, state: PlayState.STARTING }
+    : undefined;
 
   ee.emit(`onUpdate`, {
     song: { setPlaying: state },

@@ -1,5 +1,5 @@
 import { getSongSettings } from "@server/common/playlist/internal";
-import { PlayingSong, Server } from "../../types/app";
+import { ExtendedSongProperties, PlayingSong, Server } from "../../types/app";
 import { Song } from "../../types/prisma";
 
 export interface PlayError {
@@ -15,17 +15,17 @@ export enum ProcessQueueItemStatus {
   done = "done",
 }
 
-interface NonActiveItem {
+export interface NonActiveItem {
   status:
     | ProcessQueueItemStatus.pending
     | ProcessQueueItemStatus.error
     | ProcessQueueItemStatus.skipped;
-  song: Song<Server>;
+  song: Song<Server> & ExtendedSongProperties;
 }
 
-interface ActiveItem {
+export interface ActiveItem {
   status: ProcessQueueItemStatus.processing;
-  song: PlayingSong<Server>;
+  song: PlayingSong<Server> & ExtendedSongProperties;
 }
 
 export type ProcessQueueItem = (NonActiveItem | ActiveItem) & {

@@ -1,6 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
 import {
   ChatBubbleIcon,
+  CircularLoadingSpinner,
   EyeIcon,
   EyeSlashIcon,
   LyricsIcon,
@@ -62,6 +63,7 @@ const PlayingComponent: Component<Props> = (props) => {
   createEffect(
     on(title, () => {
       props.setLyrics(undefined);
+      setProgress(0);
 
       const titleRaw = title();
       document.title = titleRaw ? `${htmlDecode(titleRaw)} | Hande` : "Hande";
@@ -143,7 +145,14 @@ const PlayingComponent: Component<Props> = (props) => {
                     </Tooltip>
                   </Show>
                   <div class="w-10 h-10">
-                    <SongThumbnail song={song()} />
+                    <div class="relative">
+                      <SongThumbnail song={song()} />
+                      <Show when={song().state === PlayState.STARTING}>
+                        <div class="absolute left-0 top-0 right-0 bottom-0">
+                          <CircularLoadingSpinner />
+                        </div>
+                      </Show>
+                    </div>
                   </div>
                 </div>
                 <div>
@@ -167,6 +176,26 @@ const PlayingComponent: Component<Props> = (props) => {
                 <Show when={song().type === SongType.SONG}>
                   <Tooltip
                     text={
+                      props.showVideo()
+                        ? t("tooltip.common.hideVideo")
+                        : t("tooltip.common.showVideo")
+                    }
+                  >
+                    <button
+                      class="icon-button w-12 h-12 p-1"
+                      onClick={() => props.setShowVideo((current) => !current)}
+                    >
+                      {props.showVideo() && song().type === SongType.SONG ? (
+                        <EyeSlashIcon />
+                      ) : (
+                        <EyeIcon />
+                      )}
+                    </button>
+                  </Tooltip>
+                </Show>
+                <Show when={song().type === SongType.SONG}>
+                  <Tooltip
+                    text={
                       !hasSongDetails(
                         song() as PlayingSongClient<SongType.SONG>
                       )
@@ -186,33 +215,12 @@ const PlayingComponent: Component<Props> = (props) => {
                           : props.setLyrics(undefined);
                       }}
                       disabled={
-                        song().state === PlayState.ENDED ||
                         !hasSongDetails(
                           song() as PlayingSongClient<SongType.SONG>
                         )
                       }
                     >
                       {props.lyrics() ? <LyricsSlashIcon /> : <LyricsIcon />}
-                    </button>
-                  </Tooltip>
-                </Show>
-                <Show when={song().type === SongType.SONG}>
-                  <Tooltip
-                    text={
-                      props.showVideo()
-                        ? t("tooltip.common.hideVideo")
-                        : t("tooltip.common.showVideo")
-                    }
-                  >
-                    <button
-                      class="icon-button w-12 h-12 p-1"
-                      onClick={() => props.setShowVideo((current) => !current)}
-                    >
-                      {props.showVideo() && song().type === SongType.SONG ? (
-                        <EyeSlashIcon />
-                      ) : (
-                        <EyeIcon />
-                      )}
                     </button>
                   </Tooltip>
                 </Show>
@@ -233,7 +241,6 @@ const PlayingComponent: Component<Props> = (props) => {
                         song()?.vote !== VoteType.UP,
                     }}
                     class="icon-button w-12 h-12 p-1"
-                    disabled={song().state === PlayState.ENDED}
                   >
                     <ThumbUpIcon />
                   </button>
@@ -245,7 +252,7 @@ const PlayingComponent: Component<Props> = (props) => {
                       "text-neutral-700 dark:text-white": song().rating === 0,
                     }}
                   >
-                    {song().rating}
+                    {song().rating ?? 0}
                   </span>
                   <button
                     onClick={() =>
@@ -262,7 +269,6 @@ const PlayingComponent: Component<Props> = (props) => {
                         song()?.vote !== VoteType.DOWN,
                     }}
                     class="icon-button w-12 h-12 p-1"
-                    disabled={song().state === PlayState.ENDED}
                   >
                     <ThumbDownIcon />
                   </button>

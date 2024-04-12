@@ -3,7 +3,7 @@ import { AudioIcon } from "components/common/icon";
 import useSnackbar from "hooks/useSnackbar";
 import { Component, createSignal, Show } from "solid-js";
 import trpcClient from "trpc";
-import { PlayingSongClient, PlayState } from "trpc/types";
+import { PlayingSongClient } from "trpc/types";
 
 type Props = {
   playing: NonNullable<PlayingSongClient>;
@@ -46,16 +46,10 @@ const VolumeControlComponent: Component<Props> = (props) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <button
-        disabled={props.playing.state === PlayState.ENDED}
-        type="button"
-        class="icon-button w-12 h-12 p-1"
-      >
+      <button type="button" class="icon-button w-12 h-12 p-1">
         <AudioIcon />
       </button>
-      <Show
-        when={props.playing.state !== PlayState.ENDED && audioControlOpen()}
-      >
+      <Show when={audioControlOpen()}>
         <div class="absolute top-0 z-50">
           <div class="absolute bottom-1">
             <input
