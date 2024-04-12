@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.24.0](https://github.com/miksuh-dev/hande/compare/v2.23.0...v2.24.0) (2024-04-12)
+
+
+### Features
+
+* add report broken songs ([cd32ee6](https://github.com/miksuh-dev/hande/commit/cd32ee6b3d83d3039f313671f8e062111e67dc61))
+* Hide video button when playing radio ([2b76391](https://github.com/miksuh-dev/hande/commit/2b76391a285c57102081e888deb75940463e38b5))
+* show current song in window title ([1b27b71](https://github.com/miksuh-dev/hande/commit/1b27b7106f5936aa742830dabd83b4594c14cbfc))
+
 ## [2.23.0](https://github.com/miksuh-dev/hande/compare/v2.22.3...v2.23.0) (2024-04-12)
 
 
