@@ -94,17 +94,20 @@ wss.on("connection", () => {
   console.log(`Connection (${wss.clients.size})`);
 });
 
-process.on("exit", () => {
+const gracefulShutdown = () => {
+  // Store messages
   messages.store();
-});
 
-process.on("SIGINT", () => onExit());
-process.on("SIGTERM", () => onExit());
-
-const onExit = () => {
   wsHandler.broadcastReconnectNotification();
   wss.close();
   server.close();
+
+  setTimeout(() => {
+    process.exit(0);
+  }, 2000);
 };
+
+process.on("SIGTERM", gracefulShutdown);
+process.on("SIGINT", gracefulShutdown);
 
 messages.load();

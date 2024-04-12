@@ -31,7 +31,9 @@ client.on("error", (error: unknown) => {
 });
 
 client.connection.on("close", () => {
-  throw new Error("Mumble client closed connection");
+  console.error("Mumble client closed connection");
+
+  process.kill(process.pid, "SIGINT");
 });
 
 client.connect().catch((e: unknown) => {

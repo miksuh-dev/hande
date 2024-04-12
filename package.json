@@ -14,7 +14,7 @@
     "copy-files": "cp ./NoodleJS/Mumble.proto ./dist/NoodleJS/",
     "postinstall": "npx prisma generate",
     "start:prod": "NODE_PATH=./dist NODE_OPTIONS='--tls-min-v1.0' NODE_ENV=production node dist/server/index.js",
-    "start:pm2-prod": "npx pm2 start npm --name hande -- run start:prod",
+    "start:pm2-prod": "npx pm2 start npm --name hande --exp-backoff-restart-delay=100 --max-restarts=30 -- run start:prod",
     "test": "NODE_PATH=./src jest",
     "release": "standard-version"
   },
