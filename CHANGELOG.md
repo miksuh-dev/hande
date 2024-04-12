@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.24.1](https://github.com/miksuh-dev/hande/compare/v2.24.0...v2.24.1) (2024-04-12)
+
+
+### Bug Fixes
+
+* **window title:** show song first ([319622e](https://github.com/miksuh-dev/hande/commit/319622e04555fbd29bc9bc01a7158940254d9ec7))
+
 ## [2.24.0](https://github.com/miksuh-dev/hande/compare/v2.23.0...v2.24.0) (2024-04-12)
 
 
