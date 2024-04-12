@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.23.0](https://github.com/miksuh-dev/hande/compare/v2.22.3...v2.23.0) (2024-04-12)
+
+
+### Features
+
+* skip songs over 10 min from random song pick ([2edc589](https://github.com/miksuh-dev/hande/commit/2edc58981d5ebec3c14ab70a4e6a22d633e34012))
+
+
+### Bug Fixes
+
+* volume control not opening ([a7e8267](https://github.com/miksuh-dev/hande/commit/a7e8267d2c85013b8b67ff3ad63d2a62b277d4bd))
+
 ### [2.22.3](https://github.com/miksuh-dev/hande/compare/v2.22.2...v2.22.3) (2024-04-09)
 
 ### [2.22.2](https://github.com/miksuh-dev/hande/compare/v2.22.1...v2.22.2) (2024-04-07)
