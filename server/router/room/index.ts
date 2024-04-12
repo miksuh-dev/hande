@@ -11,6 +11,7 @@ import {
   movePosition,
   playNext,
   removeSong,
+  reportSong,
   shufflePlaylist,
   toggleAutoplay,
   volumeChange,
@@ -165,6 +166,20 @@ export const roomRouter = t.router({
       const { contentId, volume } = input;
 
       await volumeChange(contentId, volume, onlineUser);
+
+      return true;
+    }),
+  reportSongBroken: onlineUserProcedure
+    .input(
+      z.object({
+        songId: z.number().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { onlineUser } = ctx;
+      const { songId } = input;
+
+      await reportSong(songId, onlineUser);
 
       return true;
     }),

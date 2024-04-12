@@ -73,3 +73,18 @@ export const guessSongArtistAndTrack = (info: VideoInfo) => {
 
   return { artist: null, track: title };
 };
+
+const isVideoAvailable = async (song: Song<Server>) =>
+  !!(await getVideoInfo(song));
+
+export const isValidReportedBrokenSong = async (song: Song<Server>) => {
+  const availableFirstCheck = await isVideoAvailable(song);
+
+  const availableSecondCheck = await new Promise<boolean>((resolve) => {
+    setTimeout(() => {
+      resolve(isVideoAvailable(song));
+    }, 3000);
+  });
+
+  return !availableFirstCheck && !availableSecondCheck;
+};

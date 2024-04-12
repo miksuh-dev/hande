@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { searchSongLyrics } from "@server/common/genius";
 import * as room from "@server/common/room";
+import { isValidReportedBrokenSong } from "@server/common/youtube-dl";
 import ee from "@server/eventEmitter";
 import prisma from "@server/prisma";
 import { sendMessage } from "@server/router/room/message";
@@ -480,4 +481,50 @@ export const getCurrentSongLyrics = async (songId: string) => {
   }
 
   return searchSongLyrics(currentSong.artist, currentSong.track);
+};
+
+export const reportSong = async (songId: number, user: OnlineUser) => {
+  const song = (await prisma.song.findFirst({
+    where: {
+      id: songId,
+      type: SongType.SONG,
+    },
+  })) as Song<Server>;
+
+  if (!song) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "error.songNotFound",
+    });
+  }
+
+  const isValidReport = await isValidReportedBrokenSong(song);
+  if (!isValidReport) {
+    sendMessage(`event.source.song.reportedSongNotBroken`, {
+      user,
+      type: MessageType.ACTION,
+      item: [song],
+    });
+
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "error.reportedSongNotBroken",
+    });
+  }
+
+  await prisma.song.deleteMany({
+    where: {
+      contentId: song.contentId,
+    },
+  });
+
+  ee.emit(`onUpdate`, { song: { remove: [song.id] } });
+
+  sendMessage(`event.source.${song.type}.reportedSongBroken`, {
+    user,
+    type: MessageType.ACTION,
+    item: [song],
+  });
+
+  return song;
 };

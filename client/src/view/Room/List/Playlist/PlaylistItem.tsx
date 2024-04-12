@@ -1,11 +1,17 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { createSortable, useDragDropContext } from "@thisbeyond/solid-dnd";
-import { CrossIcon, RandomIcon, UpArrowIcon } from "components/common/icon";
+import {
+  CrossIcon,
+  MoreIcon,
+  RandomIcon,
+  UpArrowIcon,
+} from "components/common/icon";
 import Tooltip from "components/Tooltip";
-import { Accessor, Component, Show, createMemo } from "solid-js";
-import { SongClient } from "trpc/types";
+import { Accessor, Component, Show, createMemo, createSignal } from "solid-js";
+import { SongClient, SongType } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongImage from "../../common/SongImage";
+import PlaylistItemMenu from "./PlaylistItemMenu";
 
 type Props = {
   song: SongClient;
@@ -24,6 +30,7 @@ declare module "solid-js" {
 
 const PlayListItem: Component<Props> = (props) => {
   const [t] = useI18n();
+  const [moreMenuOpen, setMoreMenuOpen] = createSignal(false);
 
   const song = createMemo(() => props.song);
 
@@ -67,6 +74,7 @@ const PlayListItem: Component<Props> = (props) => {
         <Tooltip
           text={t(`tooltip.source.${song().type}.playNext`)}
           closeOnClick
+          visible={!moreMenuOpen()}
         >
           <button
             onClick={() => props.onPlayNext(song())}
@@ -78,6 +86,7 @@ const PlayListItem: Component<Props> = (props) => {
         <Tooltip
           text={t(`tooltip.source.${song().type}.skipInPlaylist`)}
           closeOnClick
+          visible={!moreMenuOpen()}
         >
           <button
             onClick={() => props.onSkip(song())}
@@ -86,6 +95,21 @@ const PlayListItem: Component<Props> = (props) => {
             <CrossIcon />
           </button>
         </Tooltip>
+        <button
+          disabled={props.song.type !== SongType.SONG}
+          onClick={(event) => {
+            event.stopPropagation();
+            setMoreMenuOpen(!moreMenuOpen());
+          }}
+          class="icon-button h-11 w-11"
+        >
+          <MoreIcon />
+          <PlaylistItemMenu
+            open={moreMenuOpen}
+            onClose={() => setMoreMenuOpen(false)}
+            song={song}
+          />
+        </button>
       </div>
     </div>
   );

@@ -40,6 +40,7 @@ export default {
     continue: "Jatka",
     cancel: "Peruuta",
     refreshPage: "Päivitä sivu",
+    reportSongBroken: "Ilmoita rikkinäiseksi",
   },
   tooltip: {
     common: {
@@ -86,6 +87,7 @@ export default {
     songNotFound: "Kappaletta ei löytynyt",
     lyricsNotFound: "Sanoja kappaleelle ei löytynyt",
     lyricsApiError: "Virhe haettaessa sanoja",
+    reportedSongNotBroken: "Kappale oli toimiva. Ilmoitus hylättiin!",
   },
   snackbar: {
     common: {
@@ -104,6 +106,10 @@ export default {
         skipped: 'Ohitettiin kappale "{{ item }}"',
         skippedInPlaylist: 'Poistettiin kappale "{{ item }}" jonosta',
         setAsNext: 'Siirrettiin kappale "{{ item }}" seuraavaksi',
+        reportedSong:
+          "Kappale ilmoitettu rikkinäiseksi. Kappaletta tarkistetaan...",
+        reportedSongBroken:
+          "Ilmoitettu kappale todettiin rikkinäiseksi ja poistettiin.",
       },
       radio: {
         addedToQueue: 'Lisättiin radiokanava "{{ item }}" jonoon',
@@ -198,6 +204,10 @@ export default {
         skipped: 'ohitti kappaleen "{{ item }}".',
         skippedQueue: 'poisti kappaleen "{{ item }}" jonosta.',
         setAsNext: 'siirsi kappaleen "{{ item }}" jonon kärkeen.',
+        reportedSongNotBroken:
+          'ilmoitti kappaleen "{{ item }}" rikkinäiseksi. Kappale todettiin toimivaksi.',
+        reportedSongBroken:
+          'ilmoitti kappaleen "{{ item }}" rikkinäiseksi. Kappale todettiin rikkinäiseksi ja se poistettiin.',
       },
       radio: {
         start: 'Toistetaan radiokanavaa "{{ item }}".',

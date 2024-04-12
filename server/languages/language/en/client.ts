@@ -40,6 +40,7 @@ export default {
     continue: "Continue",
     cancel: "Cancel",
     refreshPage: "Refresh page",
+    reportSongBroken: "Report as broken",
   },
   tooltip: {
     common: {
@@ -85,6 +86,7 @@ export default {
     songNotFound: "Song not found",
     lyricsNotFound: "Lyrics not found",
     lyricsApiError: "Error getting lyrics",
+    reportedSongNotBroken: "Song was not broken. Report rejected!",
   },
   snackbar: {
     common: {
@@ -103,6 +105,8 @@ export default {
         skipped: 'Skipped song "{{ item }}".',
         skippedInPlaylist: 'Removed song "{{ item }}" from queue',
         setAsNext: 'Moved song "{{ item }}" to next',
+        reportedSong: "Song reported as broken. Checking...",
+        reportedSongBroken: "Reported song was broken and it was deleted.",
       },
       radio: {
         addedToQueue: 'Added radio station "{{ item }}" to queue',
@@ -197,6 +201,10 @@ export default {
         skipped: 'skipped song "{{ item }}".',
         skippedQueue: 'skipped song "{{ item }}" from queue.',
         setAsNext: 'moved song "{{ item }}" to next.',
+        reportedSongNotBroken:
+          'reported song "{{ item }}" as broken. Song was not broken.',
+        reportedSongBroken:
+          'reported song "{{ item }}" as broken. Song was broken and was removed',
       },
       radio: {
         start: 'Playing radio station "{{ item }}".',
