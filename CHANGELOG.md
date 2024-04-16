@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.24.3](https://github.com/miksuh-dev/hande/compare/v2.24.2...v2.24.3) (2024-04-16)
+
+
+### Bug Fixes
+
+* **autoplay:** autoplay queue length to 5 ([7b59ee0](https://github.com/miksuh-dev/hande/commit/7b59ee073e6745559ca3042c41feee075125acf6))
+* **autoplay:** replace deleted reported song ([db83b74](https://github.com/miksuh-dev/hande/commit/db83b74337fc7a7879fed0d548aad5d72d354a58))
+
 ### [2.24.2](https://github.com/miksuh-dev/hande/compare/v2.24.1...v2.24.2) (2024-04-12)
 
 
