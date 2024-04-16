@@ -534,5 +534,7 @@ export const reportSong = async (songId: number, user: OnlineUser) => {
     item: [song],
   });
 
+  await handleAutoplay();
+
   return song;
 };
