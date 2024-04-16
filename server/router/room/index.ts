@@ -50,7 +50,7 @@ export const roomRouter = t.router({
     return {
       playing: await playingToClient(getCurrentSong(), user),
       room: room.getClient(),
-      songs: (await getPlaylist(true)).map(songToClient),
+      songs: (await getPlaylist()).map(songToClient),
       messages: messages.map(messageToClient),
       users: [...userState.users.values()].map((u) => u.user),
       sources: SOURCES,
