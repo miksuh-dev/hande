@@ -66,7 +66,7 @@ export const getRandomSong = async (minimumRandomIndex: number) => {
           COALESCE(sr.song_votes, 0) >= 0
           AND rp.count = ${minimumRandomIndex}
           AND so.type = 'song'
-          AND (so.duration >= ${MAX_SONG_DURATION_FOR_RANDOM_SONG} OR so.duration IS NULL)
+          AND (so.duration <= ${MAX_SONG_DURATION_FOR_RANDOM_SONG} OR so.duration IS NULL)
       GROUP BY
           so.contentId
       ORDER BY
@@ -147,7 +147,7 @@ export const getMinimumRandomIndex = async () => {
       WHERE
         COALESCE(sr.song_votes, 0) >= 0
         AND so.type = 'song'
-        AND (so.duration >= ${MAX_SONG_DURATION_FOR_RANDOM_SONG} OR so.duration IS NULL)
+        AND (so.duration <= ${MAX_SONG_DURATION_FOR_RANDOM_SONG} OR so.duration IS NULL)
     `;
 
   return Number(row?.count) ?? 0;
