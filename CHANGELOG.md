@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.25.0](https://github.com/miksuh-dev/hande/compare/v2.24.3...v2.25.0) (2024-04-19)
+
+
+### Features
+
+* random song improvements ([bc3fa8d](https://github.com/miksuh-dev/hande/commit/bc3fa8d62280bb94de058391b569d23b5f8f0955))
+
 ### [2.24.3](https://github.com/miksuh-dev/hande/compare/v2.24.2...v2.24.3) (2024-04-16)
 
 
