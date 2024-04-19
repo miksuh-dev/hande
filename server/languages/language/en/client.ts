@@ -154,6 +154,12 @@ export default {
       allTime: "All time",
     },
   },
+  randomStatistics: {
+    skipProbability: "Skip probability",
+    rating: "Rating",
+    skipCount: "Skip count",
+    playCount: "Play count",
+  },
   playlistDialog: {
     title: "Playlist: {{ name }}",
   },
@@ -179,9 +185,9 @@ export default {
       clearedPlaylist: "cleared playlist.",
       shuffledPlaylist: "shuffled playlist.",
       movedSong: 'changed song "{{ item }}" position in queue.',
-      addedRandom: 'added random song "{{ item }}" to queue.',
+      addedRandom: 'added "{{ statistics }}" song "{{ item }}" to queue.',
       addedRandomAutoplay:
-        'added random song "{{ item }}" to queue (autoplay).',
+        'added "{{ statistics }}" song "{{ item }}" to queue (autoplay).',
       changedVolume: 'changed volume of song "{{ item }}".',
       autoplayOn: "set autoplay on.",
       autoplayOff: "set autoplay on.",
@@ -189,6 +195,7 @@ export default {
         timeout: "Autoplay expired (out of time).",
         emptyRoom: "Autoplay expired (room is empty).",
       },
+      randomSong: "random",
     },
     source: {
       song: {

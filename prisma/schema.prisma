@@ -39,3 +39,8 @@ model SongSettings {
   contentId   String   @id
   volume    Int   @default(50)
 }
+
+model RandomPlaylist { 
+  contentId   String  @id
+  count     Int 
+}

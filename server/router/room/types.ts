@@ -1,5 +1,5 @@
 import { RoomClient } from "@server/common/room";
-import { Location, PlayingSong } from "@server/types/app";
+import { Location, PlayingSong, RandomSongStatistics } from "@server/types/app";
 import { OnlineUser } from "@server/types/auth";
 import { Song } from "@server/types/prisma";
 import { SourceType } from "@server/types/source";
@@ -16,6 +16,7 @@ export interface MessageOptions<L extends Location> {
   user?: OnlineUser;
   type?: MessageType;
   item?: Song<L>[];
+  statistics?: RandomSongStatistics;
   error?: string;
 }
 
@@ -24,6 +25,7 @@ interface SystemMessage<L extends Location> {
   name: string;
   content: string;
   item?: Song<L>[];
+  statistics?: RandomSongStatistics;
   error?: string;
   timestamp: number;
   type: MessageType;

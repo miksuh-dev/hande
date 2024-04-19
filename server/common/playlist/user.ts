@@ -4,6 +4,7 @@ import * as room from "@server/common/room";
 import { isValidReportedBrokenSong } from "@server/common/youtube-dl";
 import ee from "@server/eventEmitter";
 import prisma from "@server/prisma";
+import { getMinimumRandomIndex, updateRandomIndex } from "@server/prisma/query";
 import { sendMessage } from "@server/router/room/message";
 import { MessageType } from "@server/router/room/types";
 import { Server, VoteType } from "@server/types/app";
@@ -50,25 +51,39 @@ export const addSongs = async (
   const position = lastSong ? lastSong.position + 1 : 0;
 
   const contentIds = songs.map((o) => o.contentId);
+
+  const newRows = songs.filter(
+    ({ contentId }, index) => !contentIds.includes(contentId, index + 1)
+  );
+
   const addedSongs = (await prisma.$transaction(
-    songs
-      .filter(
-        ({ contentId }, index) => !contentIds.includes(contentId, index + 1)
-      )
-      .map((song, index) => {
-        return prisma.song.create({
-          data: {
-            url: song.url,
-            contentId: song.contentId,
-            title: song.title,
-            thumbnail: song.thumbnail,
-            requester: requester.name,
-            type: song.type,
-            position: position + index,
-          },
-        });
+    newRows.map((song, index) =>
+      prisma.song.create({
+        data: {
+          url: song.url,
+          contentId: song.contentId,
+          title: song.title,
+          thumbnail: song.thumbnail,
+          requester: requester.name,
+          type: song.type,
+          position: position + index,
+        },
       })
+    )
   )) as Song<Server>[];
+
+  const newSongRows = newRows.filter(
+    (song) => (song.type as SongType) === SongType.SONG
+  );
+
+  if (newSongRows.length) {
+    const minimumRandomIndex = await getMinimumRandomIndex();
+    await Promise.all(
+      newSongRows.map((song) =>
+        updateRandomIndex(song.contentId, minimumRandomIndex)
+      )
+    );
+  }
 
   const firstSong = addedSongs[0];
 

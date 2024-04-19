@@ -6,10 +6,12 @@ import { SongClient } from "trpc/types";
 import Tooltip from "components/Tooltip";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 import { DateTime } from "luxon";
+import { RandomSongStatistics } from "@server/types/app";
 
 type Props = {
   content: string;
-  item: SongClient[];
+  item?: SongClient[];
+  statistics?: RandomSongStatistics;
   error?: string;
 };
 
@@ -18,29 +20,75 @@ const ChatMessageItem: Component<Props> = (props) => {
 
   const message = createMemo(() => {
     const messageProps = {
-      count: props.item.length.toString(),
-      ...(props.item[0] && { item: htmlDecode(props.item[0].title) }),
+      count: (props.item?.length ?? 0).toString(),
+      ...(props.item?.[0] && { item: htmlDecode(props.item[0].title) }),
+      ...(props.statistics && { statistics: t("event.common.randomSong") }),
       ...(props.error && { error: props.error }),
     };
 
     const rawMessage: string = t(props.content, messageProps);
 
-    const { item } = messageProps;
+    const { item, statistics } = messageProps;
 
-    if (!item || props.item.length > 1) {
+    if (!item || (props.item?.length ?? 0) > 1) {
       return {
         item: rawMessage,
       };
     }
 
-    const [left, right] = rawMessage.split(`"${item}"`);
+    const [start, end] = rawMessage.split(`"${item}"`);
 
-    return { left, right, item };
+    if (!statistics) {
+      return { start, end, item };
+    }
+
+    const [newStart, center] = (start ?? "").split(`"${statistics}"`);
+
+    return {
+      start: newStart,
+      center,
+      end,
+      item,
+      statistics,
+    };
   });
 
   return (
     <span class="inline">
-      <Show when={message().left}>{message().left}</Show>
+      <Show when={message().start}>{message().start}</Show>
+      <Show when={props.statistics}>
+        {(stats) => (
+          <Tooltip
+            dynamic
+            content={
+              <div class="flex flex-col space-y-1 px-1 py-1 items-start">
+                <span>
+                  {`${t("randomStatistics.playCount")}: ${stats().playCount}`}
+                </span>
+                <span>
+                  {`${t("randomStatistics.skipCount")}: ${stats().skipCount}`}
+                </span>
+                <span>
+                  {`${t("randomStatistics.rating")}: ${stats().rating}`}
+                </span>
+                <span>
+                  {`${t("randomStatistics.skipProbability")}: ${(
+                    stats().skipProbability * 100
+                  ).toFixed(2)}%`}
+                </span>
+              </div>
+            }
+          >
+            <span
+              class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+              style={{ "white-space": "break-spaces" }}
+            >
+              {message().statistics}
+            </span>
+          </Tooltip>
+        )}
+      </Show>
+      <Show when={message().center}>{message().center}</Show>
       <Tooltip
         dynamic
         content={
@@ -92,7 +140,7 @@ const ChatMessageItem: Component<Props> = (props) => {
           {message().item}
         </span>
       </Tooltip>
-      <Show when={message().right}>{message().right}</Show>
+      <Show when={message().end}>{message().end}</Show>
     </span>
   );
 };

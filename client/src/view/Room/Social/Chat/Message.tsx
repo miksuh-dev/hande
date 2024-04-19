@@ -9,11 +9,12 @@ const Message: Component<{ message: IncomingMessage }> = (props) => {
   const [t] = useI18n();
 
   const content = createMemo(() => {
-    if (props.message.item) {
+    if (props.message.item || props.message.statistics) {
       return (
         <ChatMessageItem
           content={props.message.content}
           item={props.message.item}
+          statistics={props.message.statistics}
           error={"error" in props.message ? props.message.error : undefined}
         />
       );

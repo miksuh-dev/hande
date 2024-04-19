@@ -46,3 +46,10 @@ export enum VoteType {
   DOWN = "DOWN",
   NONE = "NONE",
 }
+
+export type RandomSongStatistics = {
+  rating: number;
+  playCount: number;
+  skipCount: number;
+  skipProbability: number;
+};

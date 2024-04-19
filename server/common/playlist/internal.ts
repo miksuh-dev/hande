@@ -15,7 +15,11 @@ import {
 import { AUTOPLAY_SONG_COUNT } from "../../constants";
 import ee from "../../eventEmitter";
 import prisma from "../../prisma";
-import { getRandomSong } from "../../prisma/query";
+import {
+  getMinimumRandomIndex,
+  getRandomSong,
+  updateRandomIndex,
+} from "../../prisma/query";
 import { OnlineUser } from "../../types/auth";
 import client from "../mumble";
 import { createStream as createRadioStream } from "../radio";
@@ -421,43 +425,53 @@ export const addRandomSong = async (
   requester: OnlineUser,
   source: "user" | "autoplay" = "user"
 ) => {
-  const song = await getRandomSong();
+  const result = await prisma.$transaction(async () => {
+    const minimumRandomIndex = await getMinimumRandomIndex();
 
-  const addedSong = await prisma.$transaction(async (transaction) => {
-    const lastSong = await transaction.song.findFirst({
-      where: {
-        ended: false,
-        skipped: false,
-      },
-      orderBy: [
-        {
-          position: "desc",
-        },
-        {
-          createdAt: "desc",
-        },
-      ],
-    });
+    const { song, randomStatistics } = await getRandomSong(minimumRandomIndex);
 
-    const position = lastSong ? lastSong.position + 1 : 0;
-    return {
-      ...(await transaction.song.create({
-        data: {
-          url: song.url,
-          contentId: song.contentId,
-          title: song.title,
-          thumbnail: song.thumbnail,
-          requester: requester.name,
-          type: song.type,
-          position,
+    const addedSong = await prisma.$transaction(async (transaction) => {
+      const lastSong = await transaction.song.findFirst({
+        where: {
           ended: false,
           skipped: false,
-          random: true,
         },
-      })),
-      originalRequester: song.requester,
-    } as Song<Server, SongType.SONG>;
+        orderBy: [
+          {
+            position: "desc",
+          },
+          {
+            createdAt: "desc",
+          },
+        ],
+      });
+
+      const position = lastSong ? lastSong.position + 1 : 0;
+      return {
+        ...(await transaction.song.create({
+          data: {
+            url: song.url,
+            contentId: song.contentId,
+            title: song.title,
+            thumbnail: song.thumbnail,
+            requester: requester.name,
+            type: song.type,
+            position,
+            ended: false,
+            skipped: false,
+            random: true,
+          },
+        })),
+        originalRequester: song.requester,
+      } as Song<Server, SongType.SONG>;
+    });
+
+    await updateRandomIndex(addedSong.contentId, minimumRandomIndex);
+
+    return { addedSong, randomStatistics };
   });
+
+  const { addedSong, randomStatistics } = result;
 
   sendMessage(
     source === "user"
@@ -467,6 +481,7 @@ export const addRandomSong = async (
       user: requester,
       type: MessageType.ACTION,
       item: [addedSong],
+      statistics: randomStatistics,
     }
   );
 

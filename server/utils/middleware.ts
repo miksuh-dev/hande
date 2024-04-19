@@ -25,11 +25,12 @@ export const playingToClient = async (
 };
 
 export const messageToClient = (message: Message<Server>): Message<Client> => {
-  const { item, ...rest } = message;
+  const { item, statistics, ...rest } = message;
 
   return {
     ...rest,
     ...(item && { item: item.map(songToClient) }),
+    ...(statistics && { statistics }),
   };
 };
 

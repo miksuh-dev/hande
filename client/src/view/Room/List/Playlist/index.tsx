@@ -32,6 +32,7 @@ const PlaylistComponent: Component = () => {
 
   const snackbar = useSnackbar();
   const [autoplayLeft, setAutoplayLeft] = createSignal<TimeLeft>();
+  const [loading, setLoading] = createSignal(false);
 
   const handleSkip = async (song: SongClient) => {
     try {
@@ -73,6 +74,8 @@ const PlaylistComponent: Component = () => {
 
   const handleAddRandomSong = async () => {
     try {
+      setLoading(true);
+
       await trpcClient.room.addRandomSong.mutate();
 
       snackbar.success(t(`snackbar.common.addedRandom`));
@@ -80,6 +83,8 @@ const PlaylistComponent: Component = () => {
       if (err instanceof Error) {
         snackbar.error(t("error.common", { error: err.message }));
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,6 +114,7 @@ const PlaylistComponent: Component = () => {
 
   const handleAutoplay = async () => {
     try {
+      setLoading(true);
       const autoPlayOn = await trpcClient.room.autoplay.mutate();
 
       snackbar.success(
@@ -120,6 +126,8 @@ const PlaylistComponent: Component = () => {
       if (err instanceof Error) {
         snackbar.error(t("error.common", { error: err.message }));
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -148,7 +156,11 @@ const PlaylistComponent: Component = () => {
         actions={
           <>
             <Tooltip text={t("tooltip.common.addRandomSong")}>
-              <button class="icon-button" onClick={() => handleAddRandomSong()}>
+              <button
+                disabled={loading()}
+                class="icon-button"
+                onClick={() => handleAddRandomSong()}
+              >
                 <RandomIcon />
               </button>
             </Tooltip>
@@ -159,7 +171,11 @@ const PlaylistComponent: Component = () => {
                   : t("tooltip.common.autoplayOn")
               }
             >
-              <button class="icon-button" onClick={() => handleAutoplay()}>
+              <button
+                disabled={loading()}
+                class="icon-button"
+                onClick={() => handleAutoplay()}
+              >
                 <div class="relative">
                   <RobotIcon />
                   <Show when={autoplayLeft()}>

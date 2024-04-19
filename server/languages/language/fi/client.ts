@@ -157,6 +157,12 @@ export default {
       allTime: "Kaikilta ajoilta",
     },
   },
+  randomStatistics: {
+    skipProbability: "Ohitustodennäköisyys",
+    rating: "Arvostelu",
+    skipCount: "Ohitusmäärä",
+    playCount: "Toistomäärä",
+  },
   playlistDialog: {
     title: "Soittolista: {{ name }}",
   },
@@ -182,9 +188,9 @@ export default {
       clearedPlaylist: "tyhjensi soittolistan.",
       shuffledPlaylist: "sekoitti soittolistan.",
       movedSong: 'vaihtoi kappaleen "{{ item }}" sijaintia jonossa.',
-      addedRandom: 'lisäsi sattumanvaraisen kappaleen "{{ item }}" jonoon.',
+      addedRandom: 'lisäsi "{{ statistics }}" kappaleen "{{ item }}" jonoon.',
       addedRandomAutoplay:
-        'lisäsi sattumanvaraisen kappaleen "{{ item }}" jonoon (automaattinen toisto).',
+        'lisäsi "{{ statistics }}" kappaleen "{{ item }}" jonoon (automaattinen toisto).',
       changedVolume: 'vaihtoi kappaleen "{{ item }}" äänenvoimakkuutta.',
       autoplayOn: "asetti automaattisen toiston päälle.",
       autoplayOff: "asetti automaattisen toiston pois päältä.",
@@ -192,6 +198,7 @@ export default {
         timeout: "Automaattinen toisto päättyi (aika päättyi).",
         emptyRoom: "Automaattinen toisto päättyi (huone on tyhjä).",
       },
+      randomSong: "sattumanvaraisen",
     },
     source: {
       song: {

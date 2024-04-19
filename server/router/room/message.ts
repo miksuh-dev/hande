@@ -55,6 +55,7 @@ const createMessage = (
       state,
       ...(options.item && { item: options.item }),
       ...(options.error && { error: options.error }),
+      ...(options.statistics && { statistics: options.statistics }),
     };
   }
 
