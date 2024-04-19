@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.25.1](https://github.com/miksuh-dev/hande/compare/v2.25.0...v2.25.1) (2024-04-19)
+
+
+### Bug Fixes
+
+* incorrect song duration compare ([ba40f00](https://github.com/miksuh-dev/hande/commit/ba40f0014a4cc4de9b87a061b85d035f935dfa0b))
+* vote button style not working with dark theme ([9ea520e](https://github.com/miksuh-dev/hande/commit/9ea520e469a0639346f5aebf90b9c2595f405a6a))
+
 ## [2.25.0](https://github.com/miksuh-dev/hande/compare/v2.24.3...v2.25.0) (2024-04-19)
 
 
