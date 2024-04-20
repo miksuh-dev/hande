@@ -64,13 +64,12 @@ export const getRandomSong = async (minimumRandomIndex: number) => {
         ON so.contentId = rp.contentId
       WHERE
           COALESCE(sr.song_votes, 0) >= 0
-          AND rp.count = ${minimumRandomIndex}
           AND so.type = 'song'
           AND (so.duration <= ${MAX_SONG_DURATION_FOR_RANDOM_SONG} OR so.duration IS NULL)
       GROUP BY
           so.contentId
       ORDER BY
-          RANDOM()
+          rp.count, RANDOM()
       LIMIT 10
   `;
 
@@ -114,9 +113,7 @@ export const getRandomSong = async (minimumRandomIndex: number) => {
         },
       },
       data: {
-        count: {
-          increment: 1,
-        },
+        count: minimumRandomIndex + 1,
       },
     });
   }
@@ -162,9 +159,7 @@ export const updateRandomIndex = async (
       contentId,
     },
     update: {
-      count: {
-        increment: 1,
-      },
+      count: minimumRandomIndex + 1,
     },
     create: {
       contentId,
