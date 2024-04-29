@@ -124,6 +124,17 @@ const PlayingComponent: Component<Props> = (props) => {
     }
   };
 
+  const getSongRequesterText = (song: SongClient) => {
+    if ("originalRequester" in song && song.originalRequester) {
+      return t("common.requesterWithOriginal", {
+        requester: song.requester,
+        original: song.originalRequester,
+      });
+    }
+
+    return `${t("common.requester")}: ${song.requester}`;
+  };
+
   return (
     <div class="flex">
       <Show when={room().playing}>
@@ -158,17 +169,7 @@ const PlayingComponent: Component<Props> = (props) => {
                 <div>
                   <h1 class="whitespace-nowrap">{htmlDecode(song().title)}</h1>
                   <p class="whitespace-nowrap">
-                    <Show
-                      when={"originalRequester" in song()}
-                      fallback={`${t("common.requester")}: ${song().requester}`}
-                    >
-                      {t("common.requesterWithOriginal", {
-                        requester: song().requester,
-                        original:
-                          (song() as SongClient<SongType.SONG>)
-                            .originalRequester ?? "",
-                      })}
-                    </Show>
+                    {getSongRequesterText(song())}
                   </p>
                 </div>
               </div>

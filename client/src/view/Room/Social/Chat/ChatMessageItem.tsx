@@ -104,10 +104,10 @@ const ChatMessageItem: Component<Props> = (props) => {
                   </div>
                   <div class="flex flex-col text-xs font-medium items-start space-y-1">
                     <p>
-                      {"originalRequester" in item
+                      {"originalRequester" in item && item.originalRequester
                         ? t("common.requesterWithOriginal", {
                             requester: item.requester,
-                            original: item.originalRequester ?? "",
+                            original: item.originalRequester,
                           })
                         : `${t("common.requester")}: ${item.requester}`}
                     </p>
