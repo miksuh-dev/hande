@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.25.2](https://github.com/miksuh-dev/hande/compare/v2.25.1...v2.25.2) (2024-04-29)
+
+
+### Bug Fixes
+
+* hide original requester text if empty ([a63cd19](https://github.com/miksuh-dev/hande/commit/a63cd197476deea0d3a4289aa09f39880fc0de0a))
+
 ### [2.25.1](https://github.com/miksuh-dev/hande/compare/v2.25.0...v2.25.1) (2024-04-19)
 
 
