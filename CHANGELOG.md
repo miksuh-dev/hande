@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.25.3](https://github.com/miksuh-dev/hande/compare/v2.25.2...v2.25.3) (2024-10-06)
+
+
+### Bug Fixes
+
+* video info parsing failing often ([e4a6480](https://github.com/miksuh-dev/hande/commit/e4a6480d4b311bd36682e30827499cdb94b6f788))
+
 ### [2.25.2](https://github.com/miksuh-dev/hande/compare/v2.25.1...v2.25.2) (2024-04-29)
 
 
