@@ -13,15 +13,28 @@ export const createStream = (song: Song<Server>) => {
   return youtubeDlWrap.execStream([song.url, "-f", "m4a"]) as Readable;
 };
 
+const parseVideoInfoString = (metadata: string): VideoInfo => {
+  try {
+    return JSON.parse(metadata) as VideoInfo;
+  } catch {
+    return JSON.parse(
+      "[" + metadata.replace(/\n/g, ",").slice(0, -1) + "]"
+    ) as VideoInfo;
+  }
+};
+
 export const getVideoInfo = async (song: Song<Server>) => {
   try {
-    const metadata = await youtubeDlWrap.getVideoInfo(song.url);
+    const metadata: string = await youtubeDlWrap.execPromise([
+      song.url,
+      "--dump-json",
+    ]);
 
     if (!metadata) {
       throw new Error("No metadata");
     }
 
-    return metadata as VideoInfo;
+    return parseVideoInfoString(metadata);
   } catch (e) {
     console.log("e", e);
   }
