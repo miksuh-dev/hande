@@ -39,7 +39,7 @@
     "node-html-parser": "^6.1.12",
     "protobufjs": "^7.2.6",
     "superjson": "^1.11.0",
-    "ws": "^8.8.1",
+    "ws": "^8.17.1",
     "youtube-dl-wrap": "^2.1.1",
     "zod": "^3.19.0"
   },
