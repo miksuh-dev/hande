@@ -1,5 +1,5 @@
-import { SongType } from "@server/types/source";
 import { Song } from "./prisma";
+import { SongType } from "./source";
 
 export enum PlayState {
   STARTING = "STARTING",
