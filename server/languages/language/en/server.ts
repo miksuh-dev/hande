@@ -15,7 +15,7 @@ export default {
     help: {
       command: "help",
       description: "Shows commands.",
-      header: "Available commands:",
+      header: "Available commands",
       wipCaution:
         "Note! Hande's private messages only work if the user does not have (too long) comment",
     },

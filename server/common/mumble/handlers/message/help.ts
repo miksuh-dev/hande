@@ -4,7 +4,7 @@ import { Message } from "./types";
 
 const t = serverLanguage.commands.help;
 
-const handleGenerateToken = async (message: Message) => {
+const handleHelp = async (message: Message) => {
   let content = `<br /><b>${t.header}:</b><br /><br />`;
 
   commands.forEach((command) => {
@@ -20,4 +20,4 @@ const handleGenerateToken = async (message: Message) => {
   }
 };
 
-export default handleGenerateToken;
+export default handleHelp;

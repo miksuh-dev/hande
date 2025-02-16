@@ -14,7 +14,7 @@ export default {
     help: {
       command: "apua",
       description: "Näyttää komennot.",
-      header: "Käytössä olevat komennot:",
+      header: "Käytössä olevat komennot",
       wipCaution:
         "Huom! Handen yksityisviestit toimivat vain jos käyttäjällä ei ole (liian pitkää) kommenttia",
     },
