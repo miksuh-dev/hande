@@ -11,7 +11,7 @@ export default [
   },
   {
     command: serverLanguage.commands.help.command,
-    description: serverLanguage.commands.www.description,
+    description: serverLanguage.commands.help.description,
     action: help,
   },
 ] as {
