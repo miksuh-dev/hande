@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.25.4](https://github.com/miksuh-dev/hande/compare/v2.25.3...v2.25.4) (2025-02-25)
+
+
+### Bug Fixes
+
+* add random song throws expired transaction error ([93c724b](https://github.com/miksuh-dev/hande/commit/93c724ba349bdd0294841027638a7dd5df6d64c5))
+* help translation having double colon ([a7caeaf](https://github.com/miksuh-dev/hande/commit/a7caeaf72b5a14571bdcd6f98f9957d1bb8db5fd))
+* invalid help command description ([86e603c](https://github.com/miksuh-dev/hande/commit/86e603cc40daf5c03eeaca77d3e3f2c778ff2428))
+
 ### [2.25.3](https://github.com/miksuh-dev/hande/compare/v2.25.2...v2.25.3) (2024-10-06)
 
 
