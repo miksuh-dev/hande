@@ -425,53 +425,46 @@ export const addRandomSong = async (
   requester: OnlineUser,
   source: "user" | "autoplay" = "user"
 ) => {
-  const result = await prisma.$transaction(async () => {
-    const minimumRandomIndex = await getMinimumRandomIndex();
+  const minimumRandomIndex = await getMinimumRandomIndex();
+  const { song, randomStatistics } = await getRandomSong(minimumRandomIndex);
 
-    const { song, randomStatistics } = await getRandomSong(minimumRandomIndex);
-
-    const addedSong = await prisma.$transaction(async (transaction) => {
-      const lastSong = await transaction.song.findFirst({
-        where: {
-          ended: false,
-          skipped: false,
+  const addedSong = await prisma.$transaction(async (transaction) => {
+    const lastSong = await transaction.song.findFirst({
+      where: {
+        ended: false,
+        skipped: false,
+      },
+      orderBy: [
+        {
+          position: "desc",
         },
-        orderBy: [
-          {
-            position: "desc",
-          },
-          {
-            createdAt: "desc",
-          },
-        ],
-      });
-
-      const position = lastSong ? lastSong.position + 1 : 0;
-      return {
-        ...(await transaction.song.create({
-          data: {
-            url: song.url,
-            contentId: song.contentId,
-            title: song.title,
-            thumbnail: song.thumbnail,
-            requester: requester.name,
-            type: song.type,
-            position,
-            ended: false,
-            skipped: false,
-            random: true,
-          },
-        })),
-        originalRequester: song.requester,
-      } as Song<Server, SongType.SONG>;
+        {
+          createdAt: "desc",
+        },
+      ],
     });
 
-    await updateRandomIndex(addedSong.contentId, minimumRandomIndex);
-
-    return { addedSong, randomStatistics };
+    const position = lastSong ? lastSong.position + 1 : 0;
+    return {
+      ...(await transaction.song.create({
+        data: {
+          url: song.url,
+          contentId: song.contentId,
+          title: song.title,
+          thumbnail: song.thumbnail,
+          requester: requester.name,
+          type: song.type,
+          position,
+          ended: false,
+          skipped: false,
+          random: true,
+        },
+      })),
+      originalRequester: song.requester,
+    } as Song<Server, SongType.SONG>;
   });
 
-  const { addedSong, randomStatistics } = result;
+  await updateRandomIndex(addedSong.contentId, minimumRandomIndex);
 
   sendMessage(
     source === "user"
