@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import MarkdownIt from "markdown-it";
+import { getMarkdownIt } from "../../utils/markdown";
 import { z } from "zod";
 import {
   getClientLanguage,
@@ -9,7 +9,7 @@ import {
 import { userProcedure } from "@server/router/utils";
 import { t } from "@server/trpc";
 
-const markdownIt = new MarkdownIt();
+const markdownIt = getMarkdownIt();
 
 export const commonRouter = t.router({
   language: t.procedure
