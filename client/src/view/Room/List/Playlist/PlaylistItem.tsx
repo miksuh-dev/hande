@@ -39,6 +39,17 @@ const PlayListItem: Component<Props> = (props) => {
 
   const state = useDragDropContext();
 
+  const getSongRequesterText = (song: SongClient) => {
+    if ("originalRequester" in song && song.originalRequester) {
+      return t("common.requesterWithOriginal", {
+        requester: song.requester,
+        original: song.originalRequester,
+      });
+    }
+
+    return `${t("common.requester")}: ${song.requester}`;
+  };
+
   return (
     <div
       use:sortable
@@ -63,9 +74,7 @@ const PlayListItem: Component<Props> = (props) => {
             </Show>
             <div>
               <h1>{htmlDecode(song().title)}</h1>
-              <p>
-                {t("common.requester")}: {song().requester}
-              </p>
+              <p>{getSongRequesterText(song())}</p>
             </div>
           </div>
         </div>

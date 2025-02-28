@@ -1,7 +1,9 @@
+import { getSongOriginalRequester } from "@server/common/playlist/internal";
 import { Message, UpdateEvent } from "@server/router/room/types";
 import { Client, PlayingSong, Server, VoteType } from "@server/types/app";
 import { MumbleUser } from "@server/types/auth";
 import { Song } from "@server/types/prisma";
+import { SongType } from "@server/types/source";
 import prisma from "../prisma";
 
 const voteValueToVoteType = (vote: number | undefined) => {
@@ -57,6 +59,23 @@ export const enrichWithUserVote = async (
     ...song,
     vote: voteValueToVoteType(rating?.vote),
   };
+};
+
+export const enrichWithOriginalRequester = (
+  songs: Song<Server>[]
+): Promise<Song<Server>[]> => {
+  return Promise.all(
+    songs.map(async (song) => {
+      if (song.type === SongType.SONG && song.random) {
+        return {
+          ...song,
+          originalRequester: await getSongOriginalRequester(song),
+        };
+      }
+
+      return song;
+    })
+  );
 };
 
 const processSongEvent = async (

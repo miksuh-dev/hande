@@ -175,6 +175,18 @@ export const getSongOriginalRequester = async (song: Song<Server>) => {
   if (song.type !== SongType.SONG) return undefined;
   if (!song.random) return undefined;
 
+  if (song.originalRequester) {
+    return song.originalRequester;
+  }
+
+  const songInQueue = processingQueue.find(
+    (item) => item.song.id === song.id
+  )?.song;
+
+  if (songInQueue && "originalRequester" in songInQueue) {
+    return songInQueue.originalRequester;
+  }
+
   return prisma.song
     .findFirst({
       where: {
