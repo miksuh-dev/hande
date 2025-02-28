@@ -27,6 +27,7 @@ import { Song } from "@server/types/prisma";
 import { SongType, SOURCES, SourceType } from "@server/types/source";
 import {
   enrichUpdateMessage,
+  enrichWithOriginalRequester,
   messageToClient,
   playingToClient,
   songToClient,
@@ -50,7 +51,9 @@ export const roomRouter = t.router({
     return {
       playing: await playingToClient(getCurrentSong(), user),
       room: room.getClient(),
-      songs: (await getPlaylist()).map(songToClient),
+      songs: (await getPlaylist().then(enrichWithOriginalRequester)).map(
+        songToClient
+      ),
       messages: messages.map(messageToClient),
       users: [...userState.users.values()].map((u) => u.user),
       sources: SOURCES,
