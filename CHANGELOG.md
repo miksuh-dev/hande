@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.26.0](https://github.com/miksuh-dev/hande/compare/v2.25.4...v2.26.0) (2025-02-28)
+
+
+### Features
+
+* show original requester in playlist when song is random ([#24](https://github.com/miksuh-dev/hande/issues/24)) ([74d07e5](https://github.com/miksuh-dev/hande/commit/74d07e5255866dcb9b14eda3a6a1db84108abe48)), closes [#23](https://github.com/miksuh-dev/hande/issues/23)
+
+
+### Bug Fixes
+
+* changelog links opening in current window ([a8bd004](https://github.com/miksuh-dev/hande/commit/a8bd004223e8934cc4e2451a7d5b83593ef86ee1))
+
 ### [2.25.4](https://github.com/miksuh-dev/hande/compare/v2.25.3...v2.25.4) (2025-02-25)
 
 
