@@ -113,11 +113,17 @@ const handleUpdateEvent = (
     }
 
     if (event.song.update) {
-      const updatedSongs = event.song.update;
-
-      if (!updatedSongs?.length) {
+      if (!event.song.update?.length) {
         return existingRoom;
       }
+
+      const updatedSongs = event.song.update.map((song) => {
+        const existingSong = existingRoom.songs.find(
+          (existingSong) => existingSong.id === song.id
+        );
+
+        return existingSong ? { ...existingSong, ...song } : song;
+      });
 
       const songs = existingRoom.songs
         .filter((s) => !updatedSongs.some((us) => us.id === s.id))
