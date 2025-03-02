@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.26.1](https://github.com/miksuh-dev/hande/compare/v2.26.0...v2.26.1) (2025-03-02)
+
+
+### Bug Fixes
+
+* changing song order in queue removes original requester ([4a02d68](https://github.com/miksuh-dev/hande/commit/4a02d685bdb7aacd08d46d568f851260f176c59c)), closes [#25](https://github.com/miksuh-dev/hande/issues/25)
+
 ## [2.26.0](https://github.com/miksuh-dev/hande/compare/v2.25.4...v2.26.0) (2025-02-28)
 
 
