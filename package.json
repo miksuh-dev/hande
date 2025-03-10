@@ -1,6 +1,6 @@
 {
   "name": "hande-server",
-  "version": "2.26.1",
+  "version": "2.26.2",
   "description": "",
   "main": "index.ts",
   "scripts": {
