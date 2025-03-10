@@ -60,6 +60,8 @@ const PlayingComponent: Component<Props> = (props) => {
 
   const title = createMemo(() => room()?.playing?.title);
 
+  const [loading, setLoading] = createSignal(false);
+
   createEffect(
     on(title, () => {
       props.setLyrics(undefined);
@@ -72,6 +74,7 @@ const PlayingComponent: Component<Props> = (props) => {
 
   const handleSkip = async (song: PlayingSongClient) => {
     try {
+      setLoading(true);
       const skippedSong = await trpcClient.room.skipCurrent.mutate({
         id: song.id,
       });
@@ -87,11 +90,14 @@ const PlayingComponent: Component<Props> = (props) => {
           t("error.common", { error: t(err.message) || err.message })
         );
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleVote = async (song: SongClient, vote: VoteType) => {
     try {
+      setLoading(true);
       await trpcClient.room.voteSong.mutate({
         songId: song.id,
         contentId: song.contentId,
@@ -103,11 +109,14 @@ const PlayingComponent: Component<Props> = (props) => {
       if (err instanceof Error) {
         snackbar.error(t(err.message) ?? err.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGetLyrics = async (song: PlayingSongClient<SongType.SONG>) => {
     try {
+      setLoading(true);
       const result = await trpcClient.room.getCurrentLyrics.query({
         songId: song.contentId,
       });
@@ -121,6 +130,8 @@ const PlayingComponent: Component<Props> = (props) => {
       }
 
       props.setLyrics(undefined);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -218,7 +229,7 @@ const PlayingComponent: Component<Props> = (props) => {
                       disabled={
                         !hasSongDetails(
                           song() as PlayingSongClient<SongType.SONG>
-                        )
+                        ) || loading()
                       }
                     >
                       {props.lyrics() ? <LyricsSlashIcon /> : <LyricsIcon />}
@@ -228,6 +239,7 @@ const PlayingComponent: Component<Props> = (props) => {
                 <VolumeControl playing={song()} />
                 <div class="space-x-2 w-max flex items-center ">
                   <button
+                    disabled={loading()}
                     onClick={() =>
                       handleVote(
                         song(),
@@ -257,6 +269,7 @@ const PlayingComponent: Component<Props> = (props) => {
                     {song().rating ?? 0}
                   </span>
                   <button
+                    disabled={loading()}
                     onClick={() =>
                       handleVote(
                         song(),
@@ -280,7 +293,7 @@ const PlayingComponent: Component<Props> = (props) => {
                   <button
                     onClick={() => handleSkip(song())}
                     class="icon-button w-12 h-12 p-1"
-                    disabled={song().state === PlayState.ENDED}
+                    disabled={song().state === PlayState.ENDED || loading()}
                   >
                     <SkipSongIcon />
                   </button>
