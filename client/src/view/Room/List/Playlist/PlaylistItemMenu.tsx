@@ -1,5 +1,5 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Accessor, Component, Show } from "solid-js";
+import { Accessor, Component, Show, createSignal } from "solid-js";
 import { SongClient } from "trpc/types";
 import useSnackbar from "hooks/useSnackbar";
 import trpcClient from "trpc";
@@ -12,12 +12,15 @@ type Props = {
   onClose: () => void;
 };
 
+const [checkingBroken, setCheckingBroken] = createSignal(false);
+
 const PlaylistItemMenu: Component<Props> = (props) => {
   const [t] = useI18n();
   const snackbar = useSnackbar();
 
   const handleSongReportSong = async (song: SongClient) => {
     try {
+      setCheckingBroken(true);
       snackbar.success(t(`snackbar.source.song.reportedSong`));
 
       await trpcClient.room.reportSongBroken.mutate({
@@ -31,6 +34,8 @@ const PlaylistItemMenu: Component<Props> = (props) => {
           t("error.common", { error: t(err.message) || err.message })
         );
       }
+    } finally {
+      setCheckingBroken(false);
     }
   };
 
@@ -48,6 +53,7 @@ const PlaylistItemMenu: Component<Props> = (props) => {
           <div class="tooltip absolute right-0 -top-1 z-50 my-4 w-[175px] list-none divide-y divide-neutral-200 text-base">
             <div>
               <MenuItem
+                disabled={checkingBroken()}
                 onClick={() => {
                   handleSongReportSong(props.song());
                   props.onClose();

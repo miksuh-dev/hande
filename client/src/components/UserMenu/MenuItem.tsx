@@ -5,6 +5,7 @@ type Props = {
   children: JSX.Element;
   onClick?: () => void;
   notify?: boolean;
+  disabled?: boolean;
 };
 
 const MenuItem: Component<Props> = (props) => {
@@ -18,6 +19,7 @@ const MenuItem: Component<Props> = (props) => {
       }
     >
       <button
+        disabled={props.disabled}
         onClick={(event) => {
           event.stopPropagation();
           props.onClick?.();
