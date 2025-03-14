@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.26.3](https://github.com/miksuh-dev/hande/compare/v2.26.2...v2.26.3) (2025-03-14)
+
+
+### Bug Fixes
+
+* spam clicking report song crashes hande ([227c2bc](https://github.com/miksuh-dev/hande/commit/227c2bce08153c403ac226fb09e6568fff39dd59))
+
 ### [2.26.2](https://github.com/miksuh-dev/hande/compare/v2.26.1...v2.26.2) (2025-03-10)
 
 
