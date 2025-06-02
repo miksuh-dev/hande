@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.26.4](https://github.com/miksuh-dev/hande/compare/v2.26.3...v2.26.4) (2025-06-02)
+
+
+### Bug Fixes
+
+* prevent adding more than 100 songs ([0f77835](https://github.com/miksuh-dev/hande/commit/0f7783570098a481e4c45e543172cecbec8bdc06))
+* set maximum username length to 30 to prevent chat overflow ([0cd8624](https://github.com/miksuh-dev/hande/commit/0cd8624dc2881a9a068ba15864633f61c3785f62)), closes [#28](https://github.com/miksuh-dev/hande/issues/28)
+
 ### [2.26.3](https://github.com/miksuh-dev/hande/compare/v2.26.2...v2.26.3) (2025-03-14)
 
 
