@@ -53,6 +53,7 @@ const GuestLoginView: Component = () => {
               id="username"
               value={username()}
               onInput={(e) => setUsername(e.currentTarget.value)}
+              maxLength="30"
             />
             <Show when={error()?.name}>
               <p class="mt-2 text-sm text-red-600 dark:text-red-500">
