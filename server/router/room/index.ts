@@ -62,15 +62,17 @@ export const roomRouter = t.router({
   }),
   addSong: onlineUserProcedure
     .input(
-      z.array(
-        z.object({
-          url: z.string().min(1),
-          contentId: z.string().min(1),
-          title: z.string().min(1),
-          thumbnail: z.string().nullable(),
-          type: z.enum([SongType.SONG, SongType.RADIO]),
-        })
-      )
+      z
+        .array(
+          z.object({
+            url: z.string().min(1),
+            contentId: z.string().min(1),
+            title: z.string().min(1),
+            thumbnail: z.string().nullable(),
+            type: z.enum([SongType.SONG, SongType.RADIO]),
+          })
+        )
+        .max(100)
     )
     .mutation(async ({ input, ctx }) => {
       const { onlineUser } = ctx;
