@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.28.0](https://github.com/miksuh-dev/hande/compare/v2.27.0...v2.28.0) (2025-11-08)
+
+
+### Features
+
+* make footer song title clickable ([ea515a6](https://github.com/miksuh-dev/hande/commit/ea515a63087ea3f62733949144e4c0595e7bba84)), closes [#29](https://github.com/miksuh-dev/hande/issues/29)
+
 ## [2.27.0](https://github.com/miksuh-dev/hande/compare/v2.26.4...v2.27.0) (2025-11-08)
 
 
