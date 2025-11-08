@@ -178,7 +178,22 @@ const PlayingComponent: Component<Props> = (props) => {
                   </div>
                 </div>
                 <div>
-                  <h1 class="whitespace-nowrap">{htmlDecode(song().title)}</h1>
+                  {song().type === SongType.SONG ? (
+                    <a
+                      draggable={false}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={song().url}
+                      onClick={(event) => event.stopPropagation()}
+                      class="whitespace-nowrap"
+                    >
+                      {htmlDecode(song().title)}
+                    </a>
+                  ) : (
+                    <h1 class="whitespace-nowrap">
+                      {htmlDecode(song().title)}
+                    </h1>
+                  )}
                   <p class="whitespace-nowrap">
                     {getSongRequesterText(song())}
                   </p>
