@@ -73,7 +73,19 @@ const PlayListItem: Component<Props> = (props) => {
               </div>
             </Show>
             <div>
-              <h1>{htmlDecode(song().title)}</h1>
+              {song().type === SongType.SONG ? (
+                <a
+                  draggable={false}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={song().url}
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  {htmlDecode(song().title)}
+                </a>
+              ) : (
+                <h1>{htmlDecode(song().title)}</h1>
+              )}
               <p>{getSongRequesterText(song())}</p>
             </div>
           </div>

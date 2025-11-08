@@ -11,6 +11,10 @@
     @apply h-screen bg-neutral-900 dark:bg-neutral-750;
   }
 
+  a {
+    @apply hover:underline;
+  }
+
   button {
     @apply disabled:cursor-not-allowed disabled:opacity-50;
   }

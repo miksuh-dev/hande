@@ -2,7 +2,7 @@ import { useI18n } from "@solid-primitives/i18n";
 import { CircularLoadingSpinner } from "components/common/icon";
 import { DateTime } from "luxon";
 import { Accessor, Component, For, Show } from "solid-js";
-import { HistoryItem, SongClient } from "trpc/types";
+import { HistoryItem, SongClient, SongType } from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 
@@ -56,9 +56,21 @@ const HistoryComponent: Component<Props> = (props) => {
 
                 <SongThumbnail song={song} />
                 <div class="flex flex-col text-neutral-900 dark:text-neutral-200">
-                  <h3 class="text-md text-left font-medium">
-                    {htmlDecode(song.title)}
-                  </h3>
+                  {song.type === SongType.SONG ? (
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={song.url}
+                      class="text-md text-left font-medium"
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      {htmlDecode(song.title)}
+                    </a>
+                  ) : (
+                    <h3 class="text-md text-left font-medium">
+                      {htmlDecode(song.title)}
+                    </h3>
+                  )}
                   <div class="space-x-4 self-start text-sm font-medium">
                     <span>
                       {t("common.requestedAt")}: {song.requester}

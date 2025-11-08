@@ -1,7 +1,12 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { CircularLoadingSpinner } from "components/common/icon";
 import { Accessor, Component, For, Show } from "solid-js";
-import { PlayingSongClient, SongClient, StatisticItem } from "trpc/types";
+import {
+  PlayingSongClient,
+  SongClient,
+  SongType,
+  StatisticItem,
+} from "trpc/types";
 import { htmlDecode } from "utils/parse";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 
@@ -42,9 +47,21 @@ const StatisticsComponent: Component<Props> = (props) => {
                 <div class="w-4 flex-shrink-0">{index() + 1}</div>
                 <SongThumbnail song={statistic} />
                 <div class="flex flex-col text-neutral-900 dark:text-neutral-200">
-                  <h3 class="text-md text-left font-medium">
-                    {htmlDecode(statistic.title ?? "")}
-                  </h3>
+                  {statistic.type === SongType.SONG ? (
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={statistic.url}
+                      class="text-md text-left font-medium"
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      {htmlDecode(statistic.title ?? "")}
+                    </a>
+                  ) : (
+                    <h3 class="text-md text-left font-medium">
+                      {htmlDecode(statistic.title ?? "")}
+                    </h3>
+                  )}
                   <div class="space-x-4 self-start text-sm font-medium">
                     {t("statistics.playCount", {
                       count: statistic.count.toString(),

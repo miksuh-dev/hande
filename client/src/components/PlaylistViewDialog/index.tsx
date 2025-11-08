@@ -10,7 +10,12 @@ import {
 } from "solid-js";
 import trpcClient from "trpc";
 import { htmlDecode } from "utils/parse";
-import { SearchResultPlaylist, SearchResultSong, SongClient } from "trpc/types";
+import {
+  SearchResultPlaylist,
+  SearchResultSong,
+  SongClient,
+  SourceType,
+} from "trpc/types";
 import Tooltip from "components/Tooltip";
 import SongThumbnail from "view/Room/common/SongThumbnail";
 import Dialog from "components/Dialog";
@@ -136,9 +141,20 @@ const PlaylistView: Component<Props> = (props) => {
                 />
                 <SongThumbnail song={song} />
                 <div class="ml-4">
-                  <h3 class="text-md text-left font-medium text-neutral-900 dark:text-neutral-200">
-                    {htmlDecode(song.title)}
-                  </h3>
+                  {song.type === SourceType.SONG ? (
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={song.url}
+                      class="text-md text-left font-medium text-neutral-900 dark:text-neutral-200"
+                    >
+                      {htmlDecode(song.title)}
+                    </a>
+                  ) : (
+                    <h3 class="text-md text-left font-medium text-neutral-900 dark:text-neutral-200">
+                      {htmlDecode(song.title)}
+                    </h3>
+                  )}
                 </div>
               </div>
             </button>

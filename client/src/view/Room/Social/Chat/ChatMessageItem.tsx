@@ -122,7 +122,7 @@ const ChatMessageItem: Component<Props> = (props) => {
                       href={"https://www.youtube.com/watch?v=" + item.contentId}
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="text-blue-500 hover:underline inline-block"
+                      class="text-custom-primary-700 hover:underline inline-block"
                     >
                       Youtube
                     </a>

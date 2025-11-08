@@ -11,7 +11,7 @@ const Navbar: Component = () => {
       <div class="mx-auto flex flex-wrap items-center justify-between px-2">
         <Link
           href="/room"
-          class="flex self-center whitespace-nowrap text-xl font-semibold text-custom-primary-700"
+          class="flex self-center whitespace-nowrap text-xl font-semibold text-custom-primary-700 hover:no-underline"
         >
           <span class="mr-2 h-6 w-6 hover:animate-spin">
             <CrownIcon />
