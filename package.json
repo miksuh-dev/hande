@@ -24,7 +24,7 @@
     "@discordjs/opus": "github:discordjs/opus",
     "@prisma/client": "^5.1.1",
     "@trpc/server": "^10.0.0-proxy-beta.8",
-    "axios": "^1.7.4",
+    "axios": "^1.12.0",
     "bcrypt": "^5.0.1",
     "bluebird": "^3.7.2",
     "cors": "^2.8.5",
