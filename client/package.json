@@ -36,7 +36,7 @@
     "@solid-primitives/i18n": "^1.4.1",
     "@solidjs/router": "^0.8.3",
     "@thisbeyond/solid-dnd": "^0.7.4",
-    "@trpc/client": "^10.0.0-proxy-beta.7",
+    "@trpc/client": "^10.45.3",
     "luxon": "^3.2.1",
     "solid-js": "^1.6.1",
     "superjson": "^1.11.0"
